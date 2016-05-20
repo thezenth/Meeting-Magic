@@ -23,10 +23,10 @@ yaml.dump(data, stream)
 
 # DEBUG
 '''
-#print (
+print (
     yaml.dump(newUser)
 )
 
-#User2 = (yaml.load(yaml.dump(newUser)))
+User2 = (yaml.load(yaml.dump(newUser)))
 print User2
 '''
