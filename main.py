@@ -14,8 +14,8 @@ class User:
             self.__class__.__name__, self.username, self.food_prefs
         )
 
-newUser = User("Noah")
-newUser.add_food_prefs("Gujarati", "Sushi", "Taco Bell", "Pizza")
+newUser = User("Lajja")
+newUser.add_food_prefs("Punjabi", "Gujarati", "Taco Bell", "Pizza")
 
 data = newUser
 stream = file('user_config.yaml', 'w')
