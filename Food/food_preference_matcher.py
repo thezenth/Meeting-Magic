@@ -27,6 +27,3 @@ otherUser = User("Noah")
 otherUser.add_food_prefs("Gujarati", "Mango", "Pizza", "Jewish")
 
 sameList = compare(localUser, otherUser)
-
-#FETCH RESTAURANTS BASED ON SIMILAR THINGS
-#data = uhoh spaghettio
