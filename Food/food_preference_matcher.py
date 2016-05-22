@@ -18,13 +18,9 @@ def compare(user1, user2):
 
     return (same)
 
-f = open("User/user_config.yaml", "r")
+f = open("/home/noah/Meeting-Magic/User/user_config.yaml", "r")
 text = f.read()
 yamld = yaml.load(text)
 localUser = yamld #remember, this is the funky human-readable but class instantiating thing, like User(username=bsasf, etc.)
 otherUser = User("Noah")
 otherUser.add_food_prefs("Gujarati", "Mango", "Pizza", "Jewish")
-
-print (compare(
-    localUser, otherUser
-))
