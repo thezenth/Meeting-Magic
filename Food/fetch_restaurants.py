@@ -43,7 +43,7 @@ pp = pprint.PrettyPrinter(indent=4) #pretty printer for debug
 def get_restaurants ():
     factual = Factual(key, secret_key)
     places = factual.table('places')
-    data = places.search(search_param).geo(circle(lat, longi, rad)).data() #outputs a list of different objects, each object having info on the place
+    data = places.search(search_param).geo(circle(lat, longi, rad)).data() #outputs a list of different objects, each object having info on the place 
     print data
     #pp.pprint(data) #good for debug, takes a little bit
     '''
