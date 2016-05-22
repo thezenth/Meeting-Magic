@@ -8,9 +8,15 @@ import pprint
 class restaurant:
     def __init__(self, name, address, distance, hours):
         self.name = str(name) #ALL VALUES FROM FETCH API MUST BE TYPED OR FORMATTING IS SUPER WEIRD
-        self.address = str(address)
+
         self.hours = str(hours)
+
+        #Location Parameters
         self.distance = float(distance) #FLOAT
+        self.address = str(address)
+        #self.lat =
+
+    #def fetch_info(self)
     def __repr__(self): #printable representation of the object
         return "%s(name=%r, address=%r, distance=%r, hours=%r)" % (
             self.__class__.__name__, self.name, self.address, self.distance, self.hours
@@ -54,22 +60,10 @@ def get_restaurants ():
 
     for i in range(len(data)):
         raw = data[i]
-        vals = []
-        for a in getList:
-            vals.append(
-                raw.get(getList[a], None)
-            )
-
-        print restaurant(
-            raw.get(getList['name'], None),
-            raw.get(getList['address'], None),
-            raw.get(getList['distance'], None),
-            raw.get(getList['hours'], None)
-        )
 
         restsList.append(
             restaurant(
-                raw.get(getList['name'], None),
+                raw.get(getList['name'], None), # dict.get(key, default_value)
                 raw.get(getList['address'], None),
                 raw.get(getList['distance'], None),
                 raw.get(getList['hours'], None)

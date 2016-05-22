@@ -1,6 +1,12 @@
 'get':
-  'name': 'name'
+  'dist': '$distance'
   'address': 'address'
-  'distance': '$distance'
-  'telephone': 'tel'
+  'categories': 'category_labels'
   'hours': 'hours_display'
+  'lat': 'latitude'
+  'locality': 'locality'
+  'long': "longitude"
+  'name': 'name'
+  'postcode':
+  'tel': 'tel'
+  'web': 'website'
