@@ -12,6 +12,23 @@ import requests
 
 pp = pprint.PrettyPrinter(indent=4) #pretty printer for debug
 
+#MAKE SURE TO KEEP THIS UPDATED WITH FOOD/FETCH_CONFIG.YAML
+class Restaurant:
+    def __init__(self, id):
+        self.id = str(id) #ALL VALUES FROM FETCH API MUST BE TYPED OR FORMATTING IS SUPER WEIRD
+        self.info = {}
+    def fetch_info(self, dSet, *args):
+        for a in args:
+            newKey = a
+            newValue = dSet.get(a, None)
+            self.info[newKey] = newValue
+
+
+    def __repr__(self): #printable representation of the object
+        return "%s(name=%r, address=%r, distance=%r, hours=%r)" % (
+            self.__class__.__name__, self.name, self.address, self.distance, self.hours
+        )
+
 goog_key = "AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ"
 def build_url(latitude, longitude, rad, query, oauth, types="food"):
     base = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
@@ -31,6 +48,11 @@ r = requests.get(
 jason = r.json()
 print jason['results'][0]['id']
 
+
+
+
+
+
 key = "LkwWeSeAZT1xCBdQRcAqsjsoKAHQVOm7tE4KzfjX"
 secret_key = "xI8R8pWMoRJspCY40g6rrAsr9s7idQ5JXoGzxEcO"
 
@@ -39,22 +61,7 @@ lat = 34.058583
 longi = -118.416582
 rad = 1000
 
-#MAKE SURE TO KEEP THIS UPDATED WITH FOOD/FETCH_CONFIG.YAML
-class Restaurant:
-    def __init__(self, id):
-        self.id = str(id) #ALL VALUES FROM FETCH API MUST BE TYPED OR FORMATTING IS SUPER WEIRD
-        self.info = {}
-    def fetch_info(self, dSet, *args):
-        for a in args:
-            newKey = a
-            newValue = dSet.get(a, None)
-            self.info[newKey] = newValue
 
-
-    def __repr__(self): #printable representation of the object
-        return "%s(name=%r, address=%r, distance=%r, hours=%r)" % (
-            self.__class__.__name__, self.name, self.address, self.distance, self.hours
-        )
 
 def spprint(txt, doPrint=False):
     idx1 = txt.index("u") + 1 # + 1 to include the ' at the very beginning
