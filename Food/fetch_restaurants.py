@@ -4,19 +4,26 @@ from factual import Factual
 from factual.utils import circle
 import pprint
 
+key = "LkwWeSeAZT1xCBdQRcAqsjsoKAHQVOm7tE4KzfjX"
+secret_key = "xI8R8pWMoRJspCY40g6rrAsr9s7idQ5JXoGzxEcO"
+
+search_param = 'coffee'
+lat = 34.058583
+longi = -118.416582
+rad = 1000
+
 #MAKE SURE TO KEEP THIS UPDATED WITH FOOD/FETCH_CONFIG.YAML
-class restaurant:
-    def __init__(self, name, address, distance, hours):
-        self.name = str(name) #ALL VALUES FROM FETCH API MUST BE TYPED OR FORMATTING IS SUPER WEIRD
+class Restaurant:
+    def __init__(self, id):
+        self.id = str(id) #ALL VALUES FROM FETCH API MUST BE TYPED OR FORMATTING IS SUPER WEIRD
+        self.info = {}
+    def fetch_info(self, dSet, *args):
+        for a in args:
+            newKey = a
+            newValue = dSet.get(a, None)
+            self.info[newKey] = newValue
 
-        self.hours = str(hours)
 
-        #Location Parameters
-        self.distance = float(distance) #FLOAT
-        self.address = str(address)
-        #self.lat =
-
-    #def fetch_info(self)
     def __repr__(self): #printable representation of the object
         return "%s(name=%r, address=%r, distance=%r, hours=%r)" % (
             self.__class__.__name__, self.name, self.address, self.distance, self.hours
@@ -33,17 +40,11 @@ def spprint(txt, doPrint=False):
 
 pp = pprint.PrettyPrinter(indent=4) #pretty printer for debug
 
-lat = 34.058583
-lang = -118.416582
-rad = 1000
-
-key = "LkwWeSeAZT1xCBdQRcAqsjsoKAHQVOm7tE4KzfjX"
-secret_key = "xI8R8pWMoRJspCY40g6rrAsr9s7idQ5JXoGzxEcO"
-
 def get_restaurants ():
     factual = Factual(key, secret_key)
     places = factual.table('places')
-    data = places.search('coffee').geo(circle(34.058583, -118.416582, 1000)).data() #outputs a list of different objects, each object having info on the place
+    data = places.search(search_param).geo(circle(lat, longi, rad)).data() #outputs a list of different objects, each object having info on the place
+    print data
     #pp.pprint(data) #good for debug, takes a little bit
     '''
     strm = file("fetch_config.yaml", "w")
@@ -59,22 +60,20 @@ def get_restaurants ():
     getList = yaml.load(stream)['get']
 
     for i in range(len(data)):
-        raw = data[i]
-
-        restsList.append(
-            restaurant(
-                raw.get(getList['name'], None), # dict.get(key, default_value)
-                raw.get(getList['address'], None),
-                raw.get(getList['distance'], None),
-                raw.get(getList['hours'], None)
-            )
+        raw = data[i] #remember, data is a list of objects, so raw refers to a specific object
+        newRest = Restaurant(
+            raw.get('factual_id', None) #factual_id SHOULDN'T be null... watch out anyway --- dic.get(key, default_value)
         )
+        newRest.fetch_info(
+            raw, *getList.values() # the * expands the list for *args, and since getlist is a dict, .values() gets only the values
+        )
+
         #for a in getList:
 
             #just in case we REALLY need to parse a list
             #if a == 'hours':
-            #    for b in range(len(getList[a])):
             #        print getList[a][b]
+            #    for b in range(len(getList[a])):
             #        print data[0][
             #            getList[a][b]
             #        ]
@@ -83,7 +82,7 @@ def get_restaurants ():
 
     #spprint(data[0]["tel"], doPrint=True)
 
-#get_restaurants()
+get_restaurants()
 
 """
 keyInclude = "&KEY=" + key
