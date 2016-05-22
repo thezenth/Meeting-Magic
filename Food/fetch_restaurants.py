@@ -1,9 +1,19 @@
 import json
+import yaml
 from factual import Factual
 from factual.utils import circle
 import pprint
 
-#pp = pprint.PrettyPrinter(indent=4) #pretty printer for debug
+def spprint(txt, doPrint=False):
+    idx1 = txt.index("u") + 1 # + 1 to include the ' at the very beginning
+    idx2 = len(txt)
+    newTxt = txt[idx1:idx2]
+    if doPrint is True:
+        print (newTxt)
+    else:
+        return (newTxt)
+
+pp = pprint.PrettyPrinter(indent=4) #pretty printer for debug
 
 lat = 34.058583
 lang = -118.416582
@@ -16,6 +26,18 @@ places = factual.table('places')
 data = places.search('coffee').geo(circle(34.058583, -118.416582, 1000)).data() #outputs a list of different objects, each object having info on the place
 #pp.pprint(data) #good for debug, takes a little bit
 
+strm = file("fetch_config.yaml", "w")
+
+stream = file("fetch_config.yaml", "r")
+getList = yaml.load(stream)['get']
+for a in range(len(getList)):
+    if a is 'hours':
+        for b in range(len(getList['hours'])):
+            print data[0][a][b]
+    else:
+        print data[0][a]
+
+#spprint(data[0]["tel"], doPrint=True)
 
 """
 keyInclude = "&KEY=" + key
