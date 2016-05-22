@@ -1,5 +1,6 @@
 'get':
+  'name': 'name'
   'address': 'address'
   'distance': '$distance'
   'telephone': 'tel'
-  'hours': 'hours_display' 
+  'hours': 'hours_display'
