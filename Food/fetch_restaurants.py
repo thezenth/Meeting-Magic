@@ -1,8 +1,35 @@
 import json
 import yaml
+import pprint
+
+#FACTUAL API
 from factual import Factual
 from factual.utils import circle
-import pprint
+
+
+#GOOGLE PLACES API
+import requests
+
+pp = pprint.PrettyPrinter(indent=4) #pretty printer for debug
+
+goog_key = "AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ"
+def build_url(latitude, longitude, rad, query, oauth, types="food"):
+    base = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
+    location = "location=" + str(latitude) + "," + str(longitude)
+    radius = "radius=" + str(rad)
+    search = "name=" + query
+    place_type = "types=" + types
+    authKey = "key=" + oauth
+    url = base + location + "&" + radius + "&" + search + "&" + place_type + "&" + authKey
+    print url
+    return url
+
+r = requests.get(
+    build_url(-33.8670, 151.1957, 5000, "coffee", goog_key)
+)
+
+jason = r.json()
+print jason['results'][0]['id']
 
 key = "LkwWeSeAZT1xCBdQRcAqsjsoKAHQVOm7tE4KzfjX"
 secret_key = "xI8R8pWMoRJspCY40g6rrAsr9s7idQ5JXoGzxEcO"
@@ -38,12 +65,12 @@ def spprint(txt, doPrint=False):
     else:
         return (newTxt)
 
-pp = pprint.PrettyPrinter(indent=4) #pretty printer for debug
+
 
 def get_restaurants ():
     factual = Factual(key, secret_key)
     places = factual.table('places')
-    data = places.search(search_param).geo(circle(lat, longi, rad)).data() #outputs a list of different objects, each object having info on the place 
+    data = places.search(search_param).geo(circle(lat, longi, rad)).data() #outputs a list of different objects, each object having info on the place
     print data
     #pp.pprint(data) #good for debug, takes a little bit
     '''
@@ -82,7 +109,7 @@ def get_restaurants ():
 
     #spprint(data[0]["tel"], doPrint=True)
 
-get_restaurants()
+#get_restaurants()
 
 """
 keyInclude = "&KEY=" + key
