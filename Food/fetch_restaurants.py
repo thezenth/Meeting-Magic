@@ -51,14 +51,20 @@ def build_url(latitude, longitude, rad, query, oauth, types="food", rankBy="prom
     return url
 # EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&rankby=prominence&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
 
-
 def get restaurants (lati, longi, rad, cat):
     r = requests.get(
         build_url(lati, longi, rad, cat, goog_key)
     )
 
     jason = r.json()
-    print jason['results'][0]['id']
+    results = jason['results'][0]['id']
+    for i in (range(len(results)):
+        ident = results[i]['id']
+        name = results[i]['name']
+        rest_latitude = results[i]['geometry']['lat'] #typing occurs in class
+        rest_longitude = results[i]['geometry']['lng']
+        rating = results[i]['geometry']['rating']
+
 
 
 
