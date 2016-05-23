@@ -62,15 +62,19 @@ def get_restaurants (lati, longi, rad, cat):
         #if results[i]['id']
         ident = results[i]['id']
         name = results[i]['name']
-        rest_latitude = results[i]['geometry']['lat'] #typing occurs in class
-        rest_longitude = results[i]['geometry']['lng']
+        rest_latitude = results[i]['geometry']['location']['lat'] #typing occurs in class
+        rest_longitude = results[i]['geometry']['location']['lng']
         rating = results[i]['rating']
         hours = results[i]['opening_hours']
         address = results[i]['vicinity']
-        newRest = Restaurant(ident, name, address, rest_latitude, rest_longitude, rating)
+        newRest = Restaurant(ident, name, address, rest_latitude, rest_longitude, hours, rating)
         print (newRest.__repr__)
 
-
+lati = 34.058583
+longi = -118.416582
+rad = 5000
+category = "coffee"
+get_restaurants(lati, longi, rad, category)
 
 """
 key = "LkwWeSeAZT1xCBdQRcAqsjsoKAHQVOm7tE4KzfjX"
