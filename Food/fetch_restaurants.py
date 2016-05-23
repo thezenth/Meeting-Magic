@@ -30,24 +30,35 @@ class Restaurant:
         )
 
 goog_key = "AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ"
-def build_url(latitude, longitude, rad, query, oauth, types="food"):
+def build_url(latitude, longitude, rad, query, oauth, types="food", rankBy=None):
     base = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
     location = "location=" + str(latitude) + "," + str(longitude)
     radius = "radius=" + str(rad)
-    search = "name=" + query
+    search = "keyword=" + query
     place_type = "types=" + types
+
+    if rankBy is None:
+        rank_by = ""
+    else if rankBy is "distance":
+        radius = "" #CANT HAVE RADIUS WHEN SORTING BY DISTANCE
+        rank_by = "rankby=" + rankBy
+    else if rankBy is "prominence":
+        rank_by = "rankby" #CANT HAVE rankby=rating OR SOMETHING FOR SOME REASON, I DONT KNOW ASK GOOGLE
+
     authKey = "key=" + oauth
-    url = base + location + "&" + radius + "&" + search + "&" + place_type + "&" + authKey
+    url = base + location + "&" + radius + "&" + search + "&" + place_type + "&" + rank_by + "&" + authKey
     print url
     return url
+# EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
 
-r = requests.get(
-    build_url(-33.8670, 151.1957, 5000, "coffee", goog_key)
-)
 
-jason = r.json()
-print jason['results'][0]['id']
+def get restaurants (lati, longi, rad, cat):
+    r = requests.get(
+        build_url(lati, longi, rad, cat, goog_key)
+    )
 
+    jason = r.json()
+    print jason['results'][0]['id']
 
 
 
