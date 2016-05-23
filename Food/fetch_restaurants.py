@@ -30,7 +30,7 @@ class Restaurant:
         )
 
 goog_key = "AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ"
-def build_url(latitude, longitude, rad, query, oauth, types="food", rankBy=None):
+def build_url(latitude, longitude, rad, query, oauth, types="food", rankBy="prominence"):
     base = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
     location = "location=" + str(latitude) + "," + str(longitude)
     radius = "radius=" + str(rad)
@@ -42,14 +42,14 @@ def build_url(latitude, longitude, rad, query, oauth, types="food", rankBy=None)
     else if rankBy is "distance":
         radius = "" #CANT HAVE RADIUS WHEN SORTING BY DISTANCE
         rank_by = "rankby=" + rankBy
-    else if rankBy is "prominence":
-        rank_by = "rankby" #CANT HAVE rankby=rating OR SOMETHING FOR SOME REASON, I DONT KNOW ASK GOOGLE
+    else if rankBy is "prominence": #REMEMBER, PROMINENCE =/= RATING, BUT ALSO INCLUDES GOOGLE SEARCH RANK AND OTHER NEAT STUFF
+        rank_by = "rankby=" + rankBy
 
     authKey = "key=" + oauth
     url = base + location + "&" + radius + "&" + search + "&" + place_type + "&" + rank_by + "&" + authKey
     print url
     return url
-# EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
+# EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&rankby=prominence&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
 
 
 def get restaurants (lati, longi, rad, cat):
