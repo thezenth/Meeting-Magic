@@ -38,10 +38,10 @@ def build_url(latitude, longitude, rad, query, oauth, types="food", rankBy="prom
 
     if rankBy is None:
         rank_by = ""
-    else if rankBy is "distance":
+    elif rankBy is "distance":
         radius = "" #CANT HAVE RADIUS WHEN SORTING BY DISTANCE
         rank_by = "rankby=" + rankBy
-    else if rankBy is "prominence": #REMEMBER, PROMINENCE =/= RATING, BUT ALSO INCLUDES GOOGLE SEARCH RANK AND OTHER NEAT STUFF
+    elif rankBy is "prominence": #REMEMBER, PROMINENCE =/= RATING, BUT ALSO INCLUDES GOOGLE SEARCH RANK AND OTHER NEAT STUFF
         rank_by = "rankby=" + rankBy
 
     authKey = "key=" + oauth
@@ -50,39 +50,39 @@ def build_url(latitude, longitude, rad, query, oauth, types="food", rankBy="prom
     return url
 # EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&rankby=prominence&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
 
-def get restaurants (lati, longi, rad, cat):
+def get_restaurants (lati, longi, rad, cat):
     r = requests.get(
         build_url(lati, longi, rad, cat, goog_key)
     )
 
     jason = r.json()
-    results = jason['results'][0]['id']
+    results = jason['results']
 
-    for i in (range(len(results)):
-        
+    for i in range(len(results)):
+        #if results[i]['id']
         ident = results[i]['id']
-
         name = results[i]['name']
         rest_latitude = results[i]['geometry']['lat'] #typing occurs in class
         rest_longitude = results[i]['geometry']['lng']
         rating = results[i]['rating']
+        hours = results[i]['opening_hours']
         address = results[i]['vicinity']
+        newRest = Restaurant(ident, name, address, rest_latitude, rest_longitude, rating)
+        print (newRest.__repr__)
 
 
 
-
-
-
+"""
 key = "LkwWeSeAZT1xCBdQRcAqsjsoKAHQVOm7tE4KzfjX"
-secret_key = "xI8R8pWMoRJspCY40g6rrAsr9s7idQ5JXoGzxEcO"
 
+secret_key = "xI8R8pWMoRJspCY40g6rrAsr9s7idQ5JXoGzxEcO"
 search_param = 'coffee'
 lat = 34.058583
 longi = -118.416582
 rad = 1000
+"""
 
-
-
+"""
 def spprint(txt, doPrint=False):
     idx1 = txt.index("u") + 1 # + 1 to include the ' at the very beginning
     idx2 = len(txt)
@@ -135,8 +135,9 @@ def get_restaurants ():
     pp.pprint(restsList)
 
     #spprint(data[0]["tel"], doPrint=True)
-
+"""
 #get_restaurants()
+
 
 """
 keyInclude = "&KEY=" + key
