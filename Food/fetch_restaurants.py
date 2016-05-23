@@ -14,19 +14,18 @@ pp = pprint.PrettyPrinter(indent=4) #pretty printer for debug
 
 #MAKE SURE TO KEEP THIS UPDATED WITH FOOD/FETCH_CONFIG.YAML
 class Restaurant:
-    def __init__(self, id):
-        self.id = str(id) #ALL VALUES FROM FETCH API MUST BE TYPED OR FORMATTING IS SUPER WEIRD
-        self.info = {}
-    def fetch_info(self, dSet, *args):
-        for a in args:
-            newKey = a
-            newValue = dSet.get(a, None)
-            self.info[newKey] = newValue
-
+    def __init__(self, ident, name, address, lati, longi, hours, rate):
+        self.id = str(ident) #ALL VALUES FROM FACTUAL API MUST BE TYPED OR FORMATTING IS SUPER WEIRD
+        self.name = str(name)
+        self.address = str(address)
+        self.latitude = float(lati)
+        self.longitude = float(longi)
+        self.hours = str(hours)
+        self.rating = float(rate)
 
     def __repr__(self): #printable representation of the object
-        return "%s(name=%r, address=%r, distance=%r, hours=%r)" % (
-            self.__class__.__name__, self.name, self.address, self.distance, self.hours
+        return "%s(id=%r, name=%r, address=%r, latitude=%r, longitude=%r, hours=%r, rating=%r)" % (
+            self.__class__.__name__, self.id, self.name, self.address, self.latitude, self.longitude, self.hours, self.rating
         )
 
 goog_key = "AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ"
@@ -58,12 +57,16 @@ def get restaurants (lati, longi, rad, cat):
 
     jason = r.json()
     results = jason['results'][0]['id']
+
     for i in (range(len(results)):
+        
         ident = results[i]['id']
+
         name = results[i]['name']
         rest_latitude = results[i]['geometry']['lat'] #typing occurs in class
         rest_longitude = results[i]['geometry']['lng']
-        rating = results[i]['geometry']['rating']
+        rating = results[i]['rating']
+        address = results[i]['vicinity']
 
 
 
