@@ -105,6 +105,8 @@ rad = 5000
 category = "coffee"
 get_restaurants(lati, longi, rad, category)
 
+#FACTUAL STUFF
+
 """
 key = "LkwWeSeAZT1xCBdQRcAqsjsoKAHQVOm7tE4KzfjX"
 
