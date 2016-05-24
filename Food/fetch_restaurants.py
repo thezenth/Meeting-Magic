@@ -25,7 +25,7 @@ class Restaurant:
         if len(hours) > 0:
             self.hours = ''.join(hours)
 
-        self.rating = float(rate)
+        self.rating = str(rate) #String because it is going to be displayed, not useful as a float --> also, allows it to be "Not available"
 
     def __repr__(self): #printable representation of the object
         return "%s(id=%r, name=%r, address=%r, latitude=%r, longitude=%r, hours=%r, rating=%r)" % (
@@ -69,7 +69,7 @@ def get_restaurants (lati, longi, rad, cat):
         address = "Not available"
         rest_latitude = 0.0
         rest_longitude = 0.0
-        rating = 0.0
+        rating = "Not available"
         hours = []
 
         if 'id' in curr_rest:
