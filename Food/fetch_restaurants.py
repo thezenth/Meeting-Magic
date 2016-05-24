@@ -1,34 +1,121 @@
 import json
 import yaml
-from factual import Factual
-from factual.utils import circle
 import pprint
 
-key = "LkwWeSeAZT1xCBdQRcAqsjsoKAHQVOm7tE4KzfjX"
-secret_key = "xI8R8pWMoRJspCY40g6rrAsr9s7idQ5JXoGzxEcO"
+#FACTUAL API
+from factual import Factual
+from factual.utils import circle
 
+
+#GOOGLE PLACES API
+import requests
+
+pp = pprint.PrettyPrinter(indent=4) #pretty printer for debug
+
+#MAKE SURE TO KEEP THIS UPDATED WITH FOOD/FETCH_CONFIG.YAML
+class Restaurant:
+    def __init__(self, ident, name, address, lati, longi, hours, rate):
+        self.id = str(ident) #ALL VALUES FROM FACTUAL API MUST BE TYPED OR FORMATTING IS SUPER WEIRD
+        self.name = str(name)
+        self.address = str(address)
+        self.latitude = float(lati)
+        self.longitude = float(longi)
+
+        self.hours = "Not available" #this is an array
+        if len(hours) > 0:
+            self.hours = ''.join(hours)
+
+        self.rating = float(rate)
+
+    def __repr__(self): #printable representation of the object
+        return "%s(id=%r, name=%r, address=%r, latitude=%r, longitude=%r, hours=%r, rating=%r)" % (
+            self.__class__.__name__, self.id, self.name, self.address, self.latitude, self.longitude, self.hours, self.rating
+        )
+
+goog_key = "AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ"
+def build_url(latitude, longitude, rad, query, oauth, types="food", rankBy="prominence"):
+    base = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
+    location = "location=" + str(latitude) + "," + str(longitude)
+    radius = "radius=" + str(rad)
+    search = "keyword=" + query
+    place_type = "types=" + types
+
+    if rankBy is None:
+        rank_by = ""
+    elif rankBy is "distance":
+        radius = "" #CANT HAVE RADIUS WHEN SORTING BY DISTANCE
+        rank_by = "rankby=" + rankBy
+    elif rankBy is "prominence": #REMEMBER, PROMINENCE =/= RATING, BUT ALSO INCLUDES GOOGLE SEARCH RANK AND OTHER NEAT STUFF
+        rank_by = "rankby=" + rankBy
+
+    authKey = "key=" + oauth
+    url = base + location + "&" + radius + "&" + search + "&" + place_type + "&" + rank_by + "&" + authKey
+    print url
+    return url
+# EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&rankby=prominence&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
+
+def get_restaurants (lati, longi, rad, cat):
+    r = requests.get(
+        build_url(lati, longi, rad, cat, goog_key)
+    )
+
+    jason = r.json()
+    results = jason['results']
+
+    for i in range(len(results)):
+        curr_rest = results[i]
+        ident = "Not available"
+        name = "Not available"
+        address = "Not available"
+        rest_latitude = 0.0
+        rest_longitude = 0.0
+        rating = 0.0
+        hours = []
+
+        if 'id' in curr_rest:
+            ident = curr_rest['id']
+
+        if 'name' in curr_rest:
+            name = curr_rest['name']
+
+        if 'vicinity' in curr_rest:
+            address = curr_rest['vicinity']
+
+        if 'geometry' in curr_rest:
+            if 'location' in curr_rest['geometry']:
+                if 'lat' in curr_rest['geometry']['location']:
+                    rest_latitude = curr_rest['geometry']['location']['lat']
+                if 'lng' in curr_rest['geometry']['location']:
+                    rest_longitude = curr_rest['geometry']['location']['lng']
+
+        if 'rating' in curr_rest:
+            rating = curr_rest['rating']
+
+        if 'opening_hours' in curr_rest:
+            if 'weekday_text' in curr_rest['opening_hours']:
+                if len(curr_rest['opening_hours']['weekday_text']) > 0:
+                    hours = curr_rest['opening_hours']['weekday_text']
+
+        newRest = Restaurant(ident, name, address, rest_latitude, rest_longitude, hours, rating)
+        print (newRest.__repr__)
+
+lati = 34.058583
+longi = -118.416582
+rad = 5000
+category = "coffee"
+get_restaurants(lati, longi, rad, category)
+
+"""
+key = "LkwWeSeAZT1xCBdQRcAqsjsoKAHQVOm7tE4KzfjX"
+
+secret_key = "xI8R8pWMoRJspCY40g6rrAsr9s7idQ5JXoGzxEcO"
 search_param = 'coffee'
 lat = 34.058583
 longi = -118.416582
 rad = 1000
+"""
 
-#MAKE SURE TO KEEP THIS UPDATED WITH FOOD/FETCH_CONFIG.YAML
-class Restaurant:
-    def __init__(self, id):
-        self.id = str(id) #ALL VALUES FROM FETCH API MUST BE TYPED OR FORMATTING IS SUPER WEIRD
-        self.info = {}
-    def fetch_info(self, dSet, *args):
-        for a in args:
-            newKey = a
-            newValue = dSet.get(a, None)
-            self.info[newKey] = newValue
-
-
-    def __repr__(self): #printable representation of the object
-        return "%s(name=%r, address=%r, distance=%r, hours=%r)" % (
-            self.__class__.__name__, self.name, self.address, self.distance, self.hours
-        )
-
+"""
 def spprint(txt, doPrint=False):
     idx1 = txt.index("u") + 1 # + 1 to include the ' at the very beginning
     idx2 = len(txt)
@@ -38,12 +125,12 @@ def spprint(txt, doPrint=False):
     else:
         return (newTxt)
 
-pp = pprint.PrettyPrinter(indent=4) #pretty printer for debug
+
 
 def get_restaurants ():
     factual = Factual(key, secret_key)
     places = factual.table('places')
-    data = places.search(search_param).geo(circle(lat, longi, rad)).data() #outputs a list of different objects, each object having info on the place 
+    data = places.search(search_param).geo(circle(lat, longi, rad)).data() #outputs a list of different objects, each object having info on the place
     print data
     #pp.pprint(data) #good for debug, takes a little bit
     '''
@@ -81,8 +168,9 @@ def get_restaurants ():
     pp.pprint(restsList)
 
     #spprint(data[0]["tel"], doPrint=True)
+"""
+#get_restaurants()
 
-get_restaurants()
 
 """
 keyInclude = "&KEY=" + key
