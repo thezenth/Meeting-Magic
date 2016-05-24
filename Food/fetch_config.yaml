@@ -1,0 +1,12 @@
+'get':
+  'dist': '$distance'
+  'address': 'address'
+  'categories': 'category_labels'
+  'hours': 'hours_display'
+  'lat': 'latitude'
+  'locality': 'locality'
+  'long': "longitude"
+  'name': 'name'
+  'postcode':
+  'tel': 'tel'
+  'web': 'website'
