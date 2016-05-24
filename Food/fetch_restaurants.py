@@ -20,7 +20,11 @@ class Restaurant:
         self.address = str(address)
         self.latitude = float(lati)
         self.longitude = float(longi)
-        self.hours = str(hours)
+
+        self.hours = "Not available" #this is an array
+        if len(hours) > 0:
+            self.hours = ''.join(hours)
+
         self.rating = float(rate)
 
     def __repr__(self): #printable representation of the object
@@ -59,14 +63,39 @@ def get_restaurants (lati, longi, rad, cat):
     results = jason['results']
 
     for i in range(len(results)):
-        #if results[i]['id']
-        ident = results[i]['id']
-        name = results[i]['name']
-        rest_latitude = results[i]['geometry']['location']['lat'] #typing occurs in class
-        rest_longitude = results[i]['geometry']['location']['lng']
-        rating = results[i]['rating']
-        hours = results[i]['opening_hours']
-        address = results[i]['vicinity']
+        curr_rest = results[i]
+        ident = "Not available"
+        name = "Not available"
+        address = "Not available"
+        rest_latitude = 0.0
+        rest_longitude = 0.0
+        rating = 0.0
+        hours = []
+
+        if 'id' in curr_rest:
+            ident = curr_rest['id']
+
+        if 'name' in curr_rest:
+            name = curr_rest['name']
+
+        if 'vicinity' in curr_rest:
+            address = curr_rest['vicinity']
+
+        if 'geometry' in curr_rest:
+            if 'location' in curr_rest['geometry']:
+                if 'lat' in curr_rest['geometry']['location']:
+                    rest_latitude = curr_rest['geometry']['location']['lat']
+                if 'lng' in curr_rest['geometry']['location']:
+                    rest_longitude = curr_rest['geometry']['location']['lng']
+
+        if 'rating' in curr_rest:
+            rating = curr_rest['rating']
+
+        if 'opening_hours' in curr_rest:
+            if 'weekday_text' in curr_rest['opening_hours']:
+                if len(curr_rest['opening_hours']['weekday_text']) > 0:
+                    hours = curr_rest['opening_hours']['weekday_text']
+
         newRest = Restaurant(ident, name, address, rest_latitude, rest_longitude, hours, rating)
         print (newRest.__repr__)
 
