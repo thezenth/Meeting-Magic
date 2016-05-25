@@ -1,4 +1,4 @@
-class User:
+class LocalUser:
     def __init__(self, username): #initialize class
         self.username = username
         self.food_prefs = []

@@ -1,7 +1,7 @@
 import yaml
 from user_classes import *
 
-newUser = User("Lajja")
+newUser = LocalUser("Lajja")
 newUser.add_food_prefs("Punjabi", "Gujarati", "Taco Bell", "Pizza")
 
 data = newUser
