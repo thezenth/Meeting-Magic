@@ -1,20 +1,17 @@
-from peewee import *
+import os
+import sys
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
+from sqlalchemy import create_engine
 
-database = MySQLDatabase('MeetingMagic', **{'password': '123noah123'})
+Base = declarative_base()
 
-class UnknownField(object):
-    pass
-
-class BaseModel(Model):
-    class Meta:
-        database = database
-
-class User(BaseModel):
-    food_pref = CharField(null=True)
-    passwd = CharField(null=True)
-    u = IntegerField(db_column='u_id', null=True)
-    u_name = CharField(null=True)
-
-    class Meta:
-        db_table = 'User'
-
+class User(Base):
+    __tablename__ = 'person'
+    # Here we define columns for the table person
+    # Notice that each column is also a normal Python instance attribute.
+    u_id = Column(Integer, primary_key=True)
+    u_name = Column(String(20), nullable=False)
+    passwd = Column(String(20), nullable=False)
+    food_pref = Column(String(20), nullable=False)
