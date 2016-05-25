@@ -10,4 +10,7 @@ db.connect()
 def read_user(u_name):
     usr = User.get(User.username == u_name)
     locUsr = LocalUser(usr.username)
+    food_prefs = (usr.food_pref).split(",")
+    locUsr.add_food_prefs(food_prefs)
     db.close()
+    return locUsr
