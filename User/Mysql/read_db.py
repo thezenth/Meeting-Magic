@@ -1,6 +1,10 @@
+# -- SQLAlchemy -- #
 from models import Base, User
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+# -- user_classes.py --#
+from user_classes import LocalUser
 
 db_owner = "root"
 db_passwd = "123noah123"
@@ -14,6 +18,15 @@ DBSession.bind = engine
 session = DBSession()
 
 print session.query(User).filter(User.u_name == "NoahW").one()
+
+def read_user(uname):
+    dbUser = session.query(User).filter(User.u_name == "NoahW").one()
+    locUser = LocalUser(dbUser.u_name)
+    food_prefs = (dbUser.food_pref).split(",")
+    locUser.add_food_prefs(food_prefs)
+    return locUser
+
+print read_user("NoahW")
 
 """
 # Make a query to find all Persons in the database
