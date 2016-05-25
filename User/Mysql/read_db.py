@@ -1,12 +1,37 @@
+from models import Base, User
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-engine = create_engine('mysql://root:123noah123@localhost/MeetingMagic')
+db_owner = "root"
+db_passwd = "123noah123"
+host = "localhost"
+db = "MeetingMagic"
 
-connection = engine.connect()
-result = connection.execute("select u_name from User")
-for row in result:
-    print("username:", row['u_name'])
-connection.close()
+engine = create_engine('mysql://' + db_owner + ':' + db_passwd + '@' + host +'/' + db)
+Base.metadata.bind = engine
+DBSession = sessionmaker()
+DBSession.bind = engine
+session = DBSession()
+
+print session.query(User).filter(User.u_name == "NoahW").one()
+
+"""
+# Make a query to find all Persons in the database
+session.query(Person).all()
+# Return the first Person from all Persons in the database
+person = session.query(Person).first()
+person.name
+u'new person'
+
+# Find all Address whose person field is pointing to the person object
+session.query(Address).filter(Address.person == person).all()
+
+# Retrieve one Address whose person field is point to the person object
+session.query(Address).filter(Address.person == person).one()
+address = session.query(Address).filter(Address.person == person).one()
+address.post_code
+u'00000'
+"""
 
 """
 #TUTORIAL LINK:http://docs.peewee-orm.com/en/latest/peewee/quickstart.html
