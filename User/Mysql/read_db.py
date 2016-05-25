@@ -14,3 +14,5 @@ def read_user(u_name):
     locUsr.add_food_prefs(food_prefs)
     db.close()
     return locUsr
+
+noah = read_user("NoahW")
