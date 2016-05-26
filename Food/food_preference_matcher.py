@@ -18,12 +18,14 @@ def compare(user1, user2):
 
     return (same)
 
+"""
 f = open("/home/noah/Meeting-Magic/User/user_config.yaml", "r")
 text = f.read()
 yamld = yaml.load(text)
 localUser = yamld #remember, this is the funky human-readable but class instantiating thing, like User(username=bsasf, etc.)
 #REPLACE THIS WITH GETTING OTHER USER
 otherUser = LocalUser("Noah")
-otherUser.add_food_prefs("Gujarati", "Mango", "Pizza", "Jewish")
+#otherUser.add_food_prefs("Gujarati", "Mango", "Pizza", "Jewish")
 
 sameList = compare(localUser, otherUser)
+"""

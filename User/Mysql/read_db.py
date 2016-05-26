@@ -21,9 +21,9 @@ print session.query(User).filter(User.u_name == "NoahW").one()
 
 def read_user(uname):
     dbUser = session.query(User).filter(User.u_name == "NoahW").one()
-    locUser = LocalUser(dbUser.u_name)
-    food_prefs = (dbUser.food_pref).split(",")
-    locUser.add_food_prefs(food_prefs)
+    locUser = LocalUser(dbUser.id, dbUser.u_name)
+    db_food_prefs = (dbUser.food_pref).split(",")
+    locUser.food_prefs = db_food_prefs
     return locUser
 
 print read_user("NoahW")
