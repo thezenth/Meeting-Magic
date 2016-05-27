@@ -15,22 +15,32 @@ def page_init():
         header="Something at the top",
         footer="The bitter end."
     )
-page_init()
-page.form(
-    '"First name": <br> <input type="text" name="firstname"> <br> Last name:<br> <input type="text" name="lastname">',
-    action='LINK TO SCRIPT FILE ADyags yfak OR MAYBE NEW HTML FILE',
-    method='get'
-    id='nameform'
-)
-page.form.close()
 
-page.button(
-    'Submit',
-    type='submit',
-    form='nameform',
-    value='Submit'
-)
-page.button.close()
+def main_html():
+    page_init()
+    page.form(
+        '"First name": <br> <input type="text" name="firstname"> <br> Last name:<br> <input type="text" name="lastname">',
+        action='LINK TO SCRIPT FILE ADyags yfak OR MAYBE NEW HTML FILE',
+        method='get'
+        id='nameform'
+    )
+    page.form.close()
+
+    page.button(
+        'Submit',
+        type='submit',
+        form='nameform',
+        value='Submit'
+    )
+    page.button.close()
+
+def results_html(items):
+    page_init()
+
+    page.ul()
+    page.li(items)
+    page.ul.close()
 
 f = open('~/Meeting-Magic/Web/index.html', 'w')
 f.write(page)
+f.close()
