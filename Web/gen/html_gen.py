@@ -7,11 +7,15 @@ images = ("thumb1.jpg", "thumb2.jpg", "more.jpg", "more2.jpg")
 css1 = 'styles.css'
 
 page = markup.page()
-page.init( title="Meeting-Magic",
-           css=(css1),
-           header="Something at the top",
-           footer="The bitter end." )
 
+def page_init():
+    page.init(
+        title="Meeting-Magic",
+        css=(css1),
+        header="Something at the top",
+        footer="The bitter end."
+    )
+page_init()
 page.form(
     '"First name": <br> <input type="text" name="firstname"> <br> Last name:<br> <input type="text" name="lastname">',
     action='LINK TO SCRIPT FILE ADyags yfak OR MAYBE NEW HTML FILE',
