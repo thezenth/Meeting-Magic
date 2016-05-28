@@ -5,6 +5,24 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var PythonShell = require('python-shell');
 
+function checkPythonOut(text) {
+  id = 'DEBUG'
+  if text.contains(":") {
+    id = text.substring(
+      0,
+      text.indexOf(':')
+    );
+  }
+
+  switch(id) {
+    case 1:
+      id = 'DEBUG'
+      console.log(text)
+      break;
+  }
+};
+
+
 //Options for py-node.py in Python-Shell
 //Check https://www.npmjs.com/package/python-shell for options
 var options = {
@@ -54,7 +72,7 @@ io.on('connection', function(socket){
     var pyshell = new PythonShell('check_userinfo.py', { mode: 'text' });
     //listening for a message from the python file running
     pyshell.on('message', function (message) {
-      console.log(message);
+      checkPythonOut(message);
     });
 
   });

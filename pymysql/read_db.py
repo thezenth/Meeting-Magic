@@ -40,7 +40,7 @@ def read_user(uname, make_new=False, new_pwd=None):
         locUser.food_prefs = db_food_prefs
     return locUser
 
-pn.tell_node("Hi, my name is read_db.py!")
+#pn.tell_node("Hi, my name is read_db.py!")
 #print read_user("NoahW")
 
 
