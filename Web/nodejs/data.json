@@ -1,0 +1,15 @@
+[
+	{
+		"_comment": "INPUT",
+		"isUser": "true"
+	},
+	{
+		"_comment": "OUTPUT",
+		"userInfo": [
+			{
+				"username": "noah",
+				"password": "1234623"
+			}
+		]
+	}
+]
