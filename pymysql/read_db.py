@@ -11,6 +11,9 @@ from user_classes import LocalUser
 # -- write_db.py -- #
 import write_db as wdb
 
+# -- py_node.py -- #
+import Web.nodejs.py_node as pn
+
 db_owner = "root"
 db_passwd = "123noah123"
 host = "localhost"
@@ -37,7 +40,10 @@ def read_user(uname, make_new=False, new_pwd=None):
         locUser.food_prefs = db_food_prefs
     return locUser
 
+pn.tell_node("Hi, my name is read_db.py!")
 #print read_user("NoahW")
+
+
 
 """
 # Make a query to find all Persons in the database
