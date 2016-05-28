@@ -1,9 +1,20 @@
 var express = require('express');
 var app = express();
 
+var jf = require('jsonfile')
+
+
+
 app.get('/', function (req, res) {
-   res.send('Hello World');
+
+  //JSON
+  jf.readFile('./data.json', function(err, obj) {
+    res.send(obj[0]["html"])
+  });
+
 });
+
+
 
 var server = app.listen(8081, function () {
 

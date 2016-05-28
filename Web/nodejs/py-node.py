@@ -1,3 +1,25 @@
-import sys
-print ("<!DOCTYPE html><html><body><h1>My First Heading</h1><p>My first paragraph.</p></body></html>")
-sys.stdout.flush()
+#import sys
+#print ("<!DOCTYPE html><html><body><h1>My First Heading</h1><p>My first paragraph.</p></body></html>")
+#sys.stdout.flush()
+import json
+
+stuff = json.dumps(
+    [
+        {
+            "_comment": "INPUT",
+            "bar": [
+                "baz",
+                None,
+                1.0,
+                2
+            ]
+        },
+        {
+            "_comment": "OUTPUT"
+        }
+    ],
+    indent=4
+)
+f = open('data.json', 'w')
+f.write(stuff)
+f.close()
