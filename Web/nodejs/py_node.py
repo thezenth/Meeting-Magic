@@ -1,17 +1,15 @@
-#import sys
-#print ("<!DOCTYPE html><html><body><h1>My First Heading</h1><p>My first paragraph.</p></body></html>")
-#sys.stdout.flush()
+
 import json
 import sys
 
-f = open('data.json', 'r')
-f_str = f.read()
-parsed = json.loads(f_str)
-output = parsed[1]
-allUsers = output['userInfo']
+def tell_node(msg, ident="DEBUG"): #Identifier is used to parse; i.e. node checks for a list of identifiers, and if not DEBUG, then does something accordingly
+    print ("# -- PYTHON -- #")
+    print (ident + ":" + msg)
+"""
 print ("# -- PYTHON -- #")
 print ("USERNAME: " + allUsers[0]['username'])
 print ("PASSWORD: " + allUsers[0]['password'])
+"""
 
 """
 stuff = json.dumps(
@@ -35,4 +33,10 @@ stuff = json.dumps(
 f = open('data.json', 'w')
 f.write(stuff)
 f.close()
+"""
+
+"""
+import sys
+print ("<!DOCTYPE html><html><body><h1>My First Heading</h1><p>My first paragraph.</p></body></html>")
+sys.stdout.flush()
 """
