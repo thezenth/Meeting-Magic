@@ -1,4 +1,25 @@
-var express = require('express');
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', function(socket){
+
+  socket.on('message', function(msg){
+    //console.log("HELLO");
+    console.log('RECIEVED: ', msg);
+  });
+});
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});
+
+
+/* var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
@@ -9,24 +30,32 @@ app.get('/', function (req, res) {
   res.sendFile('/home/noah/Meeting-Magic/Web/nodejs/index.html');
 });
 
-/*io.on('connection', function (socket) {
+io.on('connection', function (socket) {
   socket.emit('news', { hello: 'world' });
   socket.on('my other event', function (data) {
     console.log(data);
   });
-});*/
+});
 
-/*var listener = io.listen(server);
+var listener = io.listen(server);
 listener.sockets.on('connection', function(socket){
     socket.emit('message', {'message': 'hello world'});
-});*/
-
-io.sockets.on('connection', function(socket){
-    //send data to client
-    setInterval(function(){
-        socket.emit('date', {'date': new Date()});
-    }, 1000);
 });
+
+listener.sockets.on('connection', function(socket){
+  //send data to client
+  //setInterval(function(){
+  //  socket.emit('date', {'date': new Date()});
+  //}, 1000);
+
+  //recieve client data
+  io.on('connection', function(socket){
+    socket.on('chat message', function(msg){
+      console.log('message: ' + msg);
+    });
+  });
+});
+*/
 
 /* var express = require('express');
 var app = express();
