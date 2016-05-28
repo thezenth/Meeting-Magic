@@ -8,14 +8,24 @@ app.get('/', function(req, res){
 
 io.on('connection', function(socket){
 
-  socket.on('message', function(msg){
+  socket.on('_userInfo', function(userInfo){
     //console.log("HELLO");
-    console.log('RECIEVED: ', msg);
+    console.log('RECIEVED: ' + userInfo);
+    username = userInfo.substring(
+      0,
+      userInfo.indexOf("&")
+    );
+    password = userInfo.substring(
+      userInfo.indexOf("&") + 1,
+      userInfo.length
+    );
+    console.log("USERNAME: " + username);
+    console.log("PASSWORD: " + password);
   });
 });
 
 http.listen(3000, function(){
-  console.log('listening on *:3000');
+  console.log("listening on *:3000");
 });
 
 

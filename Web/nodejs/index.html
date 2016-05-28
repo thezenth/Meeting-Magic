@@ -23,19 +23,17 @@
     //socket.emit('_TEST', 'HELLO')
 
     function sendMessage() {
-        var msg = (
+        var userInfo = (
           "username=" + document.getElementById('username').value +
           "&" +
           "password=" + document.getElementById('password').value
         );
-        console.log(msg)
-        socket.emit('message',msg);
-        msg.value = '';
+        socket.emit('_userInfo',userInfo);
+        userInfo.value = '';
         return false;
     }
     </script>
 
-    <ul id="messages"></ul>
     <form action="" onsubmit="javascript:sendMessage();">
         Username: <input id="username" autocomplete="off" /> <br>
         Password: <input id="password" autocomplete="off" type="password"/> <br>
