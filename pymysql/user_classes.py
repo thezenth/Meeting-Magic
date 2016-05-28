@@ -1,9 +1,10 @@
 class LocalUser:
-    def __init__(self, id, username, password): #initialize class
+    def __init__(self, ident, username, password): #initialize class
+        self.id = ident
         self.username = username
-        self.id = id
-        self.food_prefs = []
         self.password = password
+        self.food_prefs = []
+
 
     def add_food_prefs(self, *args): #add a food preference
         for p in args:

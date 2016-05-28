@@ -1,3 +1,4 @@
+"""
 import yaml
 from user_classes import *
 
@@ -16,7 +17,7 @@ print categories["dietary_restrictions"][0]
 
 #stream2 = file('food_categories.yaml', #'w')
 #yaml.dump(testDict, stream2#)
-
+"""
 # DEBUG
 '''
 print (

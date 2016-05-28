@@ -1,5 +1,5 @@
 # -- SQLAlchemy -- #
-from models import Base, User
+from models_db import User, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -17,16 +17,16 @@ DBSession = sessionmaker()
 DBSession.bind = engine
 session = DBSession()
 
-print session.query(User).filter(User.u_name == "NoahW").one()
+#print session.query(User).filter(User.u_name == "NoahW").one()
 
 def read_user(uname):
-    dbUser = session.query(User).filter(User.u_name == "NoahW").one()
-    locUser = LocalUser(dbUser.id, dbUser.u_name)
+    dbUser = session.query(User).filter(User.u_name == uname).one()
+    locUser = LocalUser(dbUser.id, dbUser.u_name, dbUser.passwd)
     db_food_prefs = (dbUser.food_pref).split(",")
     locUser.food_prefs = db_food_prefs
     return locUser
 
-print read_user("NoahW")
+#print read_user("NoahW")
 
 """
 # Make a query to find all Persons in the database

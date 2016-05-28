@@ -51,7 +51,7 @@ io.on('connection', function(socket){
     });
 
     //new PythonShell starts running the python file
-    var pyshell = new PythonShell('py-node.py', { mode: 'text' });
+    var pyshell = new PythonShell('check_userinfo.py', { mode: 'text' });
     //listening for a message from the python file running
     pyshell.on('message', function (message) {
       console.log(message);

@@ -4,14 +4,13 @@
 import json
 import sys
 
-f = open('data.json', 'r')
-f_str = f.read()
-parsed = json.loads(f_str)
-output = parsed[1]
-allUsers = output['userInfo']
-print ("# -- PYTHON -- #")
-print ("USERNAME: " + allUsers[0]['username'])
-print ("PASSWORD: " + allUsers[0]['password'])
+def tell_node(msg, ident="DEBUG"): #Identifier is used to parse; i.e. node checks for a list of identifiers, and if not DEBUG, then does something accordingly
+    print ("# -- PYTHON -- #")
+    print (ident + ":" + msg)
+
+#print ("# -- PYTHON -- #")
+#print ("USERNAME: " + allUsers[0]['username'])
+#print ("PASSWORD: " + allUsers[0]['password'])
 
 """
 stuff = json.dumps(
