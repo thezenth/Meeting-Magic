@@ -5,6 +5,12 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var PythonShell = require('python-shell');
 
+//Options for py-node.py in Python-Shell
+//Check https://www.npmjs.com/package/python-shell for options
+var options = {
+  mode: 'text'
+};
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
@@ -39,9 +45,9 @@ io.on('connection', function(socket){
       fs.writeFile('data.json', JSON.stringify(json, null, '\t'));
     });
 
-    PythonShell.run('py-node.py', function (err){
-      if (err) throw err;
-      console.log('finished');
+    var pyshell = new PythonShell('py-node.py', { mode: 'text' });
+    pyshell.on('message', function (message) {
+      console.log(message);
     });
 
   });

@@ -12,8 +12,6 @@ allUsers = output['userInfo']
 print ("# -- PYTHON -- #")
 print ("USERNAME: " + allUsers[0]['username'])
 print ("PASSWORD: " + allUsers[0]['password'])
-sys.stdout.flush()
-
 
 """
 stuff = json.dumps(
