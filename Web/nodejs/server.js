@@ -2,7 +2,8 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-var fs = require('fs')
+var fs = require('fs');
+var PythonShell = require('python-shell');
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -36,6 +37,11 @@ io.on('connection', function(socket){
       json[1]['userInfo'][0]['password'] = info.password;
 
       fs.writeFile('data.json', JSON.stringify(json, null, '\t'));
+    });
+
+    PythonShell.run('py-node.py', function (err){
+      if (err) throw err;
+      console.log('finished');
     });
 
   });
