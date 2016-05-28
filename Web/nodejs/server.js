@@ -2,6 +2,8 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var fs = require('fs')
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
@@ -11,16 +13,31 @@ io.on('connection', function(socket){
   socket.on('_userInfo', function(userInfo){
     //console.log("HELLO");
     console.log('RECIEVED: ' + userInfo);
+
     username = userInfo.substring(
-      0,
+      userInfo.indexOf("=") + 1, //returns first index of = sign
       userInfo.indexOf("&")
     );
     password = userInfo.substring(
-      userInfo.indexOf("&") + 1,
+      userInfo.lastIndexOf("=") + 1, //returns the second index of the = sign
       userInfo.length
     );
+
     console.log("USERNAME: " + username);
     console.log("PASSWORD: " + password);
+
+    info = {};
+    info.username = username;
+    info.password = password;
+
+    fs.readFile('data.json', function (err, data) {
+      var json = JSON.parse(data);
+      json[1]['userInfo'][0]['username'] = info.username;
+      json[1]['userInfo'][0]['password'] = info.password;
+
+      fs.writeFile('data.json', JSON.stringify(json, null, '\t'));
+    });
+
   });
 });
 
