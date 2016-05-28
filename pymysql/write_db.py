@@ -1,5 +1,5 @@
 # -- SQLAlchemy -- #
-from models import Base, User
+from models_db import Base, User
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -32,7 +32,7 @@ def write_user(new_user):
     session.add(new_db_user)
     session.commit()
 
-billy = LocalUser(2, "Billy Joe", "BillyIsTheBest")
-billy.food_prefs = ["Mexican", "Italian", "American"]
-write_user(billy)
+#billy = LocalUser(2, "Billy Joe", "BillyIsTheBest")
+#billy.food_prefs = ["Mexican", "Italian", "American"]
+#write_user(billy)
 #def update_user(curr_user):

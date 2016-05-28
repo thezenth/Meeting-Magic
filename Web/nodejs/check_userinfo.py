@@ -14,6 +14,10 @@ currUser = allUsers[0]
 username = currUser['username']
 password = currUser['password']
 
-usr = rdb.read_user(username)
+usr = rdb.read_user(
+    username,
+    make_new=True,
+    new_pwd=password
+)
 print ("HELLO")
 tell_node(usr.__repr__())

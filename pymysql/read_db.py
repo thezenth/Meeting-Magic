@@ -1,10 +1,15 @@
-# -- SQLAlchemy -- #
+# -- Mysql Stuff -- #
 from models_db import User, Base
+# SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import func #used to get row count
 
-# -- user_classes.py --#
+# -- user_classes.py -- #
 from user_classes import LocalUser
+
+# -- write_db.py -- #
+import write_db as wdb
 
 db_owner = "root"
 db_passwd = "123noah123"
@@ -19,11 +24,17 @@ session = DBSession()
 
 #print session.query(User).filter(User.u_name == "NoahW").one()
 
-def read_user(uname):
-    dbUser = session.query(User).filter(User.u_name == uname).one()
-    locUser = LocalUser(dbUser.id, dbUser.u_name, dbUser.passwd)
-    db_food_prefs = (dbUser.food_pref).split(",")
-    locUser.food_prefs = db_food_prefs
+def read_user(uname, make_new=False, new_pwd=None):
+    dbUser = session.query(User).filter(User.u_name == uname).first()
+    if dbUser is None:
+        if make_new:
+            rows = session.query(func.count(User.id)).scalar() # get the number of users, related to the number of rows using primary key of id
+            locUser = LocalUser(rows+1, uname, new_pwd) # make a new user
+            wdb.write_user(locUser) # write the new user to the database
+    else:
+        locUser = LocalUser(dbUser.id, dbUser.u_name, dbUser.passwd)
+        db_food_prefs = (dbUser.food_pref).split(",")
+        locUser.food_prefs = db_food_prefs
     return locUser
 
 #print read_user("NoahW")
