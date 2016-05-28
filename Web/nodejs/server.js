@@ -11,6 +11,7 @@ var options = {
   mode: 'text'
 };
 
+//Send the html file, which also has some bits of code to send data from client to server
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
@@ -21,6 +22,7 @@ io.on('connection', function(socket){
     //console.log("HELLO");
     console.log('RECIEVED: ' + userInfo);
 
+    //get username and password out of string formatted like username=USERNAME&password=PASSWORD
     username = userInfo.substring(
       userInfo.indexOf("=") + 1, //returns first index of = sign
       userInfo.indexOf("&")
@@ -33,19 +35,24 @@ io.on('connection', function(socket){
     console.log("USERNAME: " + username);
     console.log("PASSWORD: " + password);
 
+    //take parsed username and password into easy to handle object
     info = {};
     info.username = username;
     info.password = password;
 
+    //read the existing data.json file, and parse that into a local dictionary like JSON structure
     fs.readFile('data.json', function (err, data) {
       var json = JSON.parse(data);
+      //edit the dictionary-JSON structure to reflect newly recieved username and password
       json[1]['userInfo'][0]['username'] = info.username;
       json[1]['userInfo'][0]['password'] = info.password;
-
-      fs.writeFile('data.json', JSON.stringify(json, null, '\t'));
+      //write the edited structure in its entirity to the data.json file
+      fs.writeFile('data.json', JSON.stringify(json, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
     });
 
+    //new PythonShell starts running the python file
     var pyshell = new PythonShell('py-node.py', { mode: 'text' });
+    //listening for a message from the python file running
     pyshell.on('message', function (message) {
       console.log(message);
     });
@@ -53,6 +60,7 @@ io.on('connection', function(socket){
   });
 });
 
+//Listening on port 3000
 http.listen(3000, function(){
   console.log("listening on *:3000");
 });
