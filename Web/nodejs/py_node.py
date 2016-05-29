@@ -3,8 +3,7 @@ import json
 import sys
 
 def tell_node(msg, ident="DEBUG"): #Identifier is used to parse; i.e. node checks for a list of identifiers, and if not DEBUG, then does something accordingly
-    print ("# -- PYTHON -- #")
-    print (ident + ":" + msg)
+    print ("PYTHON_" + ident + ":" + msg)
 """
 print ("# -- PYTHON -- #")
 print ("USERNAME: " + allUsers[0]['username'])

@@ -37,10 +37,9 @@ usr2 = rdb.read_user(otherUser)
 # Compare preferences and get similar list
 prefs_list = fpm.compare(usr1, usr2)
 #pn.tell_node(','.join(prefs_list))
+pn.tell_node("Finding restaurants...")
 for i in range(len(prefs_list)):
-     foundList = fr.get_restaurants(
-        lat,
-        lon,
-        rad,
-        prefs_list[i]
-     )
+    pn.tell_node("Getting set " + str(i))
+    foundList = fr.get_restaurants(lat,lon,radius,prefs_list[i])
+    if len(foundList) is 0:
+        pn.tell_node("No restaurants found!")
