@@ -16,19 +16,25 @@
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
     var socket = io();
-    socket.on('change_html', function(data) {
+    /*socket.on('change_page', function(data) {
+      io.connect('http://127.0.0.1:3000/meeting.html');
+    });*/
+    /*socket.on('change_html', function(data) {
       document.getElementById('main body').outerHTML = data.body;
     });
     socket.emit('_TEST', 'HELLO')
+    */
 
-    function sendUserInfo() {
+    window.sendUserInfo = function() {
         var userInfo = (
-          "username=" + document.getElementById('username').value +
+          "username=" +  document.getElementById('username').value +
           "&" +
           "password=" + document.getElementById('password').value
         );
         socket.emit('_userInfo',userInfo);
         userInfo.value = '';
+        window.location = "http://127.0.0.1:3000/meeting.html";
+        event.preventDefault();
         return false;
     }
 
@@ -45,10 +51,10 @@
     </script>
   </head>
   <body id="main body">
-    <form action="" onsubmit="javascript:sendUserInfo();">
+    <form action="">
         Username: <input id="username" autocomplete="off" /> <br>
         Password: <input id="password" autocomplete="off" type="password"/> <br>
-        <button>Submit</button>
+        <button onclick="sendUserInfo()">Submit</button>
     </form>
   </body>
 </html>

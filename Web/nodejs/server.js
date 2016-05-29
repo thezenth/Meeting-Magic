@@ -1,4 +1,5 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
@@ -6,6 +7,7 @@ var fs = require('fs');
 var PythonShell = require('python-shell');
 
 var encoding = require("encoding");
+
 
 function checkPythonOut(text) {
   id = 'DEBUG'
@@ -37,10 +39,12 @@ var options = {
   mode: 'text'
 };
 
-//Send the html file, which also has some bits of code to send data from client to server
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
+app.use(express.static(__dirname + '/views'));
+/*app.get('/', function(req, res){
+  console.log('DEBUG:THIS IS THE FIRST APP.GET')
+  //res.redirect('127.0.0.1:3000/index.html')
+  res.redirect('/meeting.html');
+});*/
 
 io.on('connection', function(socket){
 
@@ -94,15 +98,14 @@ io.on('connection', function(socket){
           console.log(message)
           break;
         case 'USER_AUTH':
+          console.log(message)
           //AFTER USER AUTHENTICATION AND SUCH, LOAD THE MEETING PAGE TO ACTUALLY SETUP THE MEETING
           //console.log('ID IS USER_AUTH')
-          console.log('DEBUG:CHANGING HTML TO meeting.html');
-
-          //app.get('/index.html', function(req, res){
-          //  res.sendFile(__dirname + '/meeting.html');
+          //console.log('DEBUG:CHANGING HTML TO meeting.html');
+          //app.get('/meeting', function (req, res) {
+          //  res.render('meeting.html');
           //});
-
-          meeting_body = '<body id="main body"><form action="" onsubmit="javascript:sendMeetingInfo();">Other user: <input id="otherUser" autocomplete="off" /><br>Coordinates: <input id="coords" autocomplete="off"/><br><button>Submit</button></form></body>'
+          //meeting_body = '<body id="main body"><form action="" onsubmit="javascript:sendMeetingInfo();">Other user: <input id="otherUser" autocomplete="off" /><br>Coordinates: <input id="coords" autocomplete="off"/><br><button>Submit</button></form></body>'
           /*fs.readFile('meeting.html', function (err,data) {
             if (err) {
               return console.log(err);
@@ -110,9 +113,9 @@ io.on('connection', function(socket){
             meeting_body = data;
           });*/
           //console.log(meeting_body);
-          io.emit('change_html', {
-            body: meeting_body
-          });
+          //io.emit('change_page', {
+          // body: '_TEST'
+          //});
           break;
         default:
           console.log(message)
