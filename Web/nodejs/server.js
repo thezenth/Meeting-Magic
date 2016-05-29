@@ -138,6 +138,8 @@ index_nsp.on('connection', function(socket){
   });
 });
 
+var restaurants = [];
+
 meeting_nsp.on('connection', function(socket){
   dbg("Recieving connection to meeting.html")
   socket.on('_meetingInfo', function(meetingInfo){
@@ -180,43 +182,14 @@ meeting_nsp.on('connection', function(socket){
     });
     var pyshell1 = new PythonShell('match.py', { mode: 'text' });
     pyshell1.on('message', function (message) {
-      //message = encoding.convert(message, '');
-      id = ''
-      if (message.indexOf(":") !== -1) {
-        //console.log("HELLO");
-        id = message.substring(
-          0,
-          message.indexOf(':')
-        );
-      }
-      switch(id) {
-        case 'DEBUG':
-          console.log(message)
-          break;
-        case 'USER_AUTH':
-          console.log(message)
-          //AFTER USER AUTHENTICATION AND SUCH, LOAD THE MEETING PAGE TO ACTUALLY SETUP THE MEETING
-          //console.log('ID IS USER_AUTH')
-          //console.log('DEBUG:CHANGING HTML TO meeting.html');
-          //app.get('/meeting', function (req, res) {
-          //  res.render('meeting.html');
-          //});
-          //meeting_body = '<body id="main body"><form action="" onsubmit="javascript:sendMeetingInfo();">Other user: <input id="otherUser" autocomplete="off" /><br>Coordinates: <input id="coords" autocomplete="off"/><br><button>Submit</button></form></body>'
-          /*fs.readFile('meeting.html', function (err,data) {
-            if (err) {
-              return console.log(err);
-            }
-            meeting_body = data;
-          });*/
-          //console.log(meeting_body);
-          //io.emit('change_page', {
-          // body: '_TEST'
-          //});
-          break;
-        default:
-          console.log(message)
-          break;
-      }
+      console.log(message)
+    });
+    //somewhere in the python data.json is written to, with all the results
+
+    fs.readFile('data.json', function (err, data) {
+      var json = JSON.parse(data);
+      //edit the dictionary-JSON structure to reflect newly recieved username and password
+      restaurants = json[0]['restaurants'] //restaurants is a global variable
     });
     socket.emit("change_html", "_TEST") // Once the python is done and results.html has been updated, tell the client's meeting.html to change the page to results.html
 
@@ -225,6 +198,9 @@ meeting_nsp.on('connection', function(socket){
 
 results_nsp.on('connection', function(socket){
   dbg("Recieving connection to results.html");
+  for (a = 0; a<restaurants.length; a++) {
+    socket.emit('_results', restaurants[a].toString())
+  }
 });
 
 //Listening on port 3000

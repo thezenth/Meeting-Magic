@@ -5,9 +5,21 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+    window.newListItem = function(item, listId) {
+      var ul = document.getElementById("listId");
+      var li = document.createElement("li");
+      li.appendChild(document.createTextNode(item));
+      ul.appendChild(li);
+    };
+
     var socket = io('/results-nsp');
+    socket.on('_results', function(data) {
+      console.log(data);
+    });
     </script>
   </head>
   <body>
+    <ul>
+    </ul>
   </body>
 </html>

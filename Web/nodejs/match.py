@@ -50,6 +50,17 @@ for i in range(len(prefs_list)):
     else:
         pn.tell_node("  No restaurants found!")
 
+f3 = open('data.json', 'r')
+f3_str = f3.read()
+f3.close()
+jason = json.loads(f_str)
+for a in range(len(listOfLists)):
+    jason[0]['restaurants'].append(listOfLists[a])
+f3 = open('data.json', 'w')
+f3.write(
+    json.dumps(jason, indent=4)
+)
+"""
 lines = []
 f_results = open('/home/noah/Meeting-Magic/Web/nodejs/views/results.html', 'r')
 lines = [str(x) for x in f_results.readlines()]
@@ -68,3 +79,4 @@ results_file = open('/home/noah/Meeting-Magic/Web/nodejs/views/results.html', 'w
 lines_str = ''.join(str(e) for e in lines)
 pn.tell_node("New file=" + lines_str)
 results_file.write(lines_str)
+"""

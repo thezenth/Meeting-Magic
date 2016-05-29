@@ -32,7 +32,7 @@
           "password=" + document.getElementById('password').value
         );
         socket.emit('_userInfo',userInfo);
-        userInfo.value = '';
+        //userInfo.value = '';
         window.location = "http://127.0.0.1:3000/meeting.html";
         event.preventDefault();
         return false;
