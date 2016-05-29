@@ -53,7 +53,7 @@ app.use(express.static(__dirname + '/views'));
 // maybe have a text file for this..?
 var index_nsp = io.of('/index-nsp')
 var meeting_nsp = io.of('/meeting-nsp')
-
+var results_nsp = io.of('/results-nsp')
 
 
 index_nsp.on('connection', function(socket){
@@ -220,7 +220,11 @@ meeting_nsp.on('connection', function(socket){
     });
 
   });
-})
+});
+
+results_nsp.on('connection', function(socket){
+  dbg("Recieving connection to results.html");
+});
 
 //Listening on port 3000
 http.listen(3000, function(){
