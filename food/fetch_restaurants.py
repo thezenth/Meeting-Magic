@@ -55,6 +55,8 @@ def build_url(latitude, longitude, rad, query, oauth, types="food", rankBy="prom
 # EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&rankby=prominence&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
 
 def get_restaurants (lati, longi, rad, cat):
+    restList = []
+
     r = requests.get(
         build_url(lati, longi, rad, cat, goog_key)
     )
@@ -97,13 +99,15 @@ def get_restaurants (lati, longi, rad, cat):
                     hours = curr_rest['opening_hours']['weekday_text']
 
         newRest = Restaurant(ident, name, address, rest_latitude, rest_longitude, hours, rating)
-        print (newRest.__repr__)
+        restList.append(newRest)
+        #print (newRest.__repr__)
+    return (restList[:5]) # Returns the top 5 rated restaurants --> Since the fetch is already done in terms of rating, this returns the top 5 restaurants form the search
 
-lati = 34.058583
-longi = -118.416582
-rad = 5000
-category = "coffee"
-get_restaurants(lati, longi, rad, category)
+#lati = 34.058583
+#longi = -118.416582
+#rad = 5000
+#category = "coffee"
+#get_restaurants(lati, longi, rad, category)
 
 #FACTUAL STUFF
 

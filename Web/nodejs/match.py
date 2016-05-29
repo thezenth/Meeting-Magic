@@ -1,7 +1,11 @@
 import json
 import py_node as pn
 from food import food_preference_matcher as fpm
+from food import fetch_restaurants as fr
 from pymysql import read_db as rdb
+
+radius = 5000 #User cannot set this variable yet... possibly in a later build_url
+#Also, what units are this value in?
 
 #Get meeting info
 f = open('data.json', 'r')
@@ -32,4 +36,11 @@ usr2 = rdb.read_user(otherUser)
 
 # Compare preferences and get similar list
 prefs_list = fpm.compare(usr1, usr2)
-pn.tell_node(''.join(prefs_list))
+#pn.tell_node(','.join(prefs_list))
+for i in range(len(prefs_list)):
+     foundList = fr.get_restaurants(
+        lat,
+        lon,
+        rad,
+        prefs_list[i]
+     )
