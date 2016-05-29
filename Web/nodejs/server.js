@@ -218,6 +218,7 @@ meeting_nsp.on('connection', function(socket){
           break;
       }
     });
+    socket.emit("change_html", "_TEST") // Once the python is done and results.html has been updated, tell the client's meeting.html to change the page to results.html
 
   });
 });

@@ -16,9 +16,10 @@
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
     var socket = io('/meeting-nsp');
-    //socket.on('change_html', function(data) {
-    //  document.getElementById('main body').outerHTML = data.body;
-    //});
+    socket.on('change_html', function(data) {
+      console.log("Recieved call to change_html")
+      window.location = "http://127.0.0.1:3000/results.html"
+    });
     //socket.emit('_TEST', 'HELLO')
 
     window.sendMeetingInfo = function() {
