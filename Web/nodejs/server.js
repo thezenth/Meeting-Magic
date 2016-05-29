@@ -139,7 +139,7 @@ index_nsp.on('connection', function(socket){
 });
 
 meeting_nsp.on('connection', function(socket){
-  console.log("SOMEONE CONNECTED");
+  dbg("Recieving connection to meeting.html")
   socket.on('_meetingInfo', function(meetingInfo){
     console.log("HELLO I AM MEETING INFO");
     console.log('RECIEVED:' + meetingInfo);
@@ -155,13 +155,70 @@ meeting_nsp.on('connection', function(socket){
       0,
       coordsWhole.indexOf(",")
     );
-    long = coordsWhole.substring(
+    lon = coordsWhole.substring(
       coordsWhole.indexOf(",") + 1,
       coordsWhole.length
     );
 
     console.log("OTHER_USER:" + otherUser);
-    console.log("COORDINATES:" + lat + "," + long);
+    console.log("COORDINATES:" + lat + "," + lon);
+
+    info = {};
+    info.otherUser = otherUser;
+    info.lat = lat;
+    info.lon = lon;
+
+    //read the existing data.json file, and parse that into a local dictionary like JSON structure
+    fs.readFile('data.json', function (err, data) {
+      var json = JSON.parse(data);
+      //edit the dictionary-JSON structure to reflect newly recieved username and password
+      json[1]['meetingInfo'][0]['otherUser'] = info.otherUser;
+      json[1]['meetingInfo'][0]['lat'] = info.lat;
+      json[1]['meetingInfo'][0]['lon'] = info.lon;
+      //write the edited structure in its entirity to the data.json file
+      fs.writeFile('data.json', JSON.stringify(json, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+    });
+    var pyshell1 = new PythonShell('match.py', { mode: 'text' });
+    pyshell1.on('message', function (message) {
+      //message = encoding.convert(message, '');
+      id = ''
+      if (message.indexOf(":") !== -1) {
+        //console.log("HELLO");
+        id = message.substring(
+          0,
+          message.indexOf(':')
+        );
+      }
+      switch(id) {
+        case 'DEBUG':
+          console.log(message)
+          break;
+        case 'USER_AUTH':
+          console.log(message)
+          //AFTER USER AUTHENTICATION AND SUCH, LOAD THE MEETING PAGE TO ACTUALLY SETUP THE MEETING
+          //console.log('ID IS USER_AUTH')
+          //console.log('DEBUG:CHANGING HTML TO meeting.html');
+          //app.get('/meeting', function (req, res) {
+          //  res.render('meeting.html');
+          //});
+          //meeting_body = '<body id="main body"><form action="" onsubmit="javascript:sendMeetingInfo();">Other user: <input id="otherUser" autocomplete="off" /><br>Coordinates: <input id="coords" autocomplete="off"/><br><button>Submit</button></form></body>'
+          /*fs.readFile('meeting.html', function (err,data) {
+            if (err) {
+              return console.log(err);
+            }
+            meeting_body = data;
+          });*/
+          //console.log(meeting_body);
+          //io.emit('change_page', {
+          // body: '_TEST'
+          //});
+          break;
+        default:
+          console.log(message)
+          break;
+      }
+    });
+
   });
 })
 

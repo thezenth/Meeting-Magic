@@ -6,13 +6,13 @@ def compare(user1, user2):
     if len(user1.food_prefs) >= len(user2.food_prefs):
         #print (len(user1.food_prefs), len(user2.food_prefs))
         for a in range(len(user2.food_prefs)):
-            print (user2.food_prefs[a], user1.food_prefs)
+            #print (user2.food_prefs[a], user1.food_prefs)
             if user2.food_prefs[a] in user1.food_prefs:
                 same.append(user2.food_prefs[a])
     else:
         #print (len(user1.food_prefs), len(user2.food_prefs))
         for a in range(len(user1.food_prefs)):
-            print (user1.food_prefs[a], user2.food_prefs)
+            #print (user1.food_prefs[a], user2.food_prefs)
             if user1.food_prefs[a] in user2.food_prefs:
                 same.append(user1.food_prefs[a])
 

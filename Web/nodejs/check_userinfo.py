@@ -13,6 +13,7 @@ allUsers = output['userInfo']
 currUser = allUsers[0]
 username = currUser['username']
 password = currUser['password']
+f.close()
 
 # This checks if the user exists, and if not, makes a new user in the DB
 # Then, returns either the existing user or the new user as LocalUser class

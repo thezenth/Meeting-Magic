@@ -10,6 +10,13 @@
 				"username": "NoahW",
 				"password": "123noah123"
 			}
+		],
+		"meetingInfo": [
+			{
+				"otherUser": "LuluP",
+				"lat": "30",
+				"lon": "80"
+			}
 		]
 	}
 ]
