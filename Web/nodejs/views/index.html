@@ -15,7 +15,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-    var socket = io();
+    var socket = io('/index-nsp');
     /*socket.on('change_page', function(data) {
       io.connect('http://127.0.0.1:3000/meeting.html');
     });*/
@@ -38,7 +38,7 @@
         return false;
     }
 
-    function sendMeetingInfo() {
+    /*function sendMeetingInfo() {
         var meetingInfo = (
           "otherUser=" + document.getElementById('otherUser').value +
           "&" +
@@ -47,7 +47,7 @@
         socket.emit('_meetingInfo',meetingInfo);
         meetingInfo.value = '';
         return false;
-    }
+    }*/
     </script>
   </head>
   <body id="main body">

@@ -8,6 +8,9 @@ var PythonShell = require('python-shell');
 
 var encoding = require("encoding");
 
+function dbg(state) {
+  console.log("# SERVER_DEBUG:" + state)
+}
 
 function checkPythonOut(text) {
   id = 'DEBUG'
@@ -40,17 +43,25 @@ var options = {
 };
 
 app.use(express.static(__dirname + '/views'));
-/*app.get('/', function(req, res){
+/*app.get('/meeting.html', function(req, res){
   console.log('DEBUG:THIS IS THE FIRST APP.GET')
   //res.redirect('127.0.0.1:3000/index.html')
-  res.redirect('/meeting.html');
+  res.sendFile('/meeting.html');
 });*/
 
-io.on('connection', function(socket){
+//DEFINING NAMESPACES
+// maybe have a text file for this..?
+var index_nsp = io.of('/index-nsp')
+var meeting_nsp = io.of('/meeting-nsp')
 
+
+
+index_nsp.on('connection', function(socket){
+
+  dbg("Recieving connection to index.html");
   socket.on('_userInfo', function(userInfo){
-    //console.log("HELLO");
-    console.log('RECIEVED:' + userInfo);
+    dbg("Recieving user info");
+    dbg(userInfo);
 
     //get username and password out of string formatted like username=USERNAME&password=PASSWORD
     username = userInfo.substring(
@@ -122,31 +133,37 @@ io.on('connection', function(socket){
           break;
       }
     });
-    socket.on('_meetingInfo', function(meetingInfo){
-      console.log("HELLO I AM MEETING INFO");
-      console.log('RECIEVED:' + meetingInfo);
-      otherUser = meetingInfo.substring(
-        meetingInfo.indexOf("=") + 1, //returns first index of = sign
-        meetingInfo.indexOf("&")
-      );
-      coordsWhole = meetingInfo.substring(
-        meetingInfo.lastIndexOf("=") + 1, //returns the second index of the = sign
-        meetingInfoInfo.length
-      );
-      lat = coordsWhole.substring(
-        0,
-        coordsWhole.indexOf(",")
-      );
-      long = coordsWhole.substring(
-        coordsWhole.indexOf(",") + 1,
-        coordsWhole.length
-      );
 
-      console.log("OTHER_USER:" + otherUser);
-      console.log("COORDINATES:" + lat + "," + long);
-    });
+
   });
 });
+
+meeting_nsp.on('connection', function(socket){
+  console.log("SOMEONE CONNECTED");
+  socket.on('_meetingInfo', function(meetingInfo){
+    console.log("HELLO I AM MEETING INFO");
+    console.log('RECIEVED:' + meetingInfo);
+    otherUser = meetingInfo.substring(
+      meetingInfo.indexOf("=") + 1, //returns first index of = sign
+      meetingInfo.indexOf("&")
+    );
+    coordsWhole = meetingInfo.substring(
+      meetingInfo.lastIndexOf("=") + 1, //returns the second index of the = sign
+      meetingInfo.length
+    );
+    lat = coordsWhole.substring(
+      0,
+      coordsWhole.indexOf(",")
+    );
+    long = coordsWhole.substring(
+      coordsWhole.indexOf(",") + 1,
+      coordsWhole.length
+    );
+
+    console.log("OTHER_USER:" + otherUser);
+    console.log("COORDINATES:" + lat + "," + long);
+  });
+})
 
 //Listening on port 3000
 http.listen(3000, function(){

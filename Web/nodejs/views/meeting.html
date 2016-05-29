@@ -15,29 +15,31 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-    //var socket = io();
+    var socket = io('/meeting-nsp');
     //socket.on('change_html', function(data) {
     //  document.getElementById('main body').outerHTML = data.body;
     //});
     //socket.emit('_TEST', 'HELLO')
 
-    function sendMeetingInfo() {
+    window.sendMeetingInfo = function() {
         var meetingInfo = (
           "otherUser=" + document.getElementById('otherUser').value +
           "&" +
           "coords=" + document.getElementById('coords').value
         );
+        console.log(meetingInfo)
         socket.emit('_meetingInfo',meetingInfo);
         meetingInfo.value = '';
+        event.preventDefault();
         return false;
     }
     </script>
   </head>
   <body>
-    <form action="" onsubmit="javascript:sendMeetingInfo();">
+    <form action="">
         Other user: <input id="otherUser" autocomplete="off" /> <br>
         Coordinates: <input id="coords" autocomplete="off"/> <br>
-        <button>Submit</button>
+        <button onclick="sendMeetingInfo()">Submit</button>
     </form>
   </body>
 </html>
