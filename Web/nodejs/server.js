@@ -5,20 +5,28 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var PythonShell = require('python-shell');
 
+var encoding = require("encoding");
+
 function checkPythonOut(text) {
   id = 'DEBUG'
-  if text.contains(":") {
+  if (text.indexOf(":") != -1) {
     id = text.substring(
       0,
       text.indexOf(':')
     );
   }
-
+  console.log("ID:"+id)
   switch(id) {
     case 1:
       id = 'DEBUG'
       console.log(text)
       break;
+    case 2:
+      id = 'USER_AUTH'
+      console.log(text)
+      app.get('/', function(req, res){
+        res.sendFile(__dirname + '/meeting.html');
+      });
   }
 };
 
@@ -38,7 +46,7 @@ io.on('connection', function(socket){
 
   socket.on('_userInfo', function(userInfo){
     //console.log("HELLO");
-    console.log('RECIEVED: ' + userInfo);
+    console.log('RECIEVED:' + userInfo);
 
     //get username and password out of string formatted like username=USERNAME&password=PASSWORD
     username = userInfo.substring(
@@ -50,8 +58,8 @@ io.on('connection', function(socket){
       userInfo.length
     );
 
-    console.log("USERNAME: " + username);
-    console.log("PASSWORD: " + password);
+    console.log("USERNAME:" + username);
+    console.log("PASSWORD:" + password);
 
     //take parsed username and password into easy to handle object
     info = {};
@@ -72,9 +80,68 @@ io.on('connection', function(socket){
     var pyshell = new PythonShell('check_userinfo.py', { mode: 'text' });
     //listening for a message from the python file running
     pyshell.on('message', function (message) {
-      checkPythonOut(message);
-    });
+      //message = encoding.convert(message, '');
+      id = ''
+      if (message.indexOf(":") !== -1) {
+        //console.log("HELLO");
+        id = message.substring(
+          0,
+          message.indexOf(':')
+        );
+      }
+      switch(id) {
+        case 'DEBUG':
+          console.log(message)
+          break;
+        case 'USER_AUTH':
+          //AFTER USER AUTHENTICATION AND SUCH, LOAD THE MEETING PAGE TO ACTUALLY SETUP THE MEETING
+          //console.log('ID IS USER_AUTH')
+          console.log('DEBUG:CHANGING HTML TO meeting.html');
 
+          //app.get('/index.html', function(req, res){
+          //  res.sendFile(__dirname + '/meeting.html');
+          //});
+
+          meeting_body = '<body id="main body"><form action="" onsubmit="javascript:sendMeetingInfo();">Other user: <input id="otherUser" autocomplete="off" /><br>Coordinates: <input id="coords" autocomplete="off"/><br><button>Submit</button></form></body>'
+          /*fs.readFile('meeting.html', function (err,data) {
+            if (err) {
+              return console.log(err);
+            }
+            meeting_body = data;
+          });*/
+          //console.log(meeting_body);
+          io.emit('change_html', {
+            body: meeting_body
+          });
+          break;
+        default:
+          console.log(message)
+          break;
+      }
+    });
+    socket.on('_meetingInfo', function(meetingInfo){
+      console.log("HELLO I AM MEETING INFO");
+      console.log('RECIEVED:' + meetingInfo);
+      otherUser = meetingInfo.substring(
+        meetingInfo.indexOf("=") + 1, //returns first index of = sign
+        meetingInfo.indexOf("&")
+      );
+      coordsWhole = meetingInfo.substring(
+        meetingInfo.lastIndexOf("=") + 1, //returns the second index of the = sign
+        meetingInfoInfo.length
+      );
+      lat = coordsWhole.substring(
+        0,
+        coordsWhole.indexOf(",")
+      );
+      long = coordsWhole.substring(
+        coordsWhole.indexOf(",") + 1,
+        coordsWhole.length
+      );
+
+      console.log("OTHER_USER:" + otherUser);
+      console.log("COORDINATES:" + lat + "," + long);
+    });
   });
 });
 

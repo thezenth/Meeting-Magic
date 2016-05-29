@@ -16,8 +16,9 @@ password = currUser['password']
 
 # This checks if the user exists, and if not, makes a new user in the DB
 # Then, returns either the existing user or the new user as LocalUser class
-rdb.read_user(
+usr = rdb.read_user(
     username,
     make_new=True,
     new_pwd=password
 )
+tell_node(usr.__repr__(), "USER_AUTH")
