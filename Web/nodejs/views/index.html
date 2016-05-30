@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>Meeting Magic</title>
     <!--<style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
@@ -12,32 +12,49 @@
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
     </style>-->
-  </head>
-  <body>
-
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-    var socket = io();
+    var socket = io('/index-nsp');
+    /*socket.on('change_page', function(data) {
+      io.connect('http://127.0.0.1:3000/meeting.html');
+    });*/
+    /*socket.on('change_html', function(data) {
+      document.getElementById('main body').outerHTML = data.body;
+    });
+    socket.emit('_TEST', 'HELLO')
+    */
 
-    //socket.emit('_TEST', 'HELLO')
-
-    function sendMessage() {
+    window.sendUserInfo = function() {
         var userInfo = (
-          "username=" + document.getElementById('username').value +
+          "username=" +  document.getElementById('username').value +
           "&" +
           "password=" + document.getElementById('password').value
         );
         socket.emit('_userInfo',userInfo);
-        userInfo.value = '';
+        //userInfo.value = '';
+        window.location = "http://127.0.0.1:3000/meeting.html";
+        event.preventDefault();
         return false;
     }
-    </script>
 
-    <form action="" onsubmit="javascript:sendMessage();">
+    /*function sendMeetingInfo() {
+        var meetingInfo = (
+          "otherUser=" + document.getElementById('otherUser').value +
+          "&" +
+          "coords=" + document.getElementById('coords').value
+        );
+        socket.emit('_meetingInfo',meetingInfo);
+        meetingInfo.value = '';
+        return false;
+    }*/
+    </script>
+  </head>
+  <body id="main body">
+    <form action="">
         Username: <input id="username" autocomplete="off" /> <br>
         Password: <input id="password" autocomplete="off" type="password"/> <br>
-        <button>Submit</button>
+        <button onclick="sendUserInfo()">Submit</button>
     </form>
   </body>
 </html>

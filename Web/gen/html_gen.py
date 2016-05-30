@@ -1,5 +1,19 @@
-import markup
+from markup import markup
 
+def results_div(res_list):
+    res = ", ".join(res_list)
+
+    page = markup.page()
+
+    page.div()
+    page.ul()
+    page.li(res)
+    page.ul.close()
+    page.div.close()
+
+    return page
+
+"""
 items = ("Item one", "Item two", "Item three", "Item four")
 paras = ("This was a fantastic list.", "And now for something completely different.")
 images = ("thumb1.jpg", "thumb2.jpg", "more.jpg", "more2.jpg")
@@ -44,3 +58,4 @@ def results_html(items):
 f = open('~/Meeting-Magic/Web/index.html', 'w')
 f.write(page)
 f.close()
+"""

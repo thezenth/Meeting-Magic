@@ -6,6 +6,8 @@ import pprint
 from factual import Factual
 from factual.utils import circle
 
+#py_node.py
+from Web.nodejs import py_node as pn
 
 #GOOGLE PLACES API
 import requests
@@ -50,11 +52,13 @@ def build_url(latitude, longitude, rad, query, oauth, types="food", rankBy="prom
 
     authKey = "key=" + oauth
     url = base + location + "&" + radius + "&" + search + "&" + place_type + "&" + rank_by + "&" + authKey
-    print url
+    #print url
     return url
 # EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&rankby=prominence&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
 
 def get_restaurants (lati, longi, rad, cat):
+    restList = []
+
     r = requests.get(
         build_url(lati, longi, rad, cat, goog_key)
     )
@@ -62,7 +66,10 @@ def get_restaurants (lati, longi, rad, cat):
     jason = r.json()
     results = jason['results']
 
+    pn.tell_node("  Parsing fetched restaurants...")
+
     for i in range(len(results)):
+        pn.tell_node("Parsing restaurant " + str(i))
         curr_rest = results[i]
         ident = "Not available"
         name = "Not available"
@@ -97,13 +104,17 @@ def get_restaurants (lati, longi, rad, cat):
                     hours = curr_rest['opening_hours']['weekday_text']
 
         newRest = Restaurant(ident, name, address, rest_latitude, rest_longitude, hours, rating)
-        print (newRest.__repr__)
+        restList.append(newRest.name) # Bit of a hack for now, will have to fix it somehow
+        pn.tell_node("  Finished parsing restaurant " + str(i))
+        pn.tell_node("  " + newRest.__repr__())
+        #print (newRest.__repr__)
+    return (restList[:5]) # Returns the top 5 rated restaurants --> Since the fetch is already done in terms of rating, this returns the top 5 restaurants form the search
 
-lati = 34.058583
-longi = -118.416582
-rad = 5000
-category = "coffee"
-get_restaurants(lati, longi, rad, category)
+#lati = 34.058583
+#longi = -118.416582
+#rad = 5000
+#category = "coffee"
+#get_restaurants(lati, longi, rad, category)
 
 #FACTUAL STUFF
 
