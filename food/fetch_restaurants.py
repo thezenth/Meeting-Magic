@@ -104,8 +104,9 @@ def get_restaurants (lati, longi, rad, cat):
                     hours = curr_rest['opening_hours']['weekday_text']
 
         newRest = Restaurant(ident, name, address, rest_latitude, rest_longitude, hours, rating)
-        if newRest.name not in restList:
-            restList.append(newRest.name) # Bit of a hack for now, will have to fix it somehow
+        nameAndAddress = newRest.name + " " + newRest.address
+        if nameAndAddress not in restList:
+            restList.append(nameAndAddress) # Bit of a hack for now, will have to fix it somehow
         pn.tell_node("  Finished parsing restaurant " + str(i))
         pn.tell_node("  " + newRest.__repr__())
         #print (newRest.__repr__)
