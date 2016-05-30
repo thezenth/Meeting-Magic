@@ -1,23 +1,114 @@
 [
     {
-        "_comment": "INPUT",
-        "isUser": "true",
+        "_comment": "INPUT", 
+        "isUser": "true", 
         "restaurants": [
-					
+            [
+                "Domino's Pizza", 
+                "Papa John's Pizza", 
+                "Tony's Pizza", 
+                "Brooklyn Boys Pizza", 
+                "Salty Caper Wood Fired Pizza"
+            ], 
+            [
+                "Smoothie King"
+            ], 
+            [
+                "Yogi Indian Food & Spices", 
+                "Chick-fil-A", 
+                "Wendy's", 
+                "Wendy's"
+            ], 
+            [
+                "Nestle USA", 
+                "Edible Arrangements", 
+                "Queen City Pastry", 
+                "Baskin-Robbins", 
+                "Starbucks"
+            ], 
+            [
+                "Domino's Pizza", 
+                "Papa John's Pizza", 
+                "Tony's Pizza", 
+                "Brooklyn Boys Pizza", 
+                "Salty Caper Wood Fired Pizza"
+            ], 
+            [
+                "Smoothie King"
+            ], 
+            [
+                "Yogi Indian Food & Spices", 
+                "Chick-fil-A", 
+                "Wendy's", 
+                "Wendy's"
+            ], 
+            [
+                "Nestle USA", 
+                "Edible Arrangements", 
+                "Queen City Pastry", 
+                "Baskin-Robbins", 
+                "Starbucks"
+            ], 
+            [
+                "Domino's Pizza", 
+                "Papa John's Pizza", 
+                "Tony's Pizza", 
+                "Brooklyn Boys Pizza", 
+                "Salty Caper Wood Fired Pizza"
+            ], 
+            [
+                "Smoothie King"
+            ], 
+            [
+                "Yogi Indian Food & Spices", 
+                "Chick-fil-A", 
+                "Wendy's", 
+                "Wendy's"
+            ], 
+            [
+                "Nestle USA", 
+                "Edible Arrangements", 
+                "Queen City Pastry", 
+                "Baskin-Robbins", 
+                "Starbucks"
+            ], 
+            [
+                "Domino's Pizza", 
+                "Papa John's Pizza", 
+                "Tony's Pizza", 
+                "Brooklyn Boys Pizza", 
+                "Salty Caper Wood Fired Pizza"
+            ], 
+            [
+                "Smoothie King"
+            ], 
+            [
+                "Yogi Indian Food & Spices", 
+                "Chick-fil-A", 
+                "Wendy's", 
+                "Wendy's"
+            ], 
+            [
+                "Nestle USA", 
+                "Edible Arrangements", 
+                "Queen City Pastry", 
+                "Baskin-Robbins", 
+                "Starbucks"
+            ]
         ]
-    },
+    }, 
     {
         "meetingInfo": [
             {
-                "lat": "35.570318",
-                "lon": "-80.88944600000002",
+                "lat": "35.570318", 
+                "lon": "-80.88944600000002", 
                 "otherUser": "LuluP"
             }
-        ],
-        "_comment": "OUTPUT",
+        ], 
+        "_comment": "OUTPUT", 
         "userInfo": [
             {
-                "username": "NoahW",
+                "username": "NoahW", 
                 "password": "123noah123"
             }
         ]

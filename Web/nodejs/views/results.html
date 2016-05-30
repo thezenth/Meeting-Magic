@@ -6,20 +6,27 @@
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
     window.newListItem = function(item, listId) {
-      var ul = document.getElementById("listId");
-      var li = document.createElement("li");
-      li.appendChild(document.createTextNode(item));
-      ul.appendChild(li);
+      console.log(item);
+      console.log(listId)
+      var ul1 = document.getElementById(listId);
+      var li1 = document.createElement("li");
+      console.log(li1)
+      li1.appendChild(document.createTextNode(item));
+      ul1.appendChild(li1);
     };
 
     var socket = io('/results-nsp');
     socket.on('_results', function(data) {
       console.log(data);
+      d_arr = data.split(",\\s*"); //HEAVILY DEPENDENT ON FORMATTING OF RESULT!!!!
+      for (x=0; x<data.length;x++) {
+        newListItem(data[x],"restList");
+      }
     });
     </script>
   </head>
   <body>
-    <ul>
+    <ul id="restList">
     </ul>
   </body>
 </html>
