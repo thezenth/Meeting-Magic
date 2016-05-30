@@ -2,28 +2,10 @@
 <html>
   <head>
     <title>Meeting Magic</title>
-    <!--<style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-    </style>-->
     <script src="/socket.io/socket.io.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
     var socket = io('/index-nsp');
-    /*socket.on('change_page', function(data) {
-      io.connect('http://127.0.0.1:3000/meeting.html');
-    });*/
-    /*socket.on('change_html', function(data) {
-      document.getElementById('main body').outerHTML = data.body;
-    });
-    socket.emit('_TEST', 'HELLO')
-    */
+
 
     window.sendUserInfo = function() {
         var userInfo = (
@@ -37,17 +19,6 @@
         event.preventDefault();
         return false;
     }
-
-    /*function sendMeetingInfo() {
-        var meetingInfo = (
-          "otherUser=" + document.getElementById('otherUser').value +
-          "&" +
-          "coords=" + document.getElementById('coords').value
-        );
-        socket.emit('_meetingInfo',meetingInfo);
-        meetingInfo.value = '';
-        return false;
-    }*/
     </script>
   </head>
   <body id="main body">
@@ -58,31 +29,3 @@
     </form>
   </body>
 </html>
-
-<!--- <html>
-  <head>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js"></script>  </head>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-  <body>
-    <script>
-      var socket = io.connect();
-
-      socket.on('date', function(data){
-        $('#date').text(data.date);
-      });
-
-      $('form').submit(function(){
-        socket.emit('chat message', $('#name').val());
-        $('#name').val('');
-        return false;
-      });
-    </script>
-    <div id="date"></div>
-    <form id="form">
-      Name: <input id="name" type="text" name="name" />
-      <button type="submit" value="Submit">Submit<button/>
-    </form>
-  </body>
-</html>
---->
