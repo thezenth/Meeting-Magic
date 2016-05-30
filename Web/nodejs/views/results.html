@@ -13,13 +13,22 @@
   <!-- Script -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
+  window.makeGoogleLink = function (text) {
+    var res = text.replace(" ", "+") //search queries use + instead of " " or %d or anything
+    link = "http://google.com/#q=" + res;
+    return link
+  }
+
   window.newListItem = function(item, listId) {
     console.log(item);
     console.log(listId)
     var ul1 = document.getElementById(listId);
     var li1 = document.createElement("li");
     console.log(li1)
-    li1.appendChild(document.createTextNode(item));
+    aLink = document.createElement("A")
+    aLink.href = makeGoogleLink(item)
+    aLink.innerHTML = item
+    li1.appendChild(aLink);
     ul1.appendChild(li1);
   };
 
