@@ -1,14 +1,14 @@
 [
 	{
 		"_comment": "INPUT",
-		"restaurants": [],
-		"isUser": "true"
+		"isUser": "true",
+		"restaurants": []
 	},
 	{
 		"meetingInfo": [
 			{
-				"lat": "35.5702881",
-				"lon": "-80.8892875",
+				"lat": "35.5703464",
+				"lon": "-80.8893288",
 				"otherUser": "LuluP"
 			}
 		],
