@@ -18,10 +18,7 @@
     var socket = io('/results-nsp');
     socket.on('_results', function(data) {
       console.log(data);
-      d_arr = data.split(",\\s*"); //HEAVILY DEPENDENT ON FORMATTING OF RESULT!!!!
-      for (x=0; x<data.length;x++) {
-        newListItem(data[x],"restList");
-      }
+      newListItem(data,"restList")
     });
     </script>
   </head>

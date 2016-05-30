@@ -56,10 +56,13 @@ f3.close()
 jason = json.loads(f_str)
 for a in range(len(listOfLists)):
     jason[0]['restaurants'].append(listOfLists[a])
+print (jason)
 f3 = open('data.json', 'w')
 f3.write(
     json.dumps(jason, indent=4)
 )
+pn.tell_node("READY",ident="JSONREADY")
+
 """
 lines = []
 f_results = open('/home/noah/Meeting-Magic/Web/nodejs/views/results.html', 'r')

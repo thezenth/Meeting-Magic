@@ -183,24 +183,47 @@ meeting_nsp.on('connection', function(socket){
     var pyshell1 = new PythonShell('match.py', { mode: 'text' });
     pyshell1.on('message', function (message) {
       console.log(message)
+      if (message.indexOf("JSONREADY") != -1) {
+        fs.readFile('data.json', function (err, data) {
+            var json = JSON.parse(data);
+            //edit the dictionary-JSON structure to reflect newly recieved username and password
+            restaurants = json[0]['restaurants'] //restaurants is a global variable
+            dbg(restaurants.toString())
+          });
+          socket.emit("change_html", "_TEST") // Once the python is done and results.html has been updated, tell the client's meeting.html to change the page to results.html
+      }
     });
+    //pyshell1.end()
     //somewhere in the python data.json is written to, with all the results
 
-    fs.readFile('data.json', function (err, data) {
-      var json = JSON.parse(data);
-      //edit the dictionary-JSON structure to reflect newly recieved username and password
-      restaurants = json[0]['restaurants'] //restaurants is a global variable
-    });
-    socket.emit("change_html", "_TEST") // Once the python is done and results.html has been updated, tell the client's meeting.html to change the page to results.html
 
   });
 });
 
+
 results_nsp.on('connection', function(socket){
   dbg("Recieving connection to results.html");
+
   for (a = 0; a<restaurants.length; a++) {
-    socket.emit('_results', restaurants[a].toString())
+    console.log("RESTAURANTS:" + restaurants[a].toString())
+    console.log(restaurants[a].length)
+    for (b = 0; b<restaurants[a].length; b++) {
+      socket.emit('_results', restaurants[a][b].toString())
+    }
   }
+
+  socket.on('disconnect', function() {
+    dbg("User disconnected")
+    fs.readFile('data.json', function (err, data) {
+      var json = JSON.parse(data);
+      //edit the dictionary-JSON structure to reflect newly recieved username and password
+      json[0]['restaurants'] = []; //restaurants is a global variable
+      //write the edited structure in its entirity to the data.json file
+      fs.writeFile('data.json', JSON.stringify(json, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+    });
+    dbg("Restaurants in data.json wiped")
+  })
+
 });
 
 //Listening on port 3000
