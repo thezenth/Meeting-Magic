@@ -19,7 +19,16 @@
     console.log("Recieved call to change_html")
     window.location = "http://127.0.0.1:3000/results.html"
   });
-  //socket.emit('_TEST', 'HELLO')
+
+  window.lat = 0.0
+  window.lon = 0.0
+
+  navigator.geolocation.getCurrentPosition(function(position) {
+    window.lat = position.coords.latitude;
+    window.lon = position.coords.longitude;
+    coordsForm = document.getElementById('coords')
+    coordsForm.value = lat.toString() + "," + lon.toString();
+  });
 
   window.sendMeetingInfo = function() {
       var meetingInfo = (
