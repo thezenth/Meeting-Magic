@@ -1,47 +1,23 @@
 [
-    {
-        "_comment": "INPUT", 
-        "isUser": "true", 
-        "restaurants": [
-            [
-                "Domino's Pizza", 
-                "Papa John's Pizza", 
-                "Tony's Pizza", 
-                "Salty Caper Wood Fired Pizza", 
-                "Davino's Queens Pizza"
-            ], 
-            [
-                "Smoothie King"
-            ], 
-            [
-                "Yogi Indian Food & Spices", 
-                "Chick-fil-A", 
-                "Wendy's", 
-                "Wendy's"
-            ], 
-            [
-                "Nestle USA", 
-                "Edible Arrangements", 
-                "Queen City Pastry", 
-                "Baskin-Robbins", 
-                "Starbucks"
-            ]
-        ]
-    }, 
-    {
-        "meetingInfo": [
-            {
-                "lat": "35.5702936", 
-                "lon": "-80.8892639", 
-                "otherUser": "LuluP"
-            }
-        ], 
-        "_comment": "OUTPUT", 
-        "userInfo": [
-            {
-                "username": "NoahW", 
-                "password": "123noah123"
-            }
-        ]
-    }
+	{
+		"_comment": "INPUT",
+		"restaurants": [],
+		"isUser": "true"
+	},
+	{
+		"meetingInfo": [
+			{
+				"lat": "35.5702827",
+				"lon": "-80.8892797",
+				"otherUser": "LuluP"
+			}
+		],
+		"_comment": "OUTPUT",
+		"userInfo": [
+			{
+				"username": "NoahW",
+				"password": "123noah123"
+			}
+		]
+	}
 ]

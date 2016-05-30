@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Meeting Magic</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    window.newListItem = function(item, listId) {
+      console.log(item);
+      console.log(listId)
+      var ul1 = document.getElementById(listId);
+      var li1 = document.createElement("li");
+      console.log(li1)
+      li1.appendChild(document.createTextNode(item));
+      ul1.appendChild(li1);
+    };
+
+    var socket = io('/results-nsp');
+    socket.on('_results', function(data) {
+      console.log(data);
+      newListItem(data,"restList")
+    });
+    </script>
+  </head>
+  <body>
+    <ul id="restList">
+    </ul>
+  </body>
+</html>
