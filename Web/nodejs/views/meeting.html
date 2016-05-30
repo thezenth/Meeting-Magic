@@ -35,9 +35,10 @@
         "&" +
         "coords=" + document.getElementById('coords').value
       );
-      console.log(meetingInfo)
+      console.log(meetingInfo);
       socket.emit('_meetingInfo',meetingInfo);
       meetingInfo.value = '';
+      alert("Got it boss! Working on it now...");
       event.preventDefault();
       return false;
   }
@@ -66,11 +67,11 @@
       <div class="row center">
         <h5 class="header col s12 light">Time to setup your meeting!</h5>
       </div>
-      <div class="row center">
-        <form action="">
+      <div class="row center" id="submit-form-div">
+        <form id="submit-form" action="">
             Other user: <input id="otherUser" autocomplete="off" /> <br>
             Coordinates: <input id="coords" autocomplete="off"/> <br>
-            <button id="download-button" class="btn-large waves-effect waves-light orange" onclick="sendMeetingInfo()">Submit</button>
+            <button id="submit-button" class="btn-large waves-effect waves-light orange" onclick="sendMeetingInfo()">Submit</button>
         </form>
       </div>
       <br><br>
