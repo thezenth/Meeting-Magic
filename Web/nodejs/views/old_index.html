@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Meeting Magic</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    var socket = io('/index-nsp');W
+    window.sendUserInfo = function() {
+        var userInfo = (
+          "username=" +  document.getElementById('username').value +
+          "&" +
+          "password=" + document.getElementById('password').value
+        );
+        socket.emit('_userInfo',userInfo);
+        //userInfo.value = '';
+        window.location = "http://127.0.0.1:3000/meeting.html";
+        event.preventDefault();
+        return false;
+    }
+    </script>
+  </head>
+  <body id="main body">
+    <form action="">
+        Username: <input id="username" autocomplete="off" /> <br>
+        Password: <input id="password" autocomplete="off" type="password"/> <br>
+        <button onclick="sendUserInfo()">Submit</button>
+    </form>
+  </body>
+</html>

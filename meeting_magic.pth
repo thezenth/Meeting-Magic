@@ -1,0 +1,8 @@
+#Will have to have a wrapper to add these to the local site-packages directory
+#MAKE SURE THIS IS IN SITES PACKAGES DIRECTORY
+/home/noah/Meeting-Magic/
+/home/noah/Meeting-Magic/food/
+/home/noah/Meeting-Magic/pymysql/
+/home/noah/Meeting-Magic/Web/
+/home/noah/Meeting-Magic/Web/nodejs/
+/home/noah/Meeting-Magic/Web/Python/

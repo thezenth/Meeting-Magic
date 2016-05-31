@@ -1,0 +1,11 @@
+# give broad categories less points, specific categories more points
+types:
+  asian: 10
+  indian: 20
+  gujarati: 50
+  japanese: 20
+  sushi: 75
+  pizza: 500
+dietary_restrictions:
+  - "dairy allergy"
+  - "vegan"
