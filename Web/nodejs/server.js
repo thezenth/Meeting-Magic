@@ -211,17 +211,19 @@ results_nsp.on('connection', function(socket){
       socket.emit('_results', restaurants[a][b].toString())
     }
   }
+  //wipe immediatley after display -- no longer useful
+  fs.readFile('data.json', function (err, data) {
+    var json = JSON.parse(data);
+    //edit the dictionary-JSON structure to reflect newly recieved username and password
+    json[0]['restaurants'] = []; //restaurants is a global variable
+    //write the edited structure in its entirity to the data.json file
+    fs.writeFile('data.json', JSON.stringify(json, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+  });
+  dbg("Restaurants in data.json wiped")
 
   socket.on('disconnect', function() {
     dbg("User disconnected")
-    fs.readFile('data.json', function (err, data) {
-      var json = JSON.parse(data);
-      //edit the dictionary-JSON structure to reflect newly recieved username and password
-      json[0]['restaurants'] = []; //restaurants is a global variable
-      //write the edited structure in its entirity to the data.json file
-      fs.writeFile('data.json', JSON.stringify(json, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
-    });
-    dbg("Restaurants in data.json wiped")
+
   })
 
 });

@@ -1,29 +1,176 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Meeting Magic</title>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-    window.newListItem = function(item, listId) {
-      console.log(item);
-      console.log(listId)
-      var ul1 = document.getElementById(listId);
-      var li1 = document.createElement("li");
-      console.log(li1)
-      li1.appendChild(document.createTextNode(item));
-      ul1.appendChild(li1);
-    };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Meeting Magic</title>
 
-    var socket = io('/results-nsp');
-    socket.on('_results', function(data) {
-      console.log(data);
-      newListItem(data,"restList")
-    });
-    </script>
-  </head>
-  <body>
-    <ul id="restList">
-    </ul>
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+  <!-- Script -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+  window.makeGoogleLink = function (text) {
+    var res = text.replace(" ", "+") //search queries use + instead of " " or %d or anything
+    link = "http://google.com/#q=" + res;
+    return link
+  }
+
+  window.newListItem = function(item, listId) {
+    console.log(item);
+    console.log(listId)
+    var ul1 = document.getElementById(listId);
+    var li1 = document.createElement("li");
+    console.log(li1)
+    aLink = document.createElement("A")
+    aLink.href = makeGoogleLink(item)
+    aLink.innerHTML = item
+    li1.appendChild(aLink);
+    ul1.appendChild(li1);
+  };
+
+  var socket = io('/results-nsp');
+  socket.on('_results', function(data) {
+    console.log(data);
+    newListItem(data,"restList")
+  });
+  </script>
+</head>
+<body>
+  <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"></a>
+      <ul class="left hide-on-med-and-down">
+        <li><a href="http://127.0.0.1:3000/index.html">Home</a></li>
+        <li><a href="https://github.com/thezenth/Meeting-Magic">About</a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="http://127.0.0.1:3000/index.html">Home</a></li>
+        <li><a href="https://github.com/thezenth/Meeting-Magic">About</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <br><br>
+      <h1 class="header center orange-text">Meeting Magic</h1>
+      <div class="row center">
+        <h5 class="header col s12 light">Time to setup your meeting!</h5>
+      </div>
+      <div class="row center">
+        <ul id="restList">
+        </ul>
+      </div>
+      <br><br>
+
+    </div>
+    <div class="row center">
+      <h5 class="header col s12 light">By the way, here is everything you need to know about upcoming weather</h5>
+      <a href="http://www.accuweather.com/en/us/new-york-ny/10007/current-weather/349727" class="aw-widget-legal">
+      <!--
+      By accessing and/or using this code snippet, you agree to AccuWeather’s terms and conditions (in English) which can be found at http://www.accuweather.com/en/free-weather-widgets/terms and AccuWeather’s Privacy Statement (in English) which can be found at http://www.accuweather.com/en/privacy.
+      -->
+      </a>
+      <br> <br> <br> <br>
+      <div class="row center">
+        <div id="awtd1464626674775" class="aw-widget-36hour"  data-locationkey="" data-unit="f" data-language="en-us" data-useip="true" data-uid="awtd1464626674775" data-editlocation="true">
+        </div>
+      </div>
+      <script type="text/javascript" src="http://oap.accuweather.com/launch.js"></script>
+    </div>
+    <div class="row center">
+      <h5 class="header col s12 light">Ready to set a date?</h5>
+      <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=pl74cipa16nl6rm8ba0fo2nvng%40group.calendar.google.com&amp;color=%2342104A&amp;ctz=America%2FNew_York" style="border-width:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+    </div>
+  </div>
+
+
+  <div class="container">
+    <div class="section">
+
+      <!--   Icon Section   -->
+      <!-- <div class="row">
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center light-blue-text"><i class="material-icons">flash_on</i></h2>
+            <h5 class="center">IBM Watson Integration (coming soon!)</h5>
+
+            <p class="light">Have IBM Watson analyze the character and personality of a restaurant for compability with your own.</p>
+          </div>
+        </div>
+
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center light-blue-text"><i class="material-icons">group</i></h2>
+            <h5 class="center">Meetings at the click of a button</h5>
+
+            <p class="light">Have you ever agonized over where to go? Have friends with widly different tastes? Worry no more! Meeting Magic finds the best restaurants for everyone's tastes at the click of a button.</p>
+          </div>
+        </div>
+
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center light-blue-text"><i class="material-icons">settings</i></h2>
+            <h5 class="center">Big data on small scales (coming soon!)</h5>
+
+            <p class="light">Harness the power of "big data", from weather to traffic patterns, and let Meeting Magic plan your perfect outing.</p>
+          </div>
+        </div>
+      </div> -->
+
+    </div>
+    <br><br>
+
+    <div class="section">
+
+    </div>
+  </div>
+
+  <footer class="page-footer orange">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">About the developer</h5>
+          <p class="grey-text text-lighten-4">Hello, thank you for taking a look at this product! My name is Noah Wolfe, and you can contact me at 1151754@student.iss.k12.nc.us</p>
+
+
+        </div>
+        <!-- <div class="col l3 s12">
+          <h5 class="white-text">Settings</h5>
+          <ul>
+            <li><a class="white-text" href="#!">Link 1</a></li>
+            <li><a class="white-text" href="#!">Link 2</a></li>
+            <li><a class="white-text" href="#!">Link 3</a></li>
+            <li><a class="white-text" href="#!">Link 4</a></li>
+          </ul>
+        </div>
+        <div class="col l3 s12">
+          <h5 class="white-text">Connect</h5>
+          <ul>
+            <li><a class="white-text" href="#!">Link 1</a></li>
+            <li><a class="white-text" href="#!">Link 2</a></li>
+            <li><a class="white-text" href="#!">Link 3</a></li>
+            <li><a class="white-text" href="#!">Link 4</a></li>
+          </ul>
+        </div>
+      </div> -->
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      HTML template by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+
   </body>
 </html>
