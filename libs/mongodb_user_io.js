@@ -1,17 +1,25 @@
 var mongoose = require('mongoose'); //load the mongoose module, ORM for MongoDB
 var User = require("../models/user.js").User;
 
+// debug.js
+var debug = require("./debug/debug.js");
+dlog = debug.dlog;
+def_opts = {
+  id: "mongodb",
+  isError: false
+}
+
 var db_name = "MeetingMagic";
 
 mongoose.connect('mongodb://localhost/' + db_name); //connect to the database on 'localhost'
 
 function read_user(uname, pwd) {
   User.findOne({ username: uname, password: pwd }, function(err, user) {
-    if (user) {
-      console.log("user " + user.username + " exists")
+    if (err) {
+      dlog("failed reading user " + uname, {id: "mongodb", isError: true, errMsg: err});
     }
     else {
-      console.log("user doesn't exist")
+      dlog("user " + user.username + " exists", def_opts);
     }
   })
 }
@@ -28,7 +36,7 @@ function write_user(uname, pwd, foodPrefs) {
   //save the user to the db
   user1.save(function (err, userObj) {
     if (err) {
-      console.log(err);
+      dlog("failed writing user " + userObj.username, {id: "mongodb", isError: true, errMsg: err});
     }
     else {
       console.log('Saved successfully: ', userObj);
@@ -36,5 +44,5 @@ function write_user(uname, pwd, foodPrefs) {
   });
 }
 
-//write_user("noahw", "123noah123", ["Pizza", "Indian", "Sushi"]);
-//read_user("noahw", "123noah123");
+write_user("test1", "123noah123", ["Pizza", "Indian", "Sushi"]);
+read_user("test2", "123noah123");
