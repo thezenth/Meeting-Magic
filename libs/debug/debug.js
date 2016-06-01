@@ -40,7 +40,6 @@ function dlog (msg, opts) {
 
   if (opts.isError) {
     mainStr = startStr + error(" ERROR:") + msg;
-    console.log(errStr);
   }
 
   console.log(mainStr); //this gets called whether or not there is an error
