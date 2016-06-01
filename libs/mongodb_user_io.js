@@ -6,22 +6,29 @@ var debug = require("./debug/debug.js");
 dlog = debug.dlog;
 def_opts = {
   id: "mongodb",
+  isWarning: false,
   isError: false
 }
 
+//mongoose and db stuff
 var db_name = "MeetingMagic";
-
 mongoose.connect('mongodb://localhost/' + db_name); //connect to the database on 'localhost'
 
 function read_user(uname, pwd) {
-  User.findOne({ username: uname, password: pwd }, function(err, user) {
+  User.find({ username: uname, password: pwd }, function(err, foundArr) {
     if (err) {
-      dlog("failed reading user " + uname, {id: "mongodb", isError: true, errMsg: err});
+      dlog(err, {id: "mongodb", isError: true, isWarning: false});
     }
     else {
-      dlog("user " + user.username + " exists", def_opts);
+      if (foundArr.length > 0) {
+        dlog("user " + user.username + " exists", def_opts);
+        dlog(foundArr[0], def_opts);
+      }
+      else {
+        dlog("user " + uname + " doesn't exist", {id: "mongodb", isError: false, isWarning: true});
+      }
     }
-  })
+  }).limit(1);
 }
 
 function write_user(uname, pwd, foodPrefs) {
@@ -36,7 +43,7 @@ function write_user(uname, pwd, foodPrefs) {
   //save the user to the db
   user1.save(function (err, userObj) {
     if (err) {
-      dlog("failed writing user " + userObj.username, {id: "mongodb", isError: true, errMsg: err});
+      console.log("failed writing user " + userObj.username);
     }
     else {
       console.log('Saved successfully: ', userObj);

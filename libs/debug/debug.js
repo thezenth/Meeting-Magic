@@ -7,15 +7,18 @@ function dlog (msg, opts) {
   /* **opts**
   opts: {
     id: "some debug identifier like mongodb or sever - i.e., the source usually",
+    isWarning: is this a warning message, but maybe not code breaking (boolean),
     isError: is this an error message (boolean),
-    errMsg: "extra error string, only if isError is true"
   }
   */
 
-  def = chalk.yellow.bold
-  mongodb = chalk.bgCyan.bold;
-  server = chalk.bgYellow.bold;
-  error = chalk.bgRed.bold;
+  def = chalk.yellow.bold;
+  error = chalk.gray.bgRed.bold;
+  warning = chalk.gray.bgYellow.bold;
+
+  mongodb = chalk.gray.bgCyan.bold;
+  server = chalk.gray.bgBlue.bold;
+
 
   switch (opts.id) {
     case 'mongodb':
@@ -30,12 +33,17 @@ function dlog (msg, opts) {
   }
 
   mainStr = startStr + ":" + msg;
-  console.log(mainStr); //this gets called whether or not there is an error
+
+  if (opts.isWarning) {
+    mainStr = startStr + warning(" WARNING:" + msg);
+  }
 
   if (opts.isError) {
-    errStr = startStr + error(" ERROR:") + opts.errMsg;
+    mainStr = startStr + error(" ERROR:") + msg;
     console.log(errStr);
   }
+
+  console.log(mainStr); //this gets called whether or not there is an error
 
 }
 
