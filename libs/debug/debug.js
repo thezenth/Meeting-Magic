@@ -13,13 +13,15 @@ function dlog (msg, opts) {
   */
 
   //msgTxt = chalk.gray;
-  def = chalk.yellow.bold;
-  error = chalk.black.bgRed.bold;
-  warning = chalk.black.bgYellow.bold;
+  var def = chalk.yellow.bold;
+  var error = chalk.black.bgRed.bold;
+  var warning = chalk.black.bgYellow.bold;
 
-  mongodb = chalk.black.bgCyan.bold;
-  server = chalk.black.bgBlue.bold;
+  var mongodb = chalk.black.bgCyan.bold;
+  var server = chalk.black.bgBlue.bold;
+  var api_fetch = chalk.black.bgMagenta.bold;
 
+  var startStr = "";
 
   switch (opts.id) {
     case 'mongodb':
@@ -27,6 +29,9 @@ function dlog (msg, opts) {
       break;
     case 'server':
       startStr = server(opts.id);
+      break;
+    case 'google-places-api':
+      startStr = api_fetch(opts.id);
       break;
     default:
       startStr = def(opts.id);
