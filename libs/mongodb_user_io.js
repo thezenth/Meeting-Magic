@@ -21,7 +21,7 @@ function read_user(uname, pwd) {
     }
     else {
       if (foundArr.length > 0) {
-        dlog("user " + user.username + " exists", def_opts);
+        dlog("user " + foundArr[0].username + " exists", def_opts);
         dlog(foundArr[0], def_opts);
       }
       else {
@@ -43,13 +43,13 @@ function write_user(uname, pwd, foodPrefs) {
   //save the user to the db
   user1.save(function (err, userObj) {
     if (err) {
-      console.log("failed writing user " + userObj.username);
+      dlog(err, {id: "mongodb", isError: true, isWarning: false});
     }
     else {
-      console.log('Saved successfully: ', userObj);
+      dlog("user " + userObj.username + " saved", def_opts);
     }
   });
 }
 
 write_user("test1", "123noah123", ["Pizza", "Indian", "Sushi"]);
-read_user("test2", "123noah123");
+read_user("test1", "123noah123");

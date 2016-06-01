@@ -12,12 +12,13 @@ function dlog (msg, opts) {
   }
   */
 
+  //msgTxt = chalk.gray;
   def = chalk.yellow.bold;
-  error = chalk.gray.bgRed.bold;
-  warning = chalk.gray.bgYellow.bold;
+  error = chalk.black.bgRed.bold;
+  warning = chalk.black.bgYellow.bold;
 
-  mongodb = chalk.gray.bgCyan.bold;
-  server = chalk.gray.bgBlue.bold;
+  mongodb = chalk.black.bgCyan.bold;
+  server = chalk.black.bgBlue.bold;
 
 
   switch (opts.id) {
@@ -35,7 +36,7 @@ function dlog (msg, opts) {
   mainStr = startStr + ":" + msg;
 
   if (opts.isWarning) {
-    mainStr = startStr + warning(" WARNING:" + msg);
+    mainStr = startStr + warning("WARNING:") + msg;
   }
 
   if (opts.isError) {
