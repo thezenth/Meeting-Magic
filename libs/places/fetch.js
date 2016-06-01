@@ -93,6 +93,8 @@ function get_place(place_query) {
 
 }
 
+exports.get_place = get_place;
+
 /*var rest_pq = food_q;
 rest_pq.position = {
   lat: 34.058583,

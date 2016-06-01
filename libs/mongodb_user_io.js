@@ -51,5 +51,5 @@ function write_user(uname, pwd, foodPrefs) {
   });
 }
 
-write_user("test1", "123noah123", ["Pizza", "Indian", "Sushi"]);
-read_user("test1", "123noah123");
+//write_user("test1", "123noah123", ["Pizza", "Indian", "Sushi"]);
+//read_user("test1", "123noah123");
