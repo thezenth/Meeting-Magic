@@ -14,12 +14,12 @@ var def_opts = {
 }
 
 //latitude, longitude, rad, query, oauth, types="food", rankBy="prominence"
-/* **opts**
-opts: {
-  types="food" (type of place)
-  rankBy="empty, distance, or prominence",
-}
-*/
+// **opts**
+//opts: {
+//  types="food" (type of place)
+//  rankBy="empty, distance, or prominence",
+//}
+
 var goog_key = "AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ"
 
 /**
