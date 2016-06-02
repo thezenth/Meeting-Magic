@@ -21,12 +21,26 @@ opts: {
 }
 */
 var goog_key = "AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ"
-function build_url (latitude, longitude, rad, types, query, rankBy, oauth) {
+
+/**
+* Builds a URL according to the Google Places API.
+*
+* @method build_url
+* @param {Number} latitude The latitude coordinate of the center of the search area.
+* @param {Number} longitude The longitude coordinate of the center of the search area.
+* @param {Number} rad The radius of the search area.
+* @param {String} type The type of place you will be looking for; ex: food, crusie, entertainment, etc.
+* @param {String} keywords The keywords of the search itself; ex: coffee, Indian, Pizza, etc.
+* @param {String} rankBy Rank the data either by "distance" from center of "prominence" (which includes rating, mentions on google, etc.). Specifies the order in which the data will be returned.
+* @param {String} oauth The authKey, provided by the Google Places API.
+* @return {String} newUrl The new URL.
+*/
+function build_url (latitude, longitude, rad, type, keywords, rankBy, oauth) {
     var base = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
     var location = "location=" + latitude.toString() + "," + longitude.toString();
     var radius = "radius=" + rad.toString();
-    var search = "keyword=" + query;
-    var place_type = "types=" + types;
+    var search = "keyword=" + keywords;
+    var place_type = "types=" + type;
     var authKey = "key=" + oauth;
 
     var rank_by = ""
@@ -52,17 +66,24 @@ function build_url (latitude, longitude, rad, types, query, rankBy, oauth) {
     // EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&rankby=prominence&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
 }
 
-/* **place_query**
-place_query: {
-  position: {
-    lat: 0,
-    long: 0
-  },
-  rad: 0,
-  type: "type of place (e.g., food, entertainment)",
-  cat: "category" (e.g., pizza, indian food, etc.),
-  rankBy: "prominence" or "distance" or ""
-}
+// place_query
+//place_query: {
+//  position: {
+//    lat: 0,
+//    long: 0
+//  },
+//  rad: 0,
+//  type: "type of place (e.g., food, entertainment)",
+//  cat: "category" (e.g., pizza, indian food, etc.),
+//  rankBy: "prominence" or "distance" or ""
+//}
+
+/**
+* Designed to fetch data, specifically using the Google Places API (as it uses build_url, which builds a URL specifically for the Google Places API). Does not parse data, only gets it.
+*
+* @method get_place
+* @param {Object} place_query An object with all of the information needed to build the fetch URL. Specification: place_query: { position: { lat: Number, long: Number }, rad(radius of search): Number, type(see type in build_url): String, cat(see keywords in build_url): String, rankBy(see rankBy in build_url): String }
+* @return {String} body The JSON returned from the GET request. This is only returned if there are no errors.
 */
 
 function get_place(place_query) {

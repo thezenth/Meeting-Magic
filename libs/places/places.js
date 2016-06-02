@@ -1,5 +1,6 @@
 // ***For now, this is a list of basic query structures***
 
+
 //Reference model
 var Basic = {
   position: {

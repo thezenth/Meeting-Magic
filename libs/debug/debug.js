@@ -1,5 +1,11 @@
 chalk = require('chalk');
-
+/**
+* A function which uses Chalk to display colored debug messages, based upon the context of the message (is it a warning, is it from mongodb, etc.)
+*
+* @method dlog
+* @param {String} msg The debug message to be displayed.
+* @param {Object} opts An object with options for the id of the message (i.e., is it from the server, mongodb, etc.), and whether it is a warning, error, or neither. Specification: { id: String, isWarning: Boolean, isError: Boolean }.
+*/
 function dlog (msg, opts) {
 
   //possibly add cases for warnings?

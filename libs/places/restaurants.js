@@ -8,6 +8,7 @@ var food_q = places.Food;
 
 /**
 * Designed to fetch data on a restaurant from the Google Places API in JSON format, using the get_place function from fetch.js and Food query template.
+*
 * @method fetch_parse
 * @param {Object} pos A position object.
 * @param {Number} rad The radius of the defined search area circle.
