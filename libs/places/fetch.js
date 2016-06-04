@@ -124,6 +124,7 @@ function get_place(q, parseFunc) {
     function (err, results) {
       if (!err) {
         for (var i = 0; i < results.length; i++) {
+            //console.log(i);
             //console.log(results[i], def_opts);
             parseFunc(results[i]);
         }

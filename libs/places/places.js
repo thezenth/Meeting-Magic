@@ -1,6 +1,20 @@
-// ***For now, this is a list of basic query structures***
+// ***For now, this is a list of basic query and object structures***
 
+var BasicPlace = {
+  position: {
+    lat: 0,
+    long: 0
+  },
+  name: "",
+  address: "",
+  hours: [],
+  type: ""
+}
 
+var Restaurant = BasicPlace;
+Restaurant.type = "food";
+
+//GET Request queries to Google Places API
 //Reference model
 var Basic = {
   position: {
@@ -13,10 +27,11 @@ var Basic = {
   rankBy: ""
 };
 
-//Restaurants/other food things
+//Restaurants/other food queries
 var Food = Basic;
 Food.type = "food";
 
 module.exports = {
-  Food: Food
+  Food: Food,
+  Restaurant: Restaurant
 }

@@ -19,7 +19,7 @@ function dlog (msg, opts) {
   */
 
   if (msg !== null && typeof msg == 'object') {
-    msg = JSON.stringify(msg);
+    msg = JSON.stringify(msg, null, 4);
   }
 
   //msgTxt = chalk.gray;
