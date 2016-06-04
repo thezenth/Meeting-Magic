@@ -88,12 +88,6 @@ function build_url (latitude, longitude, rad, type, keywords, rankBy, oauth) {
 * @return {String} body The JSON returned from the GET request. This is only returned if there are no errors.
 */
 
-var lookup_list = [];
-var total_requests = 1;
-for (var i = 0; i < total_requests; i++) {
-    lookup_list.push(i);
-}
-
 function get_place(q, parseFunc) {
   var url = build_url (
     q.position.lat,
@@ -105,6 +99,31 @@ function get_place(q, parseFunc) {
     goog_key
   );
   dlog(url, def_opts);
+
+  async.parallel([
+    /*
+     * First external endpoint
+     */
+    function(callback) {
+      //var url = "http://external1.com/api/some_endpoint";
+      request(url, function(err, response, body) {
+        // JSON body
+        if(err) { console.log(err); callback(true); return; }
+        obj = JSON.parse(body);
+        callback(false, obj);
+      });
+    }
+  ],
+  /*
+   * Collate results
+   */
+  function(err, results) {
+    parseFunc(results[0]);
+  });
+}
+
+/*function get_place(q, parseFunc) {
+
 
   async.map(lookup_list, function (item, callback) {
       request(url, function (err, response, body) {
@@ -137,6 +156,7 @@ function get_place(q, parseFunc) {
       }
     });
 }
+*/
 
 exports.get_place = get_place;
 
