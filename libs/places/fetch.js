@@ -1,5 +1,7 @@
 var request = require('request');
 
+var async = require('async');
+
 //places.js
 var places = require("./places.js");
 var food_q = places.Food;
@@ -86,6 +88,67 @@ function build_url (latitude, longitude, rad, type, keywords, rankBy, oauth) {
 * @return {String} body The JSON returned from the GET request. This is only returned if there are no errors.
 */
 
+var lookup_list = [];
+var total_requests = 1;
+for (var i = 0; i < total_requests; i++) {
+    lookup_list.push(i);
+}
+
+function get_place(q, parseFunc) {
+  var url = build_url (
+    q.position.lat,
+    q.position.long,
+    q.rad,
+    q.type,
+    q.cat,
+    q.rankBy,
+    goog_key
+  );
+
+  async.map(lookup_list, function (item, callback) {
+      request(url, function (err, response, body) {
+        if (!err && response.statusCode == 200) {
+          //dlog("successfully fetched google places api", def_opts);
+          //dlog("query=\n" + place_query.toString(), def_opts);
+          //dlog("results:\n" + body);
+          callback(null, JSON.parse(body));
+        }
+        else if (response.statusCode != 200) {
+          callback(response.statusCode, null);
+        }
+        else {
+          callback(err, null);
+        }
+      });
+    },
+    function (err, results) {
+      if (!err) {
+        for (var i = 0; i < results.length; i++) {
+            //console.log(results[i], def_opts);
+            parseFunc(results[i]);
+        }
+      }
+      else {
+        dlog(err, def_opts);
+        //console.log("We had an error somewhere.");
+      }
+    });
+}
+
+exports.get_place = get_place;
+
+/*function secondFunction(data) {
+  //console.log(data);
+  for(var i =0; i<data.length; i++) {
+    console.log(data[i]);
+  }
+}
+
+function testy(err, result) {
+  return err;
+  return result;
+}
+
 function get_place(place_query) {
   var url = build_url (
     place_query.position.lat,
@@ -97,24 +160,40 @@ function get_place(place_query) {
     goog_key
   );
 
-  request(url, function (err, response, body) {
-    if (!err && response.statusCode == 200) {
-      dlog("successfully fetched google places api", def_opts);
-      //dlog("query=\n" + place_query.toString(), def_opts);
-      //dlog("results:\n" + body);
-      return (body);
+  var funcy = function() {
+    request(url, function (err, response, body) {
+      if (!err && response.statusCode == 200) {
+        //dlog("successfully fetched google places api", def_opts);
+        //dlog("query=\n" + place_query.toString(), def_opts);
+        //dlog("results:\n" + body);
+        testy(null, JSON.parse(body));
+      }
+      else if (response.statusCode != 200) {
+        dlog("status code: " + response.statusCode);
+      }
+      else {
+        dlog(err, def_opts);
+      }
+    });
+  }
+
+  async.parallel([
+    function(testy){
+      setTimeout(funcy, 200);
     }
-    else if (response.statusCode != 200) {
-      dlog("status code: " + response.statusCode);
-    }
-    else {
-      dlog(err, def_opts);
-    }
+  ],
+  function(err, results){
+      console.log(results[0])
   });
 
-}
 
-exports.get_place = get_place;
+
+
+  //call_thing();
+
+}
+*/
+//exports.get_place = get_place;
 
 /*var rest_pq = food_q;
 rest_pq.position = {
@@ -127,7 +206,6 @@ rest_pq.rankBy = "prominence";
 
 get_place(rest_pq);
 */
-
 /*
 build_url(
   34.058583,

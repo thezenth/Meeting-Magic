@@ -18,6 +18,10 @@ function dlog (msg, opts) {
   }
   */
 
+  if (msg !== null && typeof msg == 'object') {
+    msg = JSON.stringify(msg);
+  }
+
   //msgTxt = chalk.gray;
   var def = chalk.yellow.bold;
   var error = chalk.black.bgRed.bold;
