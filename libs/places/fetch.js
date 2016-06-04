@@ -104,6 +104,7 @@ function get_place(q, parseFunc) {
     q.rankBy,
     goog_key
   );
+  dlog(url, def_opts);
 
   async.map(lookup_list, function (item, callback) {
       request(url, function (err, response, body) {
@@ -124,9 +125,10 @@ function get_place(q, parseFunc) {
     function (err, results) {
       if (!err) {
         for (var i = 0; i < results.length; i++) {
-            //console.log(i);
-            //console.log(results[i], def_opts);
-            parseFunc(results[i]);
+          dlog(i, def_opts);
+          //console.log(i);
+          //console.log(results[i], def_opts);
+          parseFunc(results[i]['results']);
         }
       }
       else {

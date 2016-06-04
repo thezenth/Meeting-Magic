@@ -37,18 +37,19 @@ rest_pq.rankBy = "prominence";
 * @param {String} rankBy For the Google Places API, either "distance" (which then ignores radius, and ranks by distance from provided position), or "prominence" (which takes into account rating, mentions on google, etc.)
 */
 
+var restList = [];
+
 function fetch_parse(data) {
   //results = get_place(query);
   //dlog(data, def_opts);
   //dlog(data.length, def_opts);
-
-  dlog("parsing JSON data", def_opts);
   var restList = [];
-  async.each(data, function (item, callback) {
-    for(var i=0;i<item.length;i++) {
-      if(typeof item[i] == 'object') {
-        //dlog(item[i], def_opts);
-        curr_rest = item[i]
+
+  function parseInfo(item, callback) {
+    //for(var i=0;i<item.length;i++) {
+      if(typeof item == 'object') {
+        //ddlog(item[i], def_opts);
+        curr_rest = item;
         ident = "Not available"
         name = "Not available"
         address = "Not available"
@@ -101,12 +102,27 @@ function fetch_parse(data) {
         newRest.name = name;
         newRest.address = address;
         newRest.hours = hours;
-        //dlog(newRest, def_opts);
+        objStr = JSON.stringify(newRest, null, 4)
 
-        if(restList.indexOf(newRest) == -1) {
-          console.log("HELLO");
-          restList.push(newRest);
+        dlog(objStr, def_opts);
+        restList.push(objStr);
+        /*if(restList.length == 0) {
+          //console.log(newRest);
+          dlog(newRest.name, def_opts);
+          restList.push(newRest.name);
+          //dlog(restList, def_opts);
         }
+        else {
+          var exists = false;
+          for (var r =0; r<restList.length; r++) {
+            if (restList[r].name == newRest.name) {
+              exists = true;
+            }
+          }
+          if (!exists) {
+            restList.push(name);
+          }
+        }*/
         //dlog(restList, def_opts);
         //dlog(restList, def_opts);
         //newRest = Restaurant(ident, name, address, rest_latitude, rest_longitude, hours, rating)
@@ -116,11 +132,13 @@ function fetch_parse(data) {
 
         //return (restList[:5]) # Returns the top 5 rated restaurants --> Since the fetch is already done in terms of rating, this returns the top 5 restaurants form the search
       }
-    }
-    callback(null);
-  },
-  function(err) {
-    console.log(restList);
+    //}
+    callback(null, restList);
+  }
+
+  dlog("parsing JSON data", def_opts);
+  async.parallel(data, parseInfo, function (e, r) {
+    console.log(r);
   });
 }
 get_place(rest_pq, fetch_parse);
