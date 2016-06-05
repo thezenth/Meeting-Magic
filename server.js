@@ -1,5 +1,7 @@
 var express = require('express');
 var app = express();
+
+//var routes = express.Router();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
@@ -12,18 +14,30 @@ var def_opts = {
   isError: false
 }
 
+/*** Basic Idea ***
+Example: user clicks on the "about" button on the webpage,
+which redirects them to example.com/about,
+which is then sent as a request ot the server which runs the "app.get" for '/about',
+rendering about.pug in the browser!
+*/
+
 //view engine stuff
 app.set('views', './views');
 app.set('view engine', 'pug');
 
-app.get('/', function (req, res) {
+app.use(require('./controllers'));
+
+
+/*app.get('/', function (req, res) {
   res.render('index', { title: 'Hey', message: 'Hello there!'});
+  dlog("rendering index", def_opts);
 });
 
 app.get('/test', function (req, res) {
   res.render('test');
+  dlog("rendering test", def_opts);
 })
-
+*/
 app.listen(3000, function() {
   dlog('listening on port 3000', def_opts);
 })
