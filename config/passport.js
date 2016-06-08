@@ -7,6 +7,16 @@ var User       		= require('../models/user');
 
 var mongoose = require('mongoose');
 
+// debug.js
+var debug = require("../libs/debug/debug.js");
+dlog = debug.dlog;
+def_opts = {
+  id: "server",
+  isWarning: false,
+  isError: false
+}
+
+
 // expose this function to our app using module.exports
 module.exports = function(passport) {
 
@@ -114,5 +124,4 @@ module.exports = function(passport) {
         });
 
     }));
-
 };

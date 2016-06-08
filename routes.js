@@ -2,6 +2,9 @@
 prefs = require('./config/preferences.js');
 Foods = prefs.Foods;
 
+var User = require('./models/user');
+
+
 module.exports = function(app, passport) {
   //Home page (with login links)
   app.get('/', function(req, res) {
@@ -49,9 +52,34 @@ module.exports = function(app, passport) {
   });
 
   //user-prefs
-  app.get('/user-prefs', function(req, res) {
+  app.get('/user-prefs', isLoggedIn, function(req, res) {
       res.render('user-prefs', {foods: Foods});
-  })
+  });
+
+  //HEY! Here is what the session data for a user looks like so far:
+  /*
+ { local:
+   { email: 'noahw1',
+     password: '$2a$08$lr/eFXaNfZqEwF5ld0u5x.iXvdbKL3hzklJcIMAh7rwTPfeTzxPFq' },
+  food_prefs: [],
+  __v: 0,
+  _id: 575843c2bf7bd32028c5decd }
+  */
+  app.post('/user-prefs', function(req, res) {
+      process.nextTick(function() {
+          //dlog("session: " + req, def_opts);
+          //dlog("session: user is " + req.user, def_opts);
+          dlog("session: user email is " + req.user.local.email, def_opts);
+          User.findOne({ 'local.email' : req.user.local.email }, function(err, user) {
+              dlog("got foodprefs: " + req.body.foodprefs, def_opts);
+              user.food_prefs = req.body.foodprefs;
+              user.save();
+              dlog("successfully update user prefs", def_opts);
+          });
+      });
+
+
+  });
 
 };
 
