@@ -1,5 +1,7 @@
 # Created by https://www.gitignore.io/api/python
 
+node_modules
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
