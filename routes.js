@@ -1,3 +1,7 @@
+//preferences.js
+prefs = require('./config/preferences.js');
+Foods = prefs.Foods;
+
 module.exports = function(app, passport) {
   //Home page (with login links)
   app.get('/', function(req, res) {
@@ -46,7 +50,7 @@ module.exports = function(app, passport) {
 
   //user-prefs
   app.get('/user-prefs', function(req, res) {
-      res.render('user-prefs', {foods: ["American", "Indian","Japanese","Italian"]});
+      res.render('user-prefs', {foods: Foods});
   })
 
 };
