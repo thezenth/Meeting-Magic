@@ -43,6 +43,12 @@ module.exports = function(app, passport) {
     req.logout();
     res.redirect('/');
   });
+
+  //user-prefs
+  app.get('/user-prefs', function(req, res) {
+      res.render('user-prefs', {foods: ["American", "Indian","Japanese","Italian"]});
+  })
+
 };
 
 //route middleware to make sure user is logged in
