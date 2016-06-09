@@ -88,7 +88,7 @@ module.exports = function(app, passport) {
 function isLoggedIn(req, res, next) {
   //if user is authenticated in session, carry on
   if(req.isAuthenticated()) {
-    return next();
+    return next(); //this is usually called before another call back function, so next says to go to the next callback function
   }
 
   //if they aren't, redirect to home page

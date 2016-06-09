@@ -1,51 +1,65 @@
-<!doctype html>
-<html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Meeting Magic</title>
 
-    <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
-        <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script> <!-- jquery wooo -->
-        <script>
-            window.selFoods = [];
-            window.colorButton = function(bId) {
-                theButton = document.getElementById(bId);
-                if(theButton.className == "mdl-button mdl-js-button mdl-button--raised") {
-                    theButton.className = "mdl-button mdl-js-button mdl-button--raised mdl-button--colored";
-                    selFoods.push(theButton.innerHTML);
-                    console.log(selFoods);
-                }
-                else if(theButton.className == "mdl-button mdl-js-button mdl-button--raised mdl-button--colored") {
-                    theButton.className = "mdl-button mdl-js-button mdl-button--raised";
-                    idx = selFoods.indexOf(theButton.innerHTML);
-                    selFoods.splice(idx,1);
-                    console.log(selFoods);
-                }
-            }
-        </script>
-    </head>
-        <h1>Food</h1> <br>
-        <form action="/user-prefs" method="post">
-            <% for(var i=0; i<foods.length; i++) { %>
-                <% if (userPrefs.foodprefs.indexOf(foods[i]) == -1 ) { %>
-                    <input type="checkbox" name="foodprefs[]" id='<%= "in--"+foods[i] %>' value='<%= foods[i] %>'>
-                <% } else { %>
-                    <input type="checkbox" name="foodprefs[]" id='<%= "in--"+foods[i] %>' value='<%= foods[i] %>' checked>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.teal-red.min.css">
+    <link rel="stylesheet" href="/css/user-pref_styles.css">
+    <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+
+  </head>
+  <body>
+    <div class="demo-layout mdl-layout mdl-layout--fixed-header mdl-js-layout mdl-color--grey-100">
+      <header class="demo-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">
+        <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title">Account Settings</span>
+          <div class="mdl-layout-spacer"></div>
+        </div>
+      </header>
+      <div class="demo-ribbon"></div>
+      <main class="demo-main mdl-layout__content">
+        <div class="demo-container mdl-grid">
+          <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+          <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
+            <h3>Food Preferences</h3>
+            <form action="/user-prefs" method="post">
+
+                <% for(var i=0; i<foods.length; i++) { %>
+
+                    <label for='<%= "in--"+foods[i] %>' class="mdl-checkbox mdl-js-checkbox">
+                        <% if (userPrefs.foodprefs.indexOf(foods[i]) == -1 ) { %>
+                            <input type="checkbox" name="foodprefs[]" id='<%= "in--"+foods[i] %>' value='<%= foods[i] %>' class="mdl-checkbox__input">
+                        <% } else { %>
+                            <input type="checkbox" name="foodprefs[]" id='<%= "in--"+foods[i] %>' value='<%= foods[i] %>' class="mdl-checkbox__input" checked>
+                        <% } %>
+                        <span class="mdl-checkbox__label"><%= foods[i] %></span>
+                    </label>
+
+                    <% if ( ( (i+1) % 3) == 0 ) { %>
+                        <br>
+                    <% } %>
+
                 <% } %>
-                <label for='<%= "in--"+foods[i] %>'><%= foods[i] %></label>
-                <% if ( ( (i+1) % 3) == 0 ) { %>
-                    <br>
-                <% } %>
-            <% } %>
-            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Done</button>
-        </form>
-        <!--<script>
-            $("#submit-button").click(function() {
-                $.post()
-            })
-        </script> -->
-    <body>
 
-    </body>
+                <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Done</button>
 
+            </form>
+          </div>
+        </div>
+        <footer class="demo-footer mdl-mini-footer">
+          <div class="mdl-mini-footer--left-section">
+            <ul class="mdl-mini-footer--link-list">
+              <li><a href="#">Help</a></li>
+              <li><a href="#">Privacy and Terms</a></li>
+              <li><a href="#">User Agreement</a></li>
+            </ul>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </body>
 </html>
