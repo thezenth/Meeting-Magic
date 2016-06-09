@@ -53,7 +53,7 @@ module.exports = function(app, passport) {
 
   //user-prefs
   app.get('/user-prefs', isLoggedIn, function(req, res) {
-      res.render('user-prefs', {foods: Foods});
+      res.render('user-prefs', {userPrefs: {foodprefs: req.user.food_prefs}, foods: Foods});
   });
 
   //HEY! Here is what the session data for a user looks like so far:
@@ -75,6 +75,7 @@ module.exports = function(app, passport) {
               user.food_prefs = req.body.foodprefs;
               user.save();
               dlog("successfully update user prefs", def_opts);
+              res.redirect('/profile');
           });
       });
 
