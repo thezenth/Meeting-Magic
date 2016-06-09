@@ -1,5 +1,5 @@
 {
-  "name": "node-authentication",
+  "name": "meeting-magic",
   "main": "server.js",
   "dependencies" : {
     "express" : "latest",
@@ -17,6 +17,8 @@
     "body-parser": "~1.0.0",
     "cookie-parser": "~1.0.0",
     "method-override": "~1.0.0",
-    "express-session": "~1.0.0"
+    "express-session": "~1.0.0",
+
+    "js-yaml": "latest"
   }
 }
