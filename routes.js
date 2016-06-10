@@ -74,7 +74,7 @@ module.exports = function(app, passport) {
               dlog("got foodprefs: " + req.body.foodprefs, def_opts);
               user.food_prefs = req.body.foodprefs;
               user.save();
-              dlog("successfully update user prefs", def_opts);
+              dlog("successfully updated user", def_opts);
               res.redirect('/home');
           });
       });
@@ -88,12 +88,22 @@ module.exports = function(app, passport) {
       process.nextTick(function() {
           dlog("session: user email is " + req.user.local.email, def_opts);
           User.findOne({ 'local.email' : req.user.local.email }, function(err, user) {
-              if(req.body.newemail !== null) {
-                  user.local.email = req.body.newemail;
-                  user.save();
+              if(typeof req.body.newemail != 'undefined') {
+                  dlog("checking format of new email...", def_opts);
+                  if(req.body.newemail.includes("/^$|\s+/")) {
+                      user.local.email = req.body.newemail;
+                      user.save();
+                  }
               }
-              dlog("successfully update user prefs", def_opts);
-              res.redirect('/home');
+              else if(typeof req.body.newpwd != 'undefined') {
+                  dlog("checking format of new password...", def_opts);
+                  if(req.body.newpwd.includes("/^$|\s+/")) {
+                      user.local.password = req.body.newpwd;
+                      user.save();
+                  }
+              }
+              dlog("successfully updated user", def_opts);
+              res.redirect('/profile');
           });
       });
   });

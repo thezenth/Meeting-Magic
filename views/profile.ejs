@@ -28,11 +28,15 @@
           <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
           <div class="demo-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
             <h3>Profile</h3>
-            <!--<h2></h2>-->
-            <h5>Email</h5>
-            <p><%= user.local.email %></p>
-            <button onClick="<%- "inputOnClick(this.id, 'newemail', 'Email')" %>" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="email-button">Change Email</button>
-
+            <div>
+                <h5>Email</h5>
+                <p><%= user.local.email %></p>
+                <button onClick="<%- "inputOnClick(this.id, 'newemail', 'Email')" %>" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="email-button">Change Email</button>
+            </div>
+            <div>
+                <h5>Password</h5>
+                <button onClick="<%- "inputOnClick(this.id, 'newpwd', 'Password')" %>" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="pwd-button">Change Password</button>
+            </div>
           </div>
         </div>
         <footer class="demo-footer mdl-mini-footer">
