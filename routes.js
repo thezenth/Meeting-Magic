@@ -78,8 +78,10 @@ module.exports = function(app, passport) {
               res.redirect('/home');
           });
       });
+  });
 
-
+  app.get('/profile', isLoggedIn, function(req, res) {
+     res.render('profile', {user:req.user});
   });
 
 };
