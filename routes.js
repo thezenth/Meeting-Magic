@@ -84,6 +84,20 @@ module.exports = function(app, passport) {
      res.render('profile', {user:req.user});
   });
 
+  app.post('/profile', function(req, res) {
+      process.nextTick(function() {
+          dlog("session: user email is " + req.user.local.email, def_opts);
+          User.findOne({ 'local.email' : req.user.local.email }, function(err, user) {
+              if(req.body.newemail !== null) {
+                  user.local.email = req.body.newemail;
+                  user.save();
+              }
+              dlog("successfully update user prefs", def_opts);
+              res.redirect('/home');
+          });
+      });
+  });
+
 };
 
 //route middleware to make sure user is logged in
