@@ -43,9 +43,7 @@ module.exports = function (app, passport) {
 	//want this protected so you have to be logged in to visit
 	//use route middleware to verify this (the isLoggedIn function)
 	app.get('/home', isLoggedIn, function (req, res) {
-		res.render('home', {
-			user: req.user //get the user out of session and pass to template
-		});
+		res.render('home', {user: req.user });//get the user out of session and pass to template
 	});
 
 	//Logout
@@ -56,12 +54,7 @@ module.exports = function (app, passport) {
 
 	//user-prefs
 	app.get('/user-prefs', isLoggedIn, function (req, res) {
-		res.render('user-prefs', {
-			userPrefs: {
-				foodprefs: req.user.food_prefs
-			},
-			foods: Foods
-		});
+		res.render('user-prefs', {userPrefs: {foodprefs: req.user.food_prefs},foods: Foods});
 	});
 
 	//HEY! Here is what the session data for a user looks like so far:
@@ -91,17 +84,13 @@ module.exports = function (app, passport) {
 	});
 
 	app.get('/profile', isLoggedIn, function (req, res) {
-		res.render('profile', {
-			user: req.user
-		});
+		res.render('profile', {user: req.user});
 	});
 
 	app.post('/profile', function (req, res) {
 		process.nextTick(function () {
 			dlog("session: user email is " + req.user.local.email, def_opts);
-			User.findOne({
-				'local.email': req.user.local.email
-			}, function (err, user) {
+			User.findOne({'local.email': req.user.local.email}, function (err, user) {
 				if (typeof req.body.newemail != 'undefined') {
 					dlog("checking format of new email...", def_opts);
 					if (req.body.newemail.includes("/^$|\s+/")) {
@@ -119,6 +108,10 @@ module.exports = function (app, passport) {
 				res.redirect('/profile');
 			});
 		});
+	});
+
+	app.get('/meeting', isLoggedIn, function(req, res) {
+		res.render('meeting');
 	});
 
 };
