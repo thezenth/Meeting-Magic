@@ -14,18 +14,11 @@
   </script>
 
 	<body>
-        <form action="/meeting" method="post">
-            <div class="form-group">
-                <label>Other user</label>
-                <input type="text" class="form-control" name="otheremail">
-            </div>
-            <div class="form-group">
-                <label>Location</label>
-                <input type="text" class="form-control" name="coords" id="location">
-            </div>
-
-            <button type="submit" class="btn btn-warning btn-lg">Go!</button>
-        </form>
-    </body>
+		<div>
+        <% for(var i = 0; i<places.length; i++) { %>
+							<p><%= places[i].name %></p>
+				<% } %>
+		</div>
+	</body>
 
 </html>

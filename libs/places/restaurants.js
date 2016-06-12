@@ -33,7 +33,7 @@ var restList = [];
 
 function fetch_parse(data) {
 	//data = get_place(query);
-	dlog(data, def_opts);
+	//dlog(data, def_opts);
 	for (var i = 0; i < data['results'].length; i++) {
 		//dlog(item[i], def_opts);
 		curr_rest = data['results'][i];
@@ -92,7 +92,7 @@ function fetch_parse(data) {
 		newRest.hours = hours;
 		objStr = JSON.stringify(newRest, null, 4)
 
-		dlog(objStr, def_opts);
+		//dlog(objStr, def_opts);
 		restList.push(newRest);
 	}
 	//write restaurants to data.json

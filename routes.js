@@ -14,6 +14,15 @@ var fetch_parse = restaurants.fetch_parse;
 var places = require('./libs/places/places');
 var food_q = places.Food;
 
+// debug.js
+var debug = require("./libs/debug/debug.js");
+var dlog = debug.dlog;
+var def_opts = {
+	id: "server",
+	isWarning: false,
+	isError: false
+}
+
 module.exports = function (app, passport) {
 	//Home page (with login links)
 	app.get('/', function (req, res) {
@@ -124,7 +133,7 @@ module.exports = function (app, passport) {
 		res.render('meeting');
 	});
 
-	app.post('/meeting', function(req, res) {
+	app.post('/meeting', [function(req, res, next) {
 		process.nextTick(function() {
 				User.findOne({'local.email': req.body.otheremail}, function(err, user) {
 					if(user) {
@@ -138,15 +147,28 @@ module.exports = function (app, passport) {
 						rest_pq.rankBy = "prominence";
 
 						get_place(rest_pq, fetch_parse);
-
-						res.redirect('/results');
+						next();
 					}
 				});
 		});
-	});
+	}, function(req, res) {
+		res.redirect('/results');
+	}
+]);
 
 	app.get('/results', isLoggedIn, function(req, res) {
-		res.render('results', {});
+		fs.readFile('./libs/places/data.json', function (err, jsonData) {
+			if(err) {
+				dlog(err, {id: "server", isError:true, isWarning:false});
+			}
+			else {
+				dlog("successfully read ./libs/places/data.json", def_opts);
+				var parsedJson = JSON.parse(jsonData);
+				var found_places = parsedJson["found_places"];
+				var top5 = found_places.slice(0, 5); //gets top 5 restaurants
+				res.render('results', {places: top5});
+			}
+		});
 	});
 
 };
