@@ -109,7 +109,7 @@ function get_place(q, parseFunc) {
 				request(url, function (err, response, body) {
 					// JSON body
 					if (err) {
-						console.log(err);
+						dlog(err, {id: "google-places-api", isError:true, isWarning:false});
 						callback(true);
 						return;
 					}

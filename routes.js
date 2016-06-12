@@ -4,6 +4,16 @@ Foods = prefs.Foods;
 
 var User = require('./models/user');
 
+//fetch and google places stuff
+var fetch = require('./libs/places/fetch');
+var get_place = fetch.get_place;
+
+var restaurants = require('./libs/places/restaurants');
+var fetch_parse = restaurants.fetch_parse;
+
+var places = require('./libs/places/places');
+var food_q = places.Food;
+
 module.exports = function (app, passport) {
 	//Home page (with login links)
 	app.get('/', function (req, res) {
@@ -112,6 +122,31 @@ module.exports = function (app, passport) {
 
 	app.get('/meeting', isLoggedIn, function(req, res) {
 		res.render('meeting');
+	});
+
+	app.post('/meeting', function(req, res) {
+		process.nextTick(function() {
+				User.findOne({'local.email': req.body.otheremail}, function(err, user) {
+					if(user) {
+						var rest_pq = food_q;
+						rest_pq.position = {
+							lat: 34.058583,
+							long: -118.416582
+						};
+						rest_pq.rad = 5000;
+						rest_pq.cat = "coffee";
+						rest_pq.rankBy = "prominence";
+
+						get_place(rest_pq, fetch_parse);
+
+						res.redirect('/results');
+					}
+				});
+		});
+	});
+
+	app.get('/results', isLoggedIn, function(req, res) {
+		res.render('results', {});
 	});
 
 };

@@ -19,15 +19,6 @@ var def_opts = {
 	isError: false
 }
 
-var rest_pq = food_q;
-rest_pq.position = {
-	lat: 34.058583,
-	long: -118.416582
-};
-rest_pq.rad = 5000;
-rest_pq.cat = "coffee";
-rest_pq.rankBy = "prominence";
-
 /**
  * Designed to fetch data on a restaurant from the Google Places API in JSON format, using the get_place function from fetch.js and Food query template.
  *
@@ -42,7 +33,7 @@ var restList = [];
 
 function fetch_parse(data) {
 	//data = get_place(query);
-	console.log(data);
+	dlog(data, def_opts);
 	for (var i = 0; i < data['results'].length; i++) {
 		//dlog(item[i], def_opts);
 		curr_rest = data['results'][i];
@@ -105,24 +96,23 @@ function fetch_parse(data) {
 		restList.push(newRest);
 	}
 	//write restaurants to data.json
-	fs.readFile('./data.json', function (err, data) {
-		var json = JSON.parse(data);
-		//edit the dictionary-JSON structure to reflect found places
-		json['found_places'] = restList;
-		//write the edited structure in its entirity to the data.json file
-		fs.writeFile('./data.json', JSON.stringify(json, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+	//have to read and write from the relative path of the original server.js for some reason..?
+	dlog("attempting to write parsed restaurant objects to ./libs/places/data.json", def_opts);
+	fs.readFile('./libs/places/data.json', function (err, jsonData) {
+		if(err) {
+			dlog(err, {id: "google-places-api", isError:true, isWarning:false});
+		}
+		else {
+			dlog("successfully read ./libs/places/data.json", def_opts);
+			var parsedJson = JSON.parse(jsonData);
+			//edit the dictionary-JSON structure to reflect found places
+			parsedJson['found_places'] = restList;
+			//write the edited structure in its entirity to the data.json file
+			fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+			dlog("successfully wrote ./libs/places/data.json", def_opts);
+		}
 	});
 	//console.log(restList);
 }
 
-var rest_pq = food_q;
-rest_pq.position = {
-	lat: 34.058583,
-	long: -118.416582
-};
-rest_pq.rad = 5000;
-rest_pq.cat = "coffee";
-rest_pq.rankBy = "prominence";
-
-get_place(rest_pq, fetch_parse);
-//get_place(rest_pq, fetch_parse);
+exports.fetch_parse = fetch_parse;

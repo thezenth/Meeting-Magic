@@ -13,9 +13,10 @@ var session = require('express-session');
 var configDB = require('./config/database.js');
 
 //cloud foundry environment stuff - for bluemix
-var cfenv = require('cfenv');
-var appEnv = cfenv.getAppEnv();
-var port = appEnv.port;
+//var cfenv = require('cfenv');
+//var appEnv = cfenv.getAppEnv();
+//var port = appEnv.port;
+var port = 8080;
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
@@ -46,6 +47,7 @@ app.use(express.static(__dirname + '/public/assets/images'));
 require('./routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 // launch ======================================================================
-app.listen(port, '0.0.0.0', function() {
-	console.log("server starting on " + appEnv.url);
+app.listen(port, function() {
+	//console.log("server starting on " + appEnv.url);
+	console.log("server starting on port " + port);
 });
