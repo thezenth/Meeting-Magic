@@ -147,6 +147,23 @@ module.exports = function (app, passport) {
 						rest_pq.rankBy = "prominence";
 
 						get_place(rest_pq, fetch_parse);
+						var checkJson = function() {
+							fs.readFile('./libs/places/data.json', function(err, jsonData) {
+								if(err) {
+									dlog(err, {id: "server", isError:true, isWarning:false});
+								}
+								else {
+									dlog("checking ./libs/places/data.json", def_opts);
+									var parsedJson = JSON.parse(jsonData);
+									var found_places = parsedJson["found_places"];
+									if(found_places.length > 0) {
+										res.redirect('/results');
+										clearInterval(interval);
+									}
+								}
+							});
+						}
+						var interval = setInterval(checkJson, 1000);
 					}
 				});
 		});
@@ -158,7 +175,7 @@ module.exports = function (app, passport) {
 				dlog(err, {id: "server", isError:true, isWarning:false});
 			}
 			else {
-				dlog("successfully read ./libs/places/data.json", def_opts);
+				dlog("routes.js successfully read ./libs/places/data.json", def_opts);
 				var parsedJson = JSON.parse(jsonData);
 				var found_places = parsedJson["found_places"];
 				var top5 = found_places.slice(0, 5); //gets top 5 restaurants
