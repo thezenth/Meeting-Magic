@@ -26,6 +26,7 @@
     "chalk": "latest",
     "request": "latest",
     "async": "latest",
+    "request-promise": "latest",
 
     "cfenv": "1.0.x"
   },

@@ -1,4 +1,5 @@
 var request = require('request');
+var rp = require('request-promise');
 
 var async = require('async');
 
@@ -88,6 +89,10 @@ function build_url(latitude, longitude, rad, type, keywords, rankBy, oauth) {
  * @return {String} body The JSON returned from the GET request. This is only returned if there are no errors.
  */
 
+function donothing() {
+	console.log("IMA CALLBACK");
+}
+
 function get_place(q, parseFunc) {
 	var url = build_url(
 		q.position.lat,
@@ -100,29 +105,17 @@ function get_place(q, parseFunc) {
 	);
 	dlog(url, def_opts);
 
-	async.parallel([
-			/*
-			 * First external endpoint
-			 */
-			function (callback) {
-				//var url = "http://external1.com/api/some_endpoint";
-				request(url, function (err, response, body) {
-					// JSON body
-					if (err) {
-						dlog(err, {id: "google-places-api", isError:true, isWarning:false});
-						callback(true);
-						return;
-					}
-					obj = JSON.parse(body);
-					callback(false, obj);
-				});
-			}
-		],
-		/*
-		 * Collate results
-		 */
-		function (err, results) {
-			parseFunc(results[0]);
+	var options = {
+		uri: url,
+		json: true
+	};
+
+	rp(options)
+		.then(function (data) {
+			parseFunc(data);
+		})
+		.catch(function (err) {
+			dlog(err, {id: "google-places-api", isError: true, isWarning: false});
 		});
 }
 

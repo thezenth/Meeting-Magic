@@ -133,7 +133,7 @@ module.exports = function (app, passport) {
 		res.render('meeting');
 	});
 
-	app.post('/meeting', [function(req, res, next) {
+	app.post('/meeting', function(req, res) {
 		process.nextTick(function() {
 				User.findOne({'local.email': req.body.otheremail}, function(err, user) {
 					if(user) {
@@ -147,14 +147,10 @@ module.exports = function (app, passport) {
 						rest_pq.rankBy = "prominence";
 
 						get_place(rest_pq, fetch_parse);
-						next();
 					}
 				});
 		});
-	}, function(req, res) {
-		res.redirect('/results');
-	}
-]);
+	});
 
 	app.get('/results', isLoggedIn, function(req, res) {
 		fs.readFile('./libs/places/data.json', function (err, jsonData) {
