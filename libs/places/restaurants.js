@@ -105,6 +105,11 @@ function fetch_parse(data) {
 		else {
 			dlog("successfully read ./libs/places/data.json", def_opts);
 			var parsedJson = JSON.parse(jsonData);
+
+			dlog("wiping data.json found_places", def_opts);
+			parsedJson["found_places"] = [];
+			fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+
 			//edit the dictionary-JSON structure to reflect found places
 			parsedJson['found_places'] = restList;
 			//write the edited structure in its entirity to the data.json file
