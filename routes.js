@@ -134,13 +134,25 @@ module.exports = function (app, passport) {
 	});
 
 	app.post('/meeting', function(req, res) {
+		dlog("recived post", def_opts);
 		process.nextTick(function() {
+				dlog("test, before mongodb check", def_opts);
 				User.findOne({'local.email': req.body.otheremail}, function(err, user) {
+					dlog("checking mongodb", def_opts);
 					if(user) {
+
+						lat = parseFloat(req.body.coords.substring(
+							0, req.body.coords.indexOf(',')
+						));
+						long = parseFloat(req.body.coords.substring(
+							req.body.coords.indexOf(',') + 1, req.body.coords.length
+						));
+						dlog("coords:" + lat + "," + long, def_opts);
+
 						var rest_pq = food_q;
 						rest_pq.position = {
-							lat: 34.058583,
-							long: -118.416582
+							lat: 35.570318,
+							long: -80.88944600000002
 						};
 						rest_pq.rad = 5000;
 						rest_pq.cat = "coffee";
@@ -163,7 +175,7 @@ module.exports = function (app, passport) {
 								}
 							});
 						}
-						var interval = setInterval(checkJson, 1000);
+						var interval = setInterval(checkJson, 100);
 					}
 				});
 		});

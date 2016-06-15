@@ -2,201 +2,121 @@
 	"found_places": [
 		{
 			"type": "food",
-			"name": "Blue Bottle Coffee",
-			"address": "8301 Beverly Boulevard, Los Angeles",
+			"name": "Starbucks",
+			"address": "235 Medical Park Road, Mooresville",
 			"position": {
-				"lat": 34.07627170000001,
-				"long": -118.3702102
+				"lat": 35.55400050000001,
+				"long": -80.8542522
+			},
+			"hours": []
+		},
+		{
+			"type": "food",
+			"name": "Black Powder Roasting Company",
+			"address": "256 Raceway Drive #10, Mooresville",
+			"position": {
+				"lat": 35.586219,
+				"long": -80.864471
+			},
+			"hours": []
+		},
+		{
+			"type": "food",
+			"name": "Dunkin' Donuts",
+			"address": "651 River Highway, Mooresville",
+			"position": {
+				"lat": 35.5955786,
+				"long": -80.87615629999999
+			},
+			"hours": []
+		},
+		{
+			"type": "food",
+			"name": "Human Bean",
+			"address": "356 Williamson Road, Mooresville",
+			"position": {
+				"lat": 35.58170199999999,
+				"long": -80.8736179
+			},
+			"hours": []
+		},
+		{
+			"type": "food",
+			"name": "Sun Up Cafe",
+			"address": "120 Langtree Village Drive, Suite 106-107, Mooresville",
+			"position": {
+				"lat": 35.527917,
+				"long": -80.866558
 			},
 			"hours": []
 		},
 		{
 			"type": "food",
 			"name": "Starbucks",
-			"address": "9811 South Santa Monica Boulevard, Beverly Hills",
+			"address": "489 River Highway, Mooresville",
 			"position": {
-				"lat": 34.0667031,
-				"long": -118.4103148
+				"lat": 35.5940723,
+				"long": -80.8645956
 			},
 			"hours": []
 		},
 		{
 			"type": "food",
-			"name": "Peet's Coffee",
-			"address": "258 South Beverly Drive, Beverly Hills",
+			"name": "Starbucks",
+			"address": "594 River Highway, Mooresville",
 			"position": {
-				"lat": 34.0629015,
-				"long": -118.3988398
+				"lat": 35.5983171,
+				"long": -80.87196039999999
 			},
 			"hours": []
 		},
 		{
 			"type": "food",
-			"name": "Alfred Coffee {Melrose Place}",
-			"address": "8428 Melrose Place, Los Angeles",
+			"name": "Starbucks",
+			"address": "134 Town Center Drive, Mooresville",
 			"position": {
-				"lat": 34.0833724,
-				"long": -118.3743114
+				"lat": 35.5855575,
+				"long": -80.8759724
 			},
 			"hours": []
 		},
 		{
 			"type": "food",
-			"name": "The Coffee Bean & Tea Leaf",
-			"address": "2000 Avenue of the Stars #100, Century City",
+			"name": "Starbucks",
+			"address": "118 Argus Lane, Mooresville",
 			"position": {
-				"lat": 34.058594,
-				"long": -118.414274
+				"lat": 35.6030351,
+				"long": -80.8950014
 			},
 			"hours": []
 		},
 		{
 			"type": "food",
-			"name": "The Conservatory for Coffee, Tea & Cocoa",
-			"address": "10117 Washington Boulevard, Culver City",
+			"name": "Dunkin' Donuts",
+			"address": "842 Williamson Road, Mooresville",
 			"position": {
-				"lat": 34.0206974,
-				"long": -118.399574
+				"lat": 35.555244,
+				"long": -80.8613213
 			},
 			"hours": []
 		},
 		{
 			"type": "food",
-			"name": "Verve Coffee - West Hollywood",
-			"address": "8925 Melrose Avenue, West Hollywood",
+			"name": "Caribou Coffee",
+			"address": "690 Bluefield Road, Mooresville",
 			"position": {
-				"lat": 34.080933,
-				"long": -118.3875355
+				"lat": 35.596492,
+				"long": -80.86864849999999
 			},
 			"hours": []
 		},
 		{
 			"type": "food",
-			"name": "Balconi Coffee Company",
-			"address": "11301 West Olympic Boulevard #124, Los Angeles",
+			"name": "Three Goats Coffee House",
+			"address": "Mooresville",
 			"position": {
-				"lat": 34.03804499999999,
-				"long": -118.4418339
-			},
-			"hours": []
-		},
-		{
-			"type": "food",
-			"name": "Coffee Tomo",
-			"address": "11309 Mississippi Avenue, Los Angeles",
-			"position": {
-				"lat": 34.0394781,
-				"long": -118.4428632
-			},
-			"hours": []
-		},
-		{
-			"type": "food",
-			"name": "Bar Nine",
-			"address": "3515 Helms Avenue, Culver City",
-			"position": {
-				"lat": 34.0268383,
-				"long": -118.383641
-			},
-			"hours": []
-		},
-		{
-			"type": "food",
-			"name": "Cognoscenti Coffee",
-			"address": "6114 Washington Boulevard, Culver City",
-			"position": {
-				"lat": 34.0310978,
-				"long": -118.3778228
-			},
-			"hours": []
-		},
-		{
-			"type": "food",
-			"name": "Fountain Coffee Room at The Beverly Hills Hotel",
-			"address": "9641 Sunset Boulevard, Beverly Hills",
-			"position": {
-				"lat": 34.081527,
-				"long": -118.413856
-			},
-			"hours": []
-		},
-		{
-			"type": "food",
-			"name": "Espresso Profeta",
-			"address": "1129 Glendon Avenue, Los Angeles",
-			"position": {
-				"lat": 34.0602744,
-				"long": -118.4442262
-			},
-			"hours": []
-		},
-		{
-			"type": "food",
-			"name": "Coffee Commissary",
-			"address": "801 North Fairfax Avenue #106, Los Angeles",
-			"position": {
-				"lat": 34.08605120000001,
-				"long": -118.3619746
-			},
-			"hours": []
-		},
-		{
-			"type": "food",
-			"name": "C+M (Coffee and Milk) Westwood Gateway",
-			"address": "11111 Santa Monica Boulevard, Los Angeles",
-			"position": {
-				"lat": 34.0480626,
-				"long": -118.4448614
-			},
-			"hours": []
-		},
-		{
-			"type": "food",
-			"name": "Caffe Luxxe",
-			"address": "11975 San Vicente Boulevard, Los Angeles",
-			"position": {
-				"lat": 34.0526508,
-				"long": -118.4717799
-			},
-			"hours": []
-		},
-		{
-			"type": "food",
-			"name": "Ed's Coffee Shop",
-			"address": "460 North Robertson Boulevard, West Hollywood",
-			"position": {
-				"lat": 34.0797001,
-				"long": -118.3846144
-			},
-			"hours": []
-		},
-		{
-			"type": "food",
-			"name": "Kelly's Coffee & Fudge Factory",
-			"address": "444 North Rexford Drive, Beverly Hills",
-			"position": {
-				"lat": 34.0728812,
-				"long": -118.3993965
-			},
-			"hours": []
-		},
-		{
-			"type": "food",
-			"name": "The Coffee Bean & Tea Leaf",
-			"address": "10401 Venice Boulevard, Los Angeles",
-			"position": {
-				"lat": 34.02066,
-				"long": -118.404282
-			},
-			"hours": []
-		},
-		{
-			"type": "food",
-			"name": "Peet's Coffee",
-			"address": "11750 San Vicente Boulevard, Los Angeles",
-			"position": {
-				"lat": 34.0530299,
-				"long": -118.4675215
+				"lat": 35.6027376,
+				"long": -80.8951156
 			},
 			"hours": []
 		}
