@@ -192,12 +192,6 @@ module.exports = function (app, passport) {
 				var found_places = parsedJson["found_places"];
 				var top5 = found_places.slice(0, 5); //gets top 5 restaurants
 				res.render('results', {places: top5});
-
-				dlog("wiping data.json found_places", def_opts);
-				parsedJson["found_places"] = [];
-				fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
-
-
 			}
 		});
 	});
