@@ -62,7 +62,9 @@ module.exports = function (app, passport) {
 	//want this protected so you have to be logged in to visit
 	//use route middleware to verify this (the isLoggedIn function)
 	app.get('/home', isLoggedIn, function (req, res) {
-		res.render('home', {user: req.user });//get the user out of session and pass to template
+		res.render('home', {
+			user: req.user
+		}); //get the user out of session and pass to template
 	});
 
 	//Logout
@@ -73,7 +75,12 @@ module.exports = function (app, passport) {
 
 	//user-prefs
 	app.get('/user-prefs', isLoggedIn, function (req, res) {
-		res.render('user-prefs', {userPrefs: {foodprefs: req.user.food_prefs},foods: Foods});
+		res.render('user-prefs', {
+			userPrefs: {
+				foodprefs: req.user.food_prefs
+			},
+			foods: Foods
+		});
 	});
 
 	//HEY! Here is what the session data for a user looks like so far:
@@ -103,13 +110,17 @@ module.exports = function (app, passport) {
 	});
 
 	app.get('/profile', isLoggedIn, function (req, res) {
-		res.render('profile', {user: req.user});
+		res.render('profile', {
+			user: req.user
+		});
 	});
 
 	app.post('/profile', function (req, res) {
 		process.nextTick(function () {
 			dlog("session: user email is " + req.user.local.email, def_opts);
-			User.findOne({'local.email': req.user.local.email}, function (err, user) {
+			User.findOne({
+				'local.email': req.user.local.email
+			}, function (err, user) {
 				if (typeof req.body.newemail != 'undefined') {
 					dlog("checking format of new email...", def_opts);
 					if (req.body.newemail.includes("/^$|\s+/")) {
@@ -129,78 +140,93 @@ module.exports = function (app, passport) {
 		});
 	});
 
-	app.get('/meeting', isLoggedIn, function(req, res) {
-		res.render('meeting', {message: req.flash('meetingMessage')});
-	});
-
-	app.post('/meeting', function(req, res) {
-		//dlog("recived post", def_opts);
-		process.nextTick(function() {
-				//dlog("test, before mongodb check", def_opts);
-
-				User.findOne({'local.email': req.body.otheremail}, function(err, user) {
-					dlog("checking mongodb", def_opts);
-					dlog("other email:"+req.body.otheremail, def_opts);
-					if(err) {
-					   dlog(err, {id:"server", isError:true, isWarning:false});
-					}
-
-					if(user) {
-					lat = parseFloat(req.body.coords.substring(
-						   0, req.body.coords.indexOf(',')
-					   ));
-					   long = parseFloat(req.body.coords.substring(
-						   req.body.coords.indexOf(',') + 1, req.body.coords.length
-					   ));
-					   dlog("coords:" + lat + "," + long, def_opts);
-
-					   var rest_pq = food_q;
-					   rest_pq.position = {
-						   lat: lat,
-						   long: long
-					   };
-					   rest_pq.rad = 5000;
-					   rest_pq.cat = "coffee";
-					   rest_pq.rankBy = "prominence";
-
-					   get_place(rest_pq, fetch_parse);
-					   var checkJson = function() {
-						   fs.readFile('./libs/places/data.json', function(err, jsonData) {
-							   if(err) {
-								   dlog(err, {id: "server", isError:true, isWarning:false});
-							   }
-							   else {
-								   dlog("checking ./libs/places/data.json", def_opts);
-								   var parsedJson = JSON.parse(jsonData);
-								   var found_places = parsedJson["found_places"];
-								   if(found_places.length > 0) {
-									   res.redirect('/results');
-									   clearInterval(interval);
-								   }
-							   }
-						   });
-					   }
-					   var interval = setInterval(checkJson, 100);
-					}
-					else {
-						req.flash('meetingMessage', 'This user does not exist.');
-						res.redirect('/meeting');
-					}
-				});
+	app.get('/meeting', isLoggedIn, function (req, res) {
+		res.render('meeting', {
+			message: req.flash('meetingMessage')
 		});
 	});
 
-	app.get('/results', isLoggedIn, function(req, res) {
+	app.post('/meeting', function (req, res) {
+		//dlog("recived post", def_opts);
+		process.nextTick(function () {
+			//dlog("test, before mongodb check", def_opts);
+
+			User.findOne({
+				'local.email': req.body.otheremail
+			}, function (err, user) {
+				dlog("checking mongodb", def_opts);
+				dlog("other email:" + req.body.otheremail, def_opts);
+				if (err) {
+					dlog(err, {
+						id: "server",
+						isError: true,
+						isWarning: false
+					});
+				}
+
+				if (user) {
+					lat = parseFloat(req.body.coords.substring(
+						0, req.body.coords.indexOf(',')
+					));
+					long = parseFloat(req.body.coords.substring(
+						req.body.coords.indexOf(',') + 1, req.body.coords.length
+					));
+					dlog("coords:" + lat + "," + long, def_opts);
+
+					var rest_pq = food_q;
+					rest_pq.position = {
+						lat: lat,
+						long: long
+					};
+					rest_pq.rad = 5000;
+					rest_pq.cat = "coffee";
+					rest_pq.rankBy = "prominence";
+
+					get_place(rest_pq, fetch_parse);
+					var checkJson = function () {
+						fs.readFile('./libs/places/data.json', function (err, jsonData) {
+							if (err) {
+								dlog(err, {
+									id: "server",
+									isError: true,
+									isWarning: false
+								});
+							} else {
+								dlog("checking ./libs/places/data.json", def_opts);
+								var parsedJson = JSON.parse(jsonData);
+								var found_places = parsedJson["found_places"];
+								if (found_places.length > 0) {
+									res.redirect('/results');
+									clearInterval(interval);
+								}
+							}
+						});
+					}
+					var interval = setInterval(checkJson, 100);
+				} else {
+					req.flash('meetingMessage', 'This user does not exist.');
+					res.redirect('/meeting');
+				}
+			});
+		});
+	});
+
+	app.get('/results', isLoggedIn, function (req, res) {
 		fs.readFile('./libs/places/data.json', function (err, jsonData) {
-			if(err) {
-				dlog(err, {id: "server", isError:true, isWarning:false});
-			}
-			else {
+			if (err) {
+				dlog(err, {
+					id: "server",
+					isError: true,
+					isWarning: false
+				});
+			} else {
 				dlog("routes.js successfully read ./libs/places/data.json", def_opts);
 				var parsedJson = JSON.parse(jsonData);
 				var found_places = parsedJson["found_places"];
 				var top5 = found_places.slice(0, 5); //gets top 5 restaurants
-				res.render('results', {places: top5});
+				res.render('results', {
+					places: top5
+				});
 
 				dlog("wiping data.json found_places", def_opts);
 				parsedJson["found_places"] = [];
