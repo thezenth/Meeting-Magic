@@ -42,7 +42,15 @@ function build_url(latitude, longitude, rad, type, keywords, rankBy, oauth) {
 	var base = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 	var location = "location=" + latitude.toString() + "," + longitude.toString();
 	var radius = "radius=" + rad.toString();
-	var search = "keyword=" + keywords;
+
+	var search = "keyword=";
+	for(i = 0; i<keywords.length; i++) {
+		search += "(" + keywords[i] + ")";
+		if(i<keywords.length - 1) { //if its not last
+			search += " OR ";
+		}
+	}
+
 	var place_type = "types=" + type;
 	var authKey = "key=" + oauth;
 

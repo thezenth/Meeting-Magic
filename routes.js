@@ -1,5 +1,5 @@
 //preferences.js
-prefs = require('./config/preferences.js');
+prefs = require('./config/preferences');
 Foods = prefs.Foods;
 
 var User = require('./models/user');
@@ -14,8 +14,12 @@ var fetch_parse = restaurants.fetch_parse;
 var places = require('./libs/places/places');
 var food_q = places.Food;
 
+//compare_prefs.js
+var comp = require('./libs/compare_prefs');
+var compare_food_prefs = comp.compareFood;
+
 // debug.js
-var debug = require("./libs/debug/debug.js");
+var debug = require("./libs/debug/debug");
 var dlog = debug.dlog;
 var def_opts = {
 	id: "server",
@@ -165,44 +169,52 @@ module.exports = function (app, passport) {
 				}
 
 				if (user) {
-					lat = parseFloat(req.body.coords.substring(
-						0, req.body.coords.indexOf(',')
-					));
-					long = parseFloat(req.body.coords.substring(
-						req.body.coords.indexOf(',') + 1, req.body.coords.length
-					));
-					dlog("coords:" + lat + "," + long, def_opts);
+					if((user.food_prefs.length > 0) && (req.user.food_prefs.length > 0)) {
+						lat = parseFloat(req.body.coords.substring(
+							0, req.body.coords.indexOf(',')
+						));
+						long = parseFloat(req.body.coords.substring(
+							req.body.coords.indexOf(',') + 1, req.body.coords.length
+						));
+						dlog("coords:" + lat + "," + long, def_opts);
 
-					var rest_pq = food_q;
-					rest_pq.position = {
-						lat: lat,
-						long: long
-					};
-					rest_pq.rad = 5000;
-					rest_pq.cat = "coffee";
-					rest_pq.rankBy = "prominence";
+						var rest_pq = food_q;
+						rest_pq.position = {
+							lat: lat,
+							long: long
+						};
+						rest_pq.rad = 5000;
+						rest_pq.rankBy = "prominence";
 
-					get_place(rest_pq, fetch_parse);
-					var checkJson = function () {
-						fs.readFile('./libs/places/data.json', function (err, jsonData) {
-							if (err) {
-								dlog(err, {
-									id: "server",
-									isError: true,
-									isWarning: false
+						var sameFoodPrefs = compare_food_prefs(user.food_prefs, req.user.food_prefs);
+						if(sameFoodPrefs.length > 0) {
+							rest_pq.cat = sameFoodPrefs;
+							get_place(rest_pq, fetch_parse);
+							var checkJson = function () {
+								fs.readFile('./libs/places/data.json', function (err, jsonData) {
+									if (err) {
+										dlog(err, {
+											id: "server",
+											isError: true,
+											isWarning: false
+										});
+									} else {
+										dlog("checking ./libs/places/data.json", def_opts);
+										var parsedJson = JSON.parse(jsonData);
+										var found_places = parsedJson["found_places"];
+										if (found_places.length > 0) {
+											res.redirect('/results');
+											clearInterval(interval);
+										}
+									}
 								});
-							} else {
-								dlog("checking ./libs/places/data.json", def_opts);
-								var parsedJson = JSON.parse(jsonData);
-								var found_places = parsedJson["found_places"];
-								if (found_places.length > 0) {
-									res.redirect('/results');
-									clearInterval(interval);
-								}
 							}
-						});
+							var interval = setInterval(checkJson, 100);
+						}
+					} else {
+						req.flash('meetingMessage', 'At least one user has no food preferences.');
+						res.redirect('/meeting');
 					}
-					var interval = setInterval(checkJson, 100);
 				} else {
 					req.flash('meetingMessage', 'This user does not exist.');
 					res.redirect('/meeting');
