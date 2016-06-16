@@ -29,9 +29,10 @@ var def_opts = {
  * @param {String} rankBy For the Google Places API, either "distance" (which then ignores radius, and ranks by distance from provided position), or "prominence" (which takes into account rating, mentions on google, etc.)
  */
 
-var restList = [];
+
 
 function fetch_parse(data) {
+	var restList = [];
 	//data = get_place(query);
 	//dlog(data, def_opts);
 	for (var i = 0; i < data['results'].length; i++) {
@@ -106,11 +107,18 @@ function fetch_parse(data) {
 			dlog("successfully read ./libs/places/data.json", def_opts);
 			var parsedJson = JSON.parse(jsonData);
 
+			dlog("wiping data.json found_places", def_opts);
+			parsedJson["found_places"] = [];
+			fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+			dlog("parsedJson @ restaurants.js:"+JSON.stringify(parsedJson, null, '\t'), def_opts);
+
 			//edit the dictionary-JSON structure to reflect found places
 			parsedJson['found_places'] = restList;
 			//write the edited structure in its entirity to the data.json file
 			fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
 			dlog("successfully wrote ./libs/places/data.json", def_opts);
+			dlog("parsedJson @ restaurants.js:"+JSON.stringify(parsedJson, null, '\t'), def_opts);
+
 		}
 	});
 	//console.log(restList);

@@ -1,3 +1,12 @@
+// debug.js
+var debug = require("./debug/debug.js");
+var dlog = debug.dlog;
+var def_opts = {
+	id: "google-places-api",
+	isWarning: false,
+	isError: false
+}
+
 function compareFood(l1, l2) {
 
     var prefs1; //longer list
@@ -23,6 +32,7 @@ function compareFood(l1, l2) {
         }
     }
 
+    dlog("same list:"+sameList, def_opts);
     return sameList;
 }
 
