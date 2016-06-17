@@ -81,6 +81,13 @@ function fetch_parse(data) {
 				}
 			}
 		}
+		//https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU&key=YOUR_API_KEY
+
+		/*if ('photos' in curr_rest) {
+			if ('photo_reference' in curr_rest['photo_reference']) {
+
+			}
+		}*/
 
 		newRest = {};
 		newRest.type = 'food';
@@ -91,6 +98,7 @@ function fetch_parse(data) {
 			long: rest_longitude
 		}
 		newRest.hours = hours;
+		//newRest.imgUrl =
 		objStr = JSON.stringify(newRest, null, 4)
 
 		//dlog(objStr, def_opts);
@@ -110,14 +118,14 @@ function fetch_parse(data) {
 			dlog("wiping data.json found_places", def_opts);
 			parsedJson["found_places"] = [];
 			fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
-			dlog("parsedJson @ restaurants.js:"+JSON.stringify(parsedJson, null, '\t'), def_opts);
+			//dlog("parsedJson @ restaurants.js:"+JSON.stringify(parsedJson, null, '\t'), def_opts);
 
 			//edit the dictionary-JSON structure to reflect found places
 			parsedJson['found_places'] = restList;
 			//write the edited structure in its entirity to the data.json file
 			fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
 			dlog("successfully wrote ./libs/places/data.json", def_opts);
-			dlog("parsedJson @ restaurants.js:"+JSON.stringify(parsedJson, null, '\t'), def_opts);
+			//dlog("parsedJson @ restaurants.js:"+JSON.stringify(parsedJson, null, '\t'), def_opts);
 
 		}
 	});

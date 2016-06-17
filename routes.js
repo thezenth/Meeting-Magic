@@ -234,10 +234,10 @@ module.exports = function (app, passport) {
 			} else {
 				dlog("routes.js successfully read ./libs/places/data.json", def_opts);
 				parsedJson = JSON.parse(jsonData);
-				dlog("parsedJson:"+JSON.stringify(parsedJson, null, 4), def_opts);
+				//dlog("parsedJson:"+JSON.stringify(parsedJson, null, 4), def_opts);
 				found_places = parsedJson["found_places"];
 				top5 = found_places.slice(0, 5); //gets top 5 restaurants
-				dlog("top 5:"+top5[top5.length-1].name, def_opts);
+				//dlog("top 5:"+top5[top5.length-1].name, def_opts);
 				res.render('results', {
 					places: top5
 				});
