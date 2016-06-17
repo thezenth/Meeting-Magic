@@ -4,6 +4,7 @@ var fs = require('fs');
 //fetch.js
 var fetch = require("./fetch.js");
 var get_place = fetch.get_place;
+var build_img_url = fetch.build_img_url;
 
 //places.js
 var places = require("./places.js");
@@ -81,13 +82,15 @@ function fetch_parse(data) {
 				}
 			}
 		}
-		//https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU&key=YOUR_API_KEY
 
-		/*if ('photos' in curr_rest) {
-			if ('photo_reference' in curr_rest['photo_reference']) {
-
+		if ('photos' in curr_rest) {
+			if ('photo_reference' in curr_rest['photos'][0]) {
+				photo_reference = curr_rest['photos'][0]['photo_reference'];
 			}
-		}*/
+			if ('width' in curr_rest['photos'][0]) {
+				max_width = curr_rest['photos'][0]['width'];
+			}
+		}
 
 		newRest = {};
 		newRest.type = 'food';
@@ -98,10 +101,10 @@ function fetch_parse(data) {
 			long: rest_longitude
 		}
 		newRest.hours = hours;
-		//newRest.imgUrl =
+		newRest.imgUrl = build_img_url(photo_reference, max_width);
 		objStr = JSON.stringify(newRest, null, 4)
 
-		//dlog(objStr, def_opts);
+		dlog(objStr, def_opts);
 		restList.push(newRest);
 	}
 	//write restaurants to data.json
@@ -109,6 +112,7 @@ function fetch_parse(data) {
 	dlog("attempting to write parsed restaurant objects to ./libs/places/data.json", def_opts);
 	fs.readFile('./libs/places/data.json', function (err, jsonData) {
 		if(err) {
+			console.log("HELLO" + err);
 			dlog(err, {id: "google-places-api", isError:true, isWarning:false});
 		}
 		else {

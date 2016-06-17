@@ -77,6 +77,21 @@ function build_url(latitude, longitude, rad, type, keywords, rankBy, oauth) {
 	// EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&rankby=prominence&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
 }
 
+function build_img_url(ref, m_width) {
+	//https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU&key=YOUR_API_KEY
+
+	var base = "https://maps.googleapis.com/maps/api/place/photo?";
+	var maxWidth = "maxwidth=" + m_width;
+	var imgRef = "photoreference=" + ref;
+	var authKey = "key=" + goog_key;
+
+	var newUrl = base + maxWidth + "&" + imgRef + "&" + authKey;
+
+	dlog("made google places image fetch url", def_opts);
+	dlog("image url:"+newUrl, def_opts);
+	return (newUrl);
+}
+
 // place_query
 //place_query: {
 //  position: {
@@ -123,7 +138,7 @@ function get_place(q, parseFunc) {
 			parseFunc(data);
 		})
 		.catch(function (err) {
-			dlog(err, {id: "google-places-api", isError: true, isWarning: false});
+			dlog("CAUGHT ERROR IN FETCH:" + err, {id: "google-places-api", isError: true, isWarning: false});
 		});
 }
 
@@ -164,6 +179,7 @@ function get_place(q, parseFunc) {
 */
 
 exports.get_place = get_place;
+exports.build_img_url = build_img_url;
 
 /*function secondFunction(data) {
   //console.log(data);
