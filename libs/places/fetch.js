@@ -80,16 +80,23 @@ function build_url(latitude, longitude, rad, type, keywords, rankBy, oauth) {
 function build_img_url(ref, m_width) {
 	//https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU&key=YOUR_API_KEY
 
-	var base = "https://maps.googleapis.com/maps/api/place/photo?";
-	var maxWidth = "maxwidth=" + m_width;
-	var imgRef = "photoreference=" + ref;
-	var authKey = "key=" + goog_key;
+	if(ref == "") {
+		dlog("returned no image url", {id:"google-places-api", isWarning:true, isError:false});
+		return "";
+	}
+	else {
+		var base = "https://maps.googleapis.com/maps/api/place/photo?";
+		var maxWidth = "maxwidth=" + m_width;
+		var imgRef = "photoreference=" + ref;
+		var authKey = "key=" + goog_key;
 
-	var newUrl = base + maxWidth + "&" + imgRef + "&" + authKey;
+		var newUrl = base + maxWidth + "&" + imgRef + "&" + authKey;
 
-	dlog("made google places image fetch url", def_opts);
-	dlog("image url:"+newUrl, def_opts);
-	return (newUrl);
+		dlog("made google places image fetch url", def_opts);
+		dlog("image url:"+newUrl, def_opts);
+		//newUrl = "http://www.hvantagetechnologies.com/img/industries/restaurant.jpg";
+		return (newUrl);
+	}
 }
 
 // place_query

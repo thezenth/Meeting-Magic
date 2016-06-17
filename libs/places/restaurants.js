@@ -83,12 +83,16 @@ function fetch_parse(data) {
 			}
 		}
 
+		var photo_reference = "";
+		var max_width = "";
 		if ('photos' in curr_rest) {
 			if ('photo_reference' in curr_rest['photos'][0]) {
 				photo_reference = curr_rest['photos'][0]['photo_reference'];
+				dlog("ref:" + photo_reference, def_opts);
 			}
 			if ('width' in curr_rest['photos'][0]) {
 				max_width = curr_rest['photos'][0]['width'];
+				dlog("max_width:" + max_width, def_opts);
 			}
 		}
 
@@ -101,7 +105,9 @@ function fetch_parse(data) {
 			long: rest_longitude
 		}
 		newRest.hours = hours;
-		newRest.imgUrl = build_img_url(photo_reference, max_width);
+		if(photo_reference !== "") {
+			newRest.imgUrl = build_img_url(photo_reference, max_width);
+		}
 		objStr = JSON.stringify(newRest, null, 4)
 
 		dlog(objStr, def_opts);
