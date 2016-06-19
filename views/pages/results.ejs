@@ -2,72 +2,55 @@
 <html>
 
 	<head>
-		<!--Import Google Icon Font-->
-		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<!--Import materialize.css-->
-		<link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
-		<link rel="stylesheet" href="/css/style.css">
-
-		<!-- Scripts -->
-		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-		<script type="text/javascript" src="js/materialize.min.js"></script>
-
-		<!--Let browser know website is optimized for mobile-->
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
+		<% include ../partials/head %>
 	</head>
-
-	<script>
-		$( document ).ready(function(){
-			$(".button-collapse").sideNav();
-		})
-
-	</script>
 
 	<body>
 		<header>
 			<% include ../partials/header-nav-bar %>
 		</header>
-		
-		<div class="center-parent">
-			<% for(var i = 0; i<places.length; i++) { %>
-				<div class="card center-child">
-					<div class="card-image waves-effect waves-block waves-light">
-						<% if (places[i].imgUrl) { %>
-							<img class="activator" src="<%= places[i].imgUrl %>">
-						<% } else { %>
-							<img class="activator" src="/assets/images/menu-placeholder.gif">
-						<% } %>
-					</div>
-					<div class="card-content">
-						<span class="card-title activator grey-text text-darken-4"><%= places[i].name %>
-							<i class="material-icons right">more_vert</i>
-						</span>
-						<p>
-							<a href="#">More</a>
-						</p>
-					</div>
-					<div class="card-reveal">
-						<span class="card-title grey-text text-darken-4"><%= places[i].name %>
-							<i class="material-icons right">close</i>
-						</span>
-						<p class="term">Address:</p>
-						<p class="normal"><%= places[i].address %></p>
-						<br>
-						<% if (places[i].hours.length > 0) { %>
-							<p class="term">Hours:</p>
-							<p class="normal"><%= places[i].hours %></p>
+
+		<main>
+			<div class="center-parent">
+				<% for(var i = 0; i<places.length; i++) { %>
+					<div class="card center-child">
+						<div class="card-image waves-effect waves-block waves-light">
+							<% if (places[i].imgUrl) { %>
+								<img class="activator" src="<%= places[i].imgUrl %>">
+							<% } else { %>
+								<img class="activator" src="/assets/images/menu-placeholder.gif">
+							<% } %>
+						</div>
+						<div class="card-content">
+							<span class="card-title activator grey-text text-darken-4"><%= places[i].name %>
+								<i class="material-icons right">more_vert</i>
+							</span>
+							<p>
+								<a href="#">More</a>
+							</p>
+						</div>
+						<div class="card-reveal">
+							<span class="card-title grey-text text-darken-4"><%= places[i].name %>
+								<i class="material-icons right">close</i>
+							</span>
+							<p class="term">Address:</p>
+							<p class="normal"><%= places[i].address %></p>
 							<br>
-						<% } else { %>
-							<p class="term">Hours:</p>
-							<p class="normal">Not available</p>
-							<br>
-						<% } %>
+							<% if (places[i].hours.length > 0) { %>
+								<p class="term">Hours:</p>
+								<p class="normal"><%= places[i].hours %></p>
+								<br>
+							<% } else { %>
+								<p class="term">Hours:</p>
+								<p class="normal">Not available</p>
+								<br>
+							<% } %>
+						</div>
 					</div>
-				</div>
-				<br>
-			<% } %>
-		</div>
+					<br>
+				<% } %>
+			</div>
+		</main>
 	</body>
 
 </html>
