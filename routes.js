@@ -122,18 +122,21 @@ module.exports = function (app, passport) {
 	app.post('/profile', function (req, res) {
 		process.nextTick(function () {
 			dlog("session: user email is " + req.user.local.email, def_opts);
+			dlog("post: new email is " + req.body.newemail, def_opts);
 			User.findOne({
 				'local.email': req.user.local.email
 			}, function (err, user) {
-				if (typeof req.body.newemail != 'undefined') {
+				if (req.body.newemail) {
 					dlog("checking format of new email...", def_opts);
-					if (req.body.newemail.includes("/^$|\s+/")) {
+					if (!req.body.newemail.includes("[$%^&*:;\\/|<>\"\'!.,-\s+]")) {
+						dlog("formatted correctly!", def_opts);
 						user.local.email = req.body.newemail;
 						user.save();
 					}
-				} else if (typeof req.body.newpwd != 'undefined') {
+				} else if (req.body.newpwd) {
 					dlog("checking format of new password...", def_opts);
-					if (req.body.newpwd.includes("/^$|\s+/")) {
+					if (!req.body.newpwd.includes("[$%^&*:;\\/|<>\"\'!.,-\s+]")) {
+						dlog("formatted correctly!", def_opts);
 						user.local.password = req.body.newpwd;
 						user.save();
 					}

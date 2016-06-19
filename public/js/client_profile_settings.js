@@ -7,8 +7,7 @@ function empty(id) {
 }
 
 function existingInput() {
-	var existing = document.getElementsByClassName("mdl-textfield__input");
-	if (existing.length > 0) {
+	if (document.getElementById("newInput")) {
 		alert("Please finish filling out previous forms.")
 		return true;
 	}
@@ -28,19 +27,15 @@ function inputOnClick(id, nme, txt) {
 		form.action = "/profile";
 		form.method = "post";
 
-		div.className = "mdl-textfield mdl-js-textfield mdl-textfield--floating-label";
-
-		input.className = "mdl-textfield__input";
 		input.type = "text";
 		input.id = "newInput"
 		input.name = nme;
 
-		label.className = "mdl-textfield__label";
 		label.htmlFor = "newInput";
 		//label.innerHTML = txt;
 
 		button.type = "submit";
-		button.className = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent";
+		button.className = "waves-effect waves-light btn"
 		button.innerHTML = "Save";
 
 		div.appendChild(input);
