@@ -9,6 +9,9 @@
     margin: auto;
     width: 50%;
 }
+.container-column {
+    float:left;
+}
 p.normal {
     display: inline;
     font-weight: normal;
