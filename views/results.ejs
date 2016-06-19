@@ -26,7 +26,11 @@
 			<% for(var i = 0; i<places.length; i++) { %>
 				<div class="card center-child">
 					<div class="card-image waves-effect waves-block waves-light">
-						<img class="activator" src="<%= places[i].imgUrl %>">
+						<% if (places[i].imgUrl) { %>
+							<img class="activator" src="<%= places[i].imgUrl %>">
+						<% } else { %>
+							<img class="activator" src="/assets/images/menu-placeholder.gif">
+						<% } %>
 					</div>
 					<div class="card-content">
 						<span class="card-title activator grey-text text-darken-4"><%= places[i].name %><i class="material-icons right">more_vert</i>
