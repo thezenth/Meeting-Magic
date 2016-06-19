@@ -3481,7 +3481,8 @@ input[type=range] + .thumb {
 }
 
 .row .col {
-  float: left;
+  /*float: left;*/
+  margin: auto;
   box-sizing: border-box;
   padding: 0 0.75rem;
 }

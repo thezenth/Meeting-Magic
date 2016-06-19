@@ -5,6 +5,15 @@
     justify-content: center;
     align-items: center;
 }
+.grid-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.grid-column {
+    flex: 1;
+    margin: auto;
+}
 .center-child {
     margin: auto;
     width: 50%;
