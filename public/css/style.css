@@ -9,3 +9,15 @@
     margin: auto;
     width: 50%;
 }
+p.normal {
+    display: inline;
+    font-weight: normal;
+}
+p.term {
+    display: inline;
+    font-weight: bold;
+}
+p.definition {
+    display: inline;
+    font-weight: lighter;
+}

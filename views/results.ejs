@@ -38,9 +38,14 @@
 						</p>
 					</div>
 					<div class="card-reveal">
-						<span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i>
+						<span class="card-title grey-text text-darken-4"><%= places[i].name %><i class="material-icons right">close</i>
 						</span>
-						<p>Here is some more information about this product that is only revealed once clicked on.</p>
+						<p class="term">Address:</p> <p class="normal"><%= places[i].address %></p> <br>
+						<% if (places[i].hours.length > 0) { %>
+							<p class="term">Hours:</p> <p class="normal"><%= places[i].hours %></p> <br>
+						<% } else { %>
+							<p class="term">Hours:</p> <p class="normal">Not available</p> <br>
+						<% } %>
 					</div>
 				</div> <br>
 			<% } %>

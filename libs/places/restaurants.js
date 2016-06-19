@@ -105,6 +105,7 @@ function fetch_parse(data) {
 			long: rest_longitude
 		}
 		newRest.hours = hours;
+		newRest.rating = rating;
 		if(photo_reference !== "") {
 			newRest.imgUrl = build_img_url(photo_reference, max_width);
 		}
