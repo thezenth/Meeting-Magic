@@ -2,14 +2,26 @@
 <html>
 
 	<head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
-				<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-				<link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.teal-red.min.css">
-				<script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+		<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+		<link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.teal-red.min.css">
+		<link rel="stylesheet" href="/css/cards.css"> -->
+		<link rel="stylesheet" href="/css/style.css">
+		<script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+		<script src="/js/card_effects.js"></script>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+		<!-- Compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+
+		<!-- Compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+
   </head>
   <script>
   	navigator.geolocation.getCurrentPosition(function(pos) {
     		document.getElementById("location").value = pos.coords.latitude + "," + pos.coords.longitude;
+			Materialize.updateTextFields();
     });
   </script>
 
@@ -19,18 +31,22 @@
 				<p><%= message %></p>
 			</div>
 		<% } %>
-        <form action="/meeting" method="post">
-            <div class="form-group">
-                <label>Other user</label>
-                <input type="text" class="form-control" name="otheremail">
-            </div>
-            <div class="form-group">
-                <label>Location</label>
-                <input type="text" class="form-control" name="coords" id="location">
-            </div>
+		<div class="row">
+		   <form class="col s12" action="/meeting" method="post">
+			 <div class="row">
+			   <div class="input-field col s6">
+				 <input id="otheruser" type="text" class="validate" name="otheremail">
+				 <label for="otheruser">Other user</label>
+			   </div>
+			   <div class="input-field col s6">
+				 <input id="location" type="text" class="validate" name="coords">
+				 <label class="active" for="location">Location</label>
+			   </div>
+			 </div>
+			 <button type="submit" class="btn btn-warning btn-lg">Go!</button>
+		   </form>
+	 	</div>
 
-            <button type="submit" class="btn btn-warning btn-lg">Go!</button>
-        </form>
     </body>
 
 </html>
