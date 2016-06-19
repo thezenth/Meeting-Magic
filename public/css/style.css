@@ -21,3 +21,10 @@ p.definition {
     display: inline;
     font-weight: lighter;
 }
+a.nav-link {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: left;
+}
