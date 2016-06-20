@@ -5,6 +5,9 @@
     justify-content: center;
     align-items: center;
 }
+.inline {
+    display: inline-flex;
+}
 .grid-container {
     display: flex;
     justify-content: center;
@@ -39,4 +42,8 @@ a.nav-link {
     flex-wrap: wrap;
     justify-content: left;
     align-items: left;
+}
+a.fixed {
+    width: 100px;
+    margin: 10px;
 }
