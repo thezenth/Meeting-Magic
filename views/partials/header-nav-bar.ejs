@@ -1,0 +1,48 @@
+<nav>
+    <!-- this is here to ensure that it is always called -->
+    <script>
+		$( document ).ready(function(){
+			$(".button-collapse").sideNav();
+		})
+
+	</script>
+
+	<div class="nav-wrapper">
+		<a href="/home" class="brand-logo">Meeting Magic</a>
+		<a href="#" data-activates="collapsible-bar" class="button-collapse">
+			<i class="material-icons">menu</i>
+		</a>
+		<ul class="right hide-on-med-and-down">
+			<li>
+				<a href="/home">Home</a>
+			</li>
+			<li>
+				<a href="/meeting">Meet</a>
+			</li>
+			<li>
+				<a href="/profile">Profile</a>
+			</li>
+			<li>
+				<a href="/user-prefs">Tastes</a>
+			</li>
+		</ul>
+		<ul class="side-nav" id="collapsible-bar">
+			<li>
+				<a class="nav-link" href="/home">
+					<i class="material-icons" role="presentation">home</i>Home</a>
+			</li>
+			<li>
+				<a class="nav-link" href="/meeting">
+					<i class="material-icons" role="presentation">face</i>Meet</a>
+			</li>
+			<li>
+				<a class="nav-link" href="/profile">
+					<i class="material-icons" role="presentation">account_circle</i>Profile</a>
+			</li>
+			<li>
+				<a class="nav-link" href="/user-prefs">
+					<i class="material-icons" role="presentation">restaurant_menu</i>Tastes</a>Tastes</li>
+		</ul>
+	</div>
+</nav>
+<br>

@@ -1,4 +1,5 @@
 var request = require('request');
+var rp = require('request-promise');
 
 var async = require('async');
 
@@ -41,7 +42,15 @@ function build_url(latitude, longitude, rad, type, keywords, rankBy, oauth) {
 	var base = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 	var location = "location=" + latitude.toString() + "," + longitude.toString();
 	var radius = "radius=" + rad.toString();
-	var search = "keyword=" + keywords;
+
+	var search = "keyword=";
+	for(i = 0; i<keywords.length; i++) {
+		search += "(" + keywords[i] + ")";
+		if(i<keywords.length - 1) { //if its not last
+			search += " OR ";
+		}
+	}
+
 	var place_type = "types=" + type;
 	var authKey = "key=" + oauth;
 
@@ -68,6 +77,28 @@ function build_url(latitude, longitude, rad, type, keywords, rankBy, oauth) {
 	// EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&rankby=prominence&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
 }
 
+function build_img_url(ref, m_width) {
+	//https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU&key=YOUR_API_KEY
+
+	if(ref == "") {
+		dlog("returned no image url", {id:"google-places-api", isWarning:true, isError:false});
+		return "";
+	}
+	else {
+		var base = "https://maps.googleapis.com/maps/api/place/photo?";
+		var maxWidth = "maxwidth=" + m_width;
+		var imgRef = "photoreference=" + ref;
+		var authKey = "key=" + goog_key;
+
+		var newUrl = base + maxWidth + "&" + imgRef + "&" + authKey;
+
+		dlog("made google places image fetch url", def_opts);
+		dlog("image url:"+newUrl, def_opts);
+		//newUrl = "http://www.hvantagetechnologies.com/img/industries/restaurant.jpg";
+		return (newUrl);
+	}
+}
+
 // place_query
 //place_query: {
 //  position: {
@@ -88,6 +119,10 @@ function build_url(latitude, longitude, rad, type, keywords, rankBy, oauth) {
  * @return {String} body The JSON returned from the GET request. This is only returned if there are no errors.
  */
 
+function donothing() {
+	console.log("IMA CALLBACK");
+}
+
 function get_place(q, parseFunc) {
 	var url = build_url(
 		q.position.lat,
@@ -100,29 +135,17 @@ function get_place(q, parseFunc) {
 	);
 	dlog(url, def_opts);
 
-	async.parallel([
-			/*
-			 * First external endpoint
-			 */
-			function (callback) {
-				//var url = "http://external1.com/api/some_endpoint";
-				request(url, function (err, response, body) {
-					// JSON body
-					if (err) {
-						console.log(err);
-						callback(true);
-						return;
-					}
-					obj = JSON.parse(body);
-					callback(false, obj);
-				});
-			}
-		],
-		/*
-		 * Collate results
-		 */
-		function (err, results) {
-			parseFunc(results[0]);
+	var options = {
+		uri: url,
+		json: true
+	};
+
+	rp(options)
+		.then(function (data) {
+			parseFunc(data);
+		})
+		.catch(function (err) {
+			dlog("CAUGHT ERROR IN FETCH:" + err, {id: "google-places-api", isError: true, isWarning: false});
 		});
 }
 
@@ -163,6 +186,7 @@ function get_place(q, parseFunc) {
 */
 
 exports.get_place = get_place;
+exports.build_img_url = build_img_url;
 
 /*function secondFunction(data) {
   //console.log(data);

@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+	<head>
+		<% include ../partials/head %>
+	</head>
+	<body>
+		<div class="row">
+			<div class="center-parent">
+				<h1>Login</h1>
+			</div>
+			<!-- show any messages that come back with authentication -->
+			<% if (message.length > 0) { %>
+				<div><%= message %></div>
+			<% } %>
+
+			<form class="col s12" action="/login" method="post">
+				<div class="row">
+					<div class="input-field col s6">
+						<input id="email" type="text" class="validate" name="email">
+						<label for="email">Email</label>
+					</div>
+					<div class="input-field col s6">
+						<input id="pwd" type="password" class="validate" name="password">
+						<label class="active" for="pwd">Password</label>
+					</div>
+				</div>
+				<div class="center-parent">
+					<button type="submit" class="btn btn-warning btn-lg">Login</button>
+				</div>
+			</form>
+
+			<hr>
+				<div class="basic-container">
+					<p class>Need an account?
+						<a href="/signup">Signup</a>
+					</p>
+					<p>Or go
+						<a href="/">home</a>
+					</p>
+				</div>
+		</div>
+	</body>
+</html>

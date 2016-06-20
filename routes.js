@@ -1,8 +1,31 @@
 //preferences.js
-prefs = require('./config/preferences.js');
+prefs = require('./config/preferences');
 Foods = prefs.Foods;
 
 var User = require('./models/user');
+
+//fetch and google places stuff
+var fetch = require('./libs/places/fetch');
+var get_place = fetch.get_place;
+
+var restaurants = require('./libs/places/restaurants');
+var fetch_parse = restaurants.fetch_parse;
+
+var places = require('./libs/places/places');
+var food_q = places.Food;
+
+//compare_prefs.js
+var comp = require('./libs/compare_prefs');
+var compare_food_prefs = comp.compareFood;
+
+// debug.js
+var debug = require("./libs/debug/debug");
+var dlog = debug.dlog;
+var def_opts = {
+	id: "server",
+	isWarning: false,
+	isError: false
+}
 
 module.exports = function (app, passport) {
 	//Home page (with login links)
@@ -43,7 +66,9 @@ module.exports = function (app, passport) {
 	//want this protected so you have to be logged in to visit
 	//use route middleware to verify this (the isLoggedIn function)
 	app.get('/home', isLoggedIn, function (req, res) {
-		res.render('home', {user: req.user });//get the user out of session and pass to template
+		res.render('home', {
+			user: req.user
+		}); //get the user out of session and pass to template
 	});
 
 	//Logout
@@ -54,7 +79,12 @@ module.exports = function (app, passport) {
 
 	//user-prefs
 	app.get('/user-prefs', isLoggedIn, function (req, res) {
-		res.render('user-prefs', {userPrefs: {foodprefs: req.user.food_prefs},foods: Foods});
+		res.render('user-prefs', {
+			userPrefs: {
+				foodprefs: req.user.food_prefs
+			},
+			foods: Foods
+		});
 	});
 
 	//HEY! Here is what the session data for a user looks like so far:
@@ -84,22 +114,29 @@ module.exports = function (app, passport) {
 	});
 
 	app.get('/profile', isLoggedIn, function (req, res) {
-		res.render('profile', {user: req.user});
+		res.render('profile', {
+			user: req.user
+		});
 	});
 
 	app.post('/profile', function (req, res) {
 		process.nextTick(function () {
 			dlog("session: user email is " + req.user.local.email, def_opts);
-			User.findOne({'local.email': req.user.local.email}, function (err, user) {
-				if (typeof req.body.newemail != 'undefined') {
+			dlog("post: new email is " + req.body.newemail, def_opts);
+			User.findOne({
+				'local.email': req.user.local.email
+			}, function (err, user) {
+				if (req.body.newemail) {
 					dlog("checking format of new email...", def_opts);
-					if (req.body.newemail.includes("/^$|\s+/")) {
+					if (!req.body.newemail.includes("[$%^&*:;\\/|<>\"\'!.,-\s+]")) {
+						dlog("formatted correctly!", def_opts);
 						user.local.email = req.body.newemail;
 						user.save();
 					}
-				} else if (typeof req.body.newpwd != 'undefined') {
+				} else if (req.body.newpwd) {
 					dlog("checking format of new password...", def_opts);
-					if (req.body.newpwd.includes("/^$|\s+/")) {
+					if (!req.body.newpwd.includes("[$%^&*:;\\/|<>\"\'!.,-\s+]")) {
+						dlog("formatted correctly!", def_opts);
 						user.local.password = req.body.newpwd;
 						user.save();
 					}
@@ -110,8 +147,109 @@ module.exports = function (app, passport) {
 		});
 	});
 
-	app.get('/meeting', isLoggedIn, function(req, res) {
-		res.render('meeting');
+	app.get('/meeting', isLoggedIn, function (req, res) {
+		res.render('meeting', {
+			message: req.flash('meetingMessage')
+		});
+	});
+
+	app.post('/meeting', function (req, res) {
+		//dlog("recived post", def_opts);
+		process.nextTick(function () {
+			//dlog("test, before mongodb check", def_opts);
+
+			User.findOne({
+				'local.email': req.body.otheremail
+			}, function (err, user) {
+				dlog("checking mongodb", def_opts);
+				dlog("other email:" + req.body.otheremail, def_opts);
+				if (err) {
+					dlog(err, {
+						id: "server",
+						isError: true,
+						isWarning: false
+					});
+				}
+
+				if (user) {
+					if((user.food_prefs.length > 0) && (req.user.food_prefs.length > 0)) {
+						lat = parseFloat(req.body.coords.substring(
+							0, req.body.coords.indexOf(',')
+						));
+						long = parseFloat(req.body.coords.substring(
+							req.body.coords.indexOf(',') + 1, req.body.coords.length
+						));
+						dlog("coords:" + lat + "," + long, def_opts);
+
+						var rest_pq = food_q;
+						rest_pq.position = {
+							lat: lat,
+							long: long
+						};
+						rest_pq.rad = 5000;
+						rest_pq.rankBy = "prominence";
+
+						var sameFoodPrefs = compare_food_prefs(user.food_prefs, req.user.food_prefs);
+						if(sameFoodPrefs.length > 0) {
+							rest_pq.cat = sameFoodPrefs;
+							get_place(rest_pq, fetch_parse);
+							var checkJson = function () {
+								fs.readFile('./libs/places/data.json', function (err, jsonData) {
+									if (err) {
+										dlog(err, {
+											id: "server",
+											isError: true,
+											isWarning: false
+										});
+									} else {
+										dlog("checking ./libs/places/data.json", def_opts);
+										var parsedJson = JSON.parse(jsonData);
+										var found_places = parsedJson["found_places"];
+										if (found_places.length > 0) {
+											res.redirect('/results');
+											clearInterval(interval);
+										}
+									}
+								});
+							}
+							var interval = setInterval(checkJson, 100);
+						}
+					} else {
+						req.flash('meetingMessage', 'At least one user has no food preferences.');
+						res.redirect('/meeting');
+					}
+				} else {
+					req.flash('meetingMessage', 'This user does not exist.');
+					res.redirect('/meeting');
+				}
+			});
+		});
+	});
+
+	app.get('/results', isLoggedIn, function (req, res) {
+		fs.readFile('./libs/places/data.json', function (err, jsonData) {
+			if (err) {
+				dlog(err, {
+					id: "server",
+					isError: true,
+					isWarning: false
+				});
+			} else {
+				dlog("routes.js successfully read ./libs/places/data.json", def_opts);
+				parsedJson = JSON.parse(jsonData);
+				//dlog("parsedJson:"+JSON.stringify(parsedJson, null, 4), def_opts);
+				found_places = parsedJson["found_places"];
+				top5 = found_places.slice(0, 5); //gets top 5 restaurants
+				//dlog("top 5:"+top5[top5.length-1].name, def_opts);
+				res.render('results', {
+					places: top5
+				});
+
+				dlog("wiping data.json found_places", def_opts);
+				parsedJson["found_places"] = [];
+				fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
+			}
+		});
 	});
 
 };
