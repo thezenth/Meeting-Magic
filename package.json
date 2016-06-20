@@ -30,8 +30,10 @@
     "request-promise": "latest",
 
     "cfenv": "1.0.x",
-    
-    "jshint": "latest"
+
+    "jshint": "latest",
+
+    "qs": "latest"
   },
   "engines": {
     "node": "4.x"
