@@ -252,6 +252,12 @@ module.exports = function (app, passport) {
 		});
 	});
 
+	app.post('/results', isLoggedIn, function(req, res) {
+		newMeeting = new Meeting({
+
+		});
+	});
+
 };
 
 //route middleware to make sure user is logged in

@@ -7,7 +7,8 @@ var meetingSchema = mongoose.Schema({
     users            : [String],
     location_ref:    : String,
     date:            : String,
-    time:            : String
+    time:            : String,
+    status:          : String
 
 });
 
