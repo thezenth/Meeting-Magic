@@ -5,6 +5,7 @@ prefs = require('./config/preferences');
 Foods = prefs.Foods;
 
 var User = require('./models/user');
+var Meeting = require('./models/meeting')
 
 //fetch and google places stuff
 var fetch = require('./libs/places/fetch');
@@ -208,7 +209,7 @@ module.exports = function (app, passport) {
 										var parsedJson = JSON.parse(jsonData);
 										var found_places = parsedJson["found_places"];
 										if (found_places.length > 0) {
-											res.redirect('/results?users=' + qs.stringify( { "users": [req.user.local.email,req.body.otheremail] } ));
+											res.redirect('/results?users=' + qs.stringify( { "users": [req.user.local.email,req.body.otheremail] } ) );
 											clearInterval(interval);
 										}
 									}
@@ -257,13 +258,13 @@ module.exports = function (app, passport) {
 	app.post('/results', isLoggedIn, function(req, res) {
 		newMeeting = new Meeting({
 			users: qs.parse(req.query.users)["users"],
-			location_ref: "",
+			location_ref: req.body.ref,
 			date: "",
 			time: ""
 		});
 		dlog("created a new meeting:" + newMeeting, def_opts);
 		newMeeting.save();
-		res.redirect('/create');
+		res.redirect('/create?users=' + qs.stringify( { "users": [req.user.local.email,req.body.otheremail] } ) + "&" + qs.stringify( { "ref": req.body.ref } ) );
 	});
 
 };

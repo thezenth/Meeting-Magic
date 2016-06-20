@@ -47,8 +47,8 @@ function fetch_parse(data) {
 		rating = "Not available"
 		hours = []
 
-		if ('id' in curr_rest) {
-			ident = curr_rest['id'];
+		if ('place_id' in curr_rest) {
+			ident = curr_rest['place_id'];
 			//dlog(ident, def_opts);
 		}
 		if ('name' in curr_rest) {
@@ -106,9 +106,14 @@ function fetch_parse(data) {
 		}
 		newRest.hours = hours;
 		newRest.rating = rating;
+		newRest.ref = ident;
 		if(photo_reference !== "") {
 			newRest.imgUrl = build_img_url(photo_reference, max_width);
 		}
+
+
+
+
 		objStr = JSON.stringify(newRest, null, 4)
 
 		dlog(objStr, def_opts);
