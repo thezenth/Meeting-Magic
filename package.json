@@ -2,7 +2,8 @@
   "name": "meeting-magic",
   "main": "server.js",
   "scripts": {
-		"start": "node server.js"
+		"start": "node server.js",
+		"test": "./node_modules/jshint/bin/jshint server.js"
 	},
   "dependencies" : {
     "express" : "latest",
@@ -28,7 +29,9 @@
     "async": "latest",
     "request-promise": "latest",
 
-    "cfenv": "1.0.x"
+    "cfenv": "1.0.x",
+    
+    "jshint": "latest"
   },
   "engines": {
     "node": "4.x"
