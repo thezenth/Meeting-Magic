@@ -88,11 +88,11 @@ function fetch_parse(data) {
 		if ('photos' in curr_rest) {
 			if ('photo_reference' in curr_rest['photos'][0]) {
 				photo_reference = curr_rest['photos'][0]['photo_reference'];
-				dlog("ref:" + photo_reference, def_opts);
+				//dlog("ref:" + photo_reference, def_opts);
 			}
 			if ('width' in curr_rest['photos'][0]) {
 				max_width = curr_rest['photos'][0]['width'];
-				dlog("max_width:" + max_width, def_opts);
+				//dlog("max_width:" + max_width, def_opts);
 			}
 		}
 
@@ -111,12 +111,9 @@ function fetch_parse(data) {
 			newRest.imgUrl = build_img_url(photo_reference, max_width);
 		}
 
-
-
-
 		objStr = JSON.stringify(newRest, null, 4)
 
-		dlog(objStr, def_opts);
+		//dlog(objStr, def_opts);
 		restList.push(newRest);
 	}
 	//write restaurants to data.json
@@ -128,10 +125,10 @@ function fetch_parse(data) {
 			dlog(err, {id: "google-places-api", isError:true, isWarning:false});
 		}
 		else {
-			dlog("successfully read ./libs/places/data.json", def_opts);
+			//dlog("successfully read ./libs/places/data.json", def_opts);
 			var parsedJson = JSON.parse(jsonData);
 
-			dlog("wiping data.json found_places", def_opts);
+			//dlog("wiping data.json found_places", def_opts);
 			parsedJson["found_places"] = [];
 			fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
 			//dlog("parsedJson @ restaurants.js:"+JSON.stringify(parsedJson, null, '\t'), def_opts);
@@ -140,7 +137,7 @@ function fetch_parse(data) {
 			parsedJson['found_places'] = restList;
 			//write the edited structure in its entirity to the data.json file
 			fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
-			dlog("successfully wrote ./libs/places/data.json", def_opts);
+			//dlog("successfully wrote ./libs/places/data.json", def_opts);
 			//dlog("parsedJson @ restaurants.js:"+JSON.stringify(parsedJson, null, '\t'), def_opts);
 
 		}

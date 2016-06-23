@@ -92,8 +92,8 @@ function build_img_url(ref, m_width) {
 
 		var newUrl = base + maxWidth + "&" + imgRef + "&" + authKey;
 
-		dlog("made google places image fetch url", def_opts);
-		dlog("image url:"+newUrl, def_opts);
+		//dlog("made google places image fetch url", def_opts);
+		//dlog("image url:"+newUrl, def_opts);
 		//newUrl = "http://www.hvantagetechnologies.com/img/industries/restaurant.jpg";
 		return (newUrl);
 	}

@@ -30,6 +30,9 @@ var def_opts = {
 	isError: false
 }
 
+//url module
+var url = require('url');
+
 module.exports = function (app, passport) {
 	//Home page (with login links)
 	app.get('/', function (req, res) {
@@ -209,7 +212,8 @@ module.exports = function (app, passport) {
 										var parsedJson = JSON.parse(jsonData);
 										var found_places = parsedJson["found_places"];
 										if (found_places.length > 0) {
-											res.redirect('/results?users=' + qs.stringify( { "users": [req.user.local.email,req.body.otheremail] } ) );
+											//redir = '/results?users=' + req.user.local.email;
+											res.redirect('/results?' + qs.stringify( { "users": [req.user.local.email,req.body.otheremail] }, { indices : false, arrayFormat: 'brackets', encode : false } ) );
 											clearInterval(interval);
 										}
 									}
@@ -229,7 +233,17 @@ module.exports = function (app, passport) {
 		});
 	});
 
+	var resultsQuery = {};
+
 	app.get('/results', isLoggedIn, function (req, res) {
+
+		//Get and save the query string
+		//console.log(req.url);
+		var url_parts = url.parse(req.url, true);
+		console.log(url_parts);
+		var query = url_parts.query;
+		resultsQuery = query;
+
 		fs.readFile('./libs/places/data.json', function (err, jsonData) {
 			if (err) {
 				dlog(err, {
@@ -238,7 +252,7 @@ module.exports = function (app, passport) {
 					isWarning: false
 				});
 			} else {
-				dlog("routes.js successfully read ./libs/places/data.json", def_opts);
+				//dlog("routes.js successfully read ./libs/places/data.json", def_opts);
 				parsedJson = JSON.parse(jsonData);
 				//dlog("parsedJson:"+JSON.stringify(parsedJson, null, 4), def_opts);
 				found_places = parsedJson["found_places"];
@@ -248,7 +262,7 @@ module.exports = function (app, passport) {
 					places: top5
 				});
 
-				dlog("wiping data.json found_places", def_opts);
+				//dlog("wiping data.json found_places", def_opts);
 				parsedJson["found_places"] = [];
 				fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
 			}
@@ -256,15 +270,18 @@ module.exports = function (app, passport) {
 	});
 
 	app.post('/results', isLoggedIn, function(req, res) {
+
+		dlog('query:' + resultsQuery.users, def_opts)
 		newMeeting = new Meeting({
-			users: qs.parse(req.query.users)["users"],
+			users: resultsQuery['users[]'],
 			location_ref: req.body.ref,
 			date: "",
 			time: ""
 		});
 		dlog("created a new meeting:" + newMeeting, def_opts);
 		newMeeting.save();
-		res.redirect('/create?users=' + qs.stringify( { "users": [req.user.local.email,req.body.otheremail] } ) + "&" + qs.stringify( { "ref": req.body.ref } ) );
+		//redir = '/create?users=' + req.query['users'][0] + ',' + req.query['users'][1] + '&ref=' + req.body.ref;
+		//res.redirect(redir);
 	});
 
 };
