@@ -299,7 +299,7 @@ module.exports = function (app, passport) {
 		var query = url_parts.query;
 		createQuery = query;
 
-		Meeting.findOne({ '_id':query.meetid }, function(err, m) {
+		Meeting.findOne({ '_id':createQuery.meetid }, function(err, m) {
 			if (err) {
 				dlog(err, {
 					id: "server",
@@ -309,9 +309,25 @@ module.exports = function (app, passport) {
 			}
 
 			if (m) {
-				dlog(m, def_opts);
+				//dlog(m, def_opts);
 				//dlog(m.place.name, def_opts);
 				res.render('create', {meeting: m});
+			}
+		});
+	});
+
+	app.post('/create', isLoggedIn, function(req, res) {
+		Meeting.findOne({ '_id':createQuery.meetid }, function(err, m) {
+			if (err) {
+				dlog(err, {
+					id: "server",
+					isError: true,
+					isWarning: false
+				});
+			}
+
+			if (m) {
+				console.log('HEY');
 			}
 		});
 	});

@@ -1,6 +1,13 @@
 <html lang="en">
 	<head>
 		<% include ../partials/head %>
+
+		<script>
+			$(document).ready(function() {
+			    $('select').material_select();
+			});
+		</script>
+
 	</head>
 
 	<body>
@@ -12,25 +19,41 @@
 			<div class="col s12 m10">
 				<div class="card-panel">
 					<h3>Meeting</h3>
-				    <div>
-                        <form class="col s12" action="/create" method="post">
-            				<div class="row">
-            					<div class="input-field col s6">
-            						<input id="users" type="text" class="validate" name="users" value="<%= meeting.users %>">
-            						<label class="active" for="users">Who</label>
-            					</div>
-                                <div class="input-field col s6">
-            						<input id="when" type="text" class="validate" name="when">
-            						<label class="active" for="users">When</label>
-            					</div>
-                                <div class="input-field col s6">
-            						<input id="where" type="text" class="validate" name="where" value="<%= meeting.place.name %>">
-            						<label class="active" for="where">Where</label>
-            					</div>
-            				</div>
-            				<button type="submit" class="btn btn-warning btn-lg">Create</button>
-            			</form>
-                    </div>
+					<div>
+						<form class="col s12" action="/create" method="post">
+							<div class="row">
+								<div class="input-field col s6">
+									<input id="users" type="text" class="validate" name="users" value="<%= meeting.users %>" disabled>
+									<label class="active" for="users">Who</label>
+								</div>
+								<div class="input-field col s6">
+									<input id="where" type="text" class="validate" name="where" value="<%= meeting.place.name %>" disabled>
+									<label class="active" for="where">Where</label>
+								</div>
+
+								<div class="input-field col s6">
+									<input id="date" type="text" class="validate" name="date">
+									<label class="active" for="date">Date mm/dd/yyyy</label>
+								</div>
+
+								<div class="input-field col s6">
+	                                <select name="time">
+	                                    <option value="" disabled selected>Time</option>
+	                                    <% for(var i = 24; i>0; i--) { %>
+	                                        <% if(i > 12) { %>
+	                                            <option value="<%=i%>"><%= (i-12) + ':00 pm' %></option>
+	                                        <% } else { %>
+												<option value="<%=i%>"><%= i + ':00 am' %></option>
+	                                        <% } %>
+	                                    <% } %>
+	                                </select>
+	                            </div>
+
+							</div>
+
+							<button type="submit" class="btn btn-warning btn-lg">Create</button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
