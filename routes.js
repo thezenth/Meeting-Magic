@@ -283,14 +283,9 @@ module.exports = function (app, passport) {
 			time: ""
 		});
 
-
-
-
-
-
 		dlog("created a new meeting:" + newMeeting, def_opts);
 		newMeeting.save();
-		var redir = '/create?' + qs.stringify( { 'users': resultsQuery['users[]'] }, { indices : false, arrayFormat: 'brackets', encode : false } ) + '&meetid=' + newMeeting._id ;//qs.stringify( { 'meetid': newMeeting._id }, { indices : false, encode : false } ) ;
+		var redir = '/create?meetid=' + newMeeting._id ;//qs.stringify( { 'meetid': newMeeting._id }, { indices : false, encode : false } ) ;
 		res.redirect(redir);
 	});
 
