@@ -13,11 +13,10 @@
 				<div class="card-panel">
 					<h3>Meeting</h3>
 				    <div>
-                        <p><%= meeting.place.name %></p>
                         <form class="col s12" action="/create" method="post">
             				<div class="row">
             					<div class="input-field col s6">
-            						<input id="users" type="text" class="validate" name="users">
+            						<input id="users" type="text" class="validate" name="users" value="<%= meeting.users %>">
             						<label class="active" for="users">Who</label>
             					</div>
                                 <div class="input-field col s6">
@@ -25,7 +24,7 @@
             						<label class="active" for="users">When</label>
             					</div>
                                 <div class="input-field col s6">
-            						<input id="where" type="text" class="validate" name="where"  value="<%= meeting.place.name %>">
+            						<input id="where" type="text" class="validate" name="where" value="<%= meeting.place.name %>">
             						<label class="active" for="where">Where</label>
             					</div>
             				</div>
