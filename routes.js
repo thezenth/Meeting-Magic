@@ -212,8 +212,8 @@ module.exports = function (app, passport) {
 										var parsedJson = JSON.parse(jsonData);
 										var found_places = parsedJson["found_places"];
 										if (found_places.length > 0) {
-											//redir = '/results?users=' + req.user.local.email;
-											res.redirect('/results?' + qs.stringify( { "users": [req.user.local.email,req.body.otheremail] }, { indices : false, arrayFormat: 'brackets', encode : false } ) );
+											var redir = '/results?' + qs.stringify( { 'users': [req.user.local.email,req.body.otheremail] }, { indices : false, arrayFormat: 'brackets', encode : false } )
+											res.redirect(redir);
 											clearInterval(interval);
 										}
 									}
@@ -274,14 +274,14 @@ module.exports = function (app, passport) {
 		dlog('query:' + resultsQuery.users, def_opts)
 		newMeeting = new Meeting({
 			users: resultsQuery['users[]'],
-			location_ref: req.body.ref,
+			places: req.body.rest,
 			date: "",
 			time: ""
 		});
 		dlog("created a new meeting:" + newMeeting, def_opts);
 		newMeeting.save();
-		//redir = '/create?users=' + req.query['users'][0] + ',' + req.query['users'][1] + '&ref=' + req.body.ref;
-		//res.redirect(redir);
+		var redir = '/create?' + qs.stringify( { 'users': resultsQuery['users[]'] }, { indices : false, arrayFormat: 'brackets', encode : false } ) + '&meetid=' + newMeeting._id ;//qs.stringify( { 'meetid': newMeeting._id }, { indices : false, encode : false } ) ;
+		res.redirect(redir);
 	});
 
 };
