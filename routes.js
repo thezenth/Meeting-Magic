@@ -234,13 +234,14 @@ module.exports = function (app, passport) {
 	});
 
 	var resultsQuery = {};
+	var resultsRests = [];
 
 	app.get('/results', isLoggedIn, function (req, res) {
 
 		//Get and save the query string
 		//console.log(req.url);
 		var url_parts = url.parse(req.url, true);
-		console.log(url_parts);
+		//console.log(url_parts);
 		var query = url_parts.query;
 		resultsQuery = query;
 
@@ -262,6 +263,8 @@ module.exports = function (app, passport) {
 					places: top5
 				});
 
+				resultsRests = top5; //save the results for use in app.post for results
+
 				//dlog("wiping data.json found_places", def_opts);
 				parsedJson["found_places"] = [];
 				fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
@@ -272,16 +275,50 @@ module.exports = function (app, passport) {
 	app.post('/results', isLoggedIn, function(req, res) {
 
 		dlog('query:' + resultsQuery.users, def_opts)
+		//console.log(req.body.idx);
 		newMeeting = new Meeting({
 			users: resultsQuery['users[]'],
-			places: req.body.rest,
+			place: resultsRests[req.body.idx], //remeber, this comes back as a string!
 			date: "",
 			time: ""
 		});
+
+
+
+
+
+
 		dlog("created a new meeting:" + newMeeting, def_opts);
 		newMeeting.save();
 		var redir = '/create?' + qs.stringify( { 'users': resultsQuery['users[]'] }, { indices : false, arrayFormat: 'brackets', encode : false } ) + '&meetid=' + newMeeting._id ;//qs.stringify( { 'meetid': newMeeting._id }, { indices : false, encode : false } ) ;
 		res.redirect(redir);
+	});
+
+	var createQuery = {};
+
+	app.get('/create', isLoggedIn, function(req, res) {
+		//Get and save the query string
+		//console.log(req.url);
+		var url_parts = url.parse(req.url, true);
+		//console.log(url_parts);
+		var query = url_parts.query;
+		createQuery = query;
+
+		Meeting.findOne({ '_id':query.meetid }, function(err, m) {
+			if (err) {
+				dlog(err, {
+					id: "server",
+					isError: true,
+					isWarning: false
+				});
+			}
+
+			if (m) {
+				dlog(m, def_opts);
+				//dlog(m.place.name, def_opts);
+				res.render('create', {meeting: m});
+			}
+		});
 	});
 
 };

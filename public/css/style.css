@@ -5,6 +5,9 @@
     margin: 0.75rem;
     width: 500px;
 }
+.invisible {
+    display: none;
+}
 .center-parent {
     display: flex;
     flex-direction: column;

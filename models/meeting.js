@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var meetingSchema = mongoose.Schema({
 
     users            : [String],
-    places           : Object,
+    place            : Object,
     date             : String,
     time             : String,
     status           : String

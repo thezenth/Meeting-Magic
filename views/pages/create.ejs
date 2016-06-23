@@ -1,0 +1,40 @@
+<html lang="en">
+	<head>
+		<% include ../partials/head %>
+	</head>
+
+	<body>
+		<header>
+			<% include ../partials/header-nav-bar %>
+		</header>
+
+		<div class="row">
+			<div class="col s12 m10">
+				<div class="card-panel">
+					<h3>Meeting</h3>
+				    <div>
+                        <p><%= meeting.place.name %></p>
+                        <form class="col s12" action="/create" method="post">
+            				<div class="row">
+            					<div class="input-field col s6">
+            						<input id="users" type="text" class="validate" name="users">
+            						<label class="active" for="users">Who</label>
+            					</div>
+                                <div class="input-field col s6">
+            						<input id="when" type="text" class="validate" name="when">
+            						<label class="active" for="users">When</label>
+            					</div>
+                                <div class="input-field col s6">
+            						<input id="where" type="text" class="validate" name="where"  value="<%= meeting.place.name %>">
+            						<label class="active" for="where">Where</label>
+            					</div>
+            				</div>
+            				<button type="submit" class="btn btn-warning btn-lg">Create</button>
+            			</form>
+                    </div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>
