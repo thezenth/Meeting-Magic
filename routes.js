@@ -274,7 +274,7 @@ module.exports = function (app, passport) {
 
 	app.post('/results', isLoggedIn, function(req, res) {
 
-		dlog('query:' + resultsQuery.users, def_opts)
+		dlog('query:' + resultsQuery['users[]'], def_opts)
 		//console.log(req.body.idx);
 		newMeeting = new Meeting({
 			users: resultsQuery['users[]'],
@@ -327,7 +327,10 @@ module.exports = function (app, passport) {
 			}
 
 			if (m) {
-				console.log('HEY');
+				m.time = req.body.time;
+				m.date = req.body.date;
+				m.save();
+				dlog("update a meeting:\n" + m, def_opts);
 			}
 		});
 	});
