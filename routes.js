@@ -326,7 +326,8 @@ module.exports = function (app, passport) {
 				users: resultsQuery['users[]'],
 				place: resultsRests[req.body.idx], //remeber, this comes back as a string!
 				date: "",
-				time: ""
+				time: "",
+				status: false
 			});
 
 			dlog("created a new meeting:" + newMeeting, def_opts);
