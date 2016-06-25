@@ -331,6 +331,7 @@ module.exports = function (app, passport) {
 				m.date = req.body.date;
 				m.save();
 				dlog("update a meeting:\n" + m, def_opts);
+				res.redirect('/home');
 			}
 		});
 	});
