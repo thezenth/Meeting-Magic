@@ -8,7 +8,7 @@ var meetingSchema = mongoose.Schema({
     place            : Object,
     date             : String,
     time             : String,
-    status           : Boolean // if true, then all parties ahve accepted this meeting- if false, than all parties have not, and it is not considered "accepted"
+    _status          : Boolean // if true, then all parties ahve accepted this meeting- if false, than all parties have not, and it is not considered "accepted"
 
 });
 

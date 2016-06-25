@@ -90,6 +90,7 @@ module.exports = function (app, passport) {
 				if(user) {
 
 					var _meetings = [];
+					var a_meetings = [];
 
 					if(user.sugg_meetings.length > 0) {
 
@@ -109,7 +110,32 @@ module.exports = function (app, passport) {
 						      console.log('A file failed to process');
 						    } else {
 								dlog("passed array:" + _meetings, def_opts);
-								res.render('home', {_meetings: _meetings});
+								res.render('home', {_meetings: _meetings, a_meetings: a_meetings});
+						    }
+						});
+					}
+
+					if(user.acc_meetings.length > 0) {
+
+						async.each(user.acc_meetings, function(mId, callback) {
+						  // Perform operation on file here.
+						  Meeting.findOne( { '_id': mId }, function(err, m) {
+							  dlog("searching acc_meetings:" + m, def_opts);
+							  if (m._status) { //check if the meeting has been accepted by everyone - not sure how to check for this just yet.. maybe check everytime an individual accepts?
+								  a_meetings.push(m.place.name);
+								  callback(null); //this calls callback after each meeting is found- so essentially re rendering the page each time?
+							  }
+						  });
+
+					  }, function(err){ //<-- callback if noah is being idiot and can't find it
+						    // if any of the file processing produced an error, err would equal that error
+						    if (err) {
+						      // One of the iterations produced an error.
+						      // All processing will now stop.
+						      console.log('A file failed to process');
+						    } else {
+								dlog("passed array:" + _meetings, def_opts);
+								res.render('home', {_meetings: _meetings, a_meetings: a_meetings});
 						    }
 						});
 					}
@@ -327,7 +353,7 @@ module.exports = function (app, passport) {
 				place: resultsRests[req.body.idx], //remeber, this comes back as a string!
 				date: "",
 				time: "",
-				status: false
+				_status: false
 			});
 
 			dlog("created a new meeting:" + newMeeting, def_opts);
