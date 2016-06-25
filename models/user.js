@@ -9,7 +9,8 @@ var userSchema = mongoose.Schema({
         email        : String,
         password     : String,
     },
-    food_prefs       : [String]
+    food_prefs       : [String],
+    meetings         : [String]
 });
 
 // methods ======================
