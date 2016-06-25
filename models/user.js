@@ -10,7 +10,8 @@ var userSchema = mongoose.Schema({
         password     : String,
     },
     food_prefs       : [String],
-    meetings         : [String]
+    acc_meetings     : [String],
+    sugg_meetings    : [String]
 });
 
 // methods ======================

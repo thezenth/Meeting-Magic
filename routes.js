@@ -75,9 +75,46 @@ module.exports = function (app, passport) {
 		//want this protected so you have to be logged in to visit
 		//use route middleware to verify this (the isLoggedIn function)
 		app.get('/home', isLoggedIn, function (req, res) {
-			res.render('home', {
-				user: req.user
-			}); //get the user out of session and pass to template
+			//req.user..
+
+
+			User.findOne( { 'local.email': req.user.local.email }, function(err, user) {
+				if(err) {
+					dlog(err, {
+						id: "server",
+						isError: true,
+						isWarning: false
+					});
+				}
+				// have to dothis to actually get the user...
+				if(user) {
+
+					var _meetings = [];
+
+					if(user.sugg_meetings.length > 0) {
+
+						async.each(user.sugg_meetings, function(mId, callback) {
+						  // Perform operation on file here.
+						  Meeting.findOne( { '_id': mId }, function(err, m) {
+							  dlog("searching sugg_meetings:" + m, def_opts);
+							  _meetings.push(m.place.name);
+							  callback(null); //this calls callback after each meeting is found- so essentially re rendering the page each time?
+						  });
+
+					  }, function(err){ //<-- callback if noah is being idiot and can't find it
+						    // if any of the file processing produced an error, err would equal that error
+						    if (err) {
+						      // One of the iterations produced an error.
+						      // All processing will now stop.
+						      console.log('A file failed to process');
+						    } else {
+								dlog("passed array:" + _meetings, def_opts);
+								res.render('home', {_meetings: _meetings});
+						    }
+						});
+					}
+				}
+			});
 		});
 
 		//Logout
@@ -362,7 +399,8 @@ module.exports = function (app, passport) {
 						  }
 
 						  if (user) {
-							  user.meetings.push(m._id); //push the meeting's id to the user
+							  //userMeetingObj = { "_id": m._id, "reviewed": false, "accepted": false }; //assume these things for everyone, including person making the meeting (for now)
+							  user.sugg_meetings.push(m._id); //push the meeting obj thingie to the user
 							  dlog('updated user:\n' + user, def_opts)
 							  user.save(); //save the user!
 							  callback(null);
