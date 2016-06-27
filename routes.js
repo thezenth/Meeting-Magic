@@ -114,6 +114,9 @@ module.exports = function (app, passport) {
 						    }
 						});
 					}
+					else {
+						res.render('home', {_meetings: _meetings, a_meetings: a_meetings});
+					}
 
 					if(user.acc_meetings.length > 0) {
 
@@ -138,6 +141,9 @@ module.exports = function (app, passport) {
 								res.render('home', {_meetings: _meetings, a_meetings: a_meetings});
 						    }
 						});
+					}
+					else {
+						res.render('home', {_meetings: _meetings, a_meetings: a_meetings});
 					}
 				}
 			});
