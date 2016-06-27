@@ -143,6 +143,10 @@ module.exports = function (app, passport) {
 			});
 		});
 
+		app.post('/home', isLoggedIn, function(req, res) {
+			console.log(req.body);
+		});
+
 		//Logout
 		app.get('/logout', function (req, res) {
 			req.logout();

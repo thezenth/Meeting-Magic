@@ -31,8 +31,8 @@
 												</div>
 											<% } %>
 
-											<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-											<a class="next" onclick="plusSlides(1)">&#10095;</a>
+											<a class="prev" onclick="plusSlides(-1, editform_1_input, acceptform_1_input)">&#10094;</a>
+											<a class="next" onclick="plusSlides(1, editform_1_input, acceptform_1_input)">&#10095;</a>
 										</div>
 										<br>
 
@@ -49,12 +49,12 @@
 								<div class="card-action">
 									<div class="inline">
 										<form action="/home" method="post" id="editform_1">
-											<input name="edit" value="true" hidden>
+											<input name="edit" value="1" id="editform_1_input" hidden>
 											<!-- value we are submitting with the form -->
 											<a href="#" onClick="<%- "document.getElementById('editform_1').submit();" %>" type="submit">Edit</a>
 										</form>
 										<form action="/home" method="post" id="acceptform_1">
-											<input name="accept" value="true" hidden>
+											<input name="accept" value="1" id="acceptform_1_input" hidden>
 											<!-- value we are submitting with the form -->
 											<a href="#" onClick="<%- "document.getElementById('acceptform_1').submit();" %>" type="submit">Accept</a>
 										</form>
