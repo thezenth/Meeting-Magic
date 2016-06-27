@@ -98,7 +98,7 @@ module.exports = function (app, passport) {
 						  // Perform operation on file here.
 						  Meeting.findOne( { '_id': mId }, function(err, m) {
 							  dlog("searching sugg_meetings:" + m, def_opts);
-							  _meetings.push(m.place.name);
+							  _meetings.push(m);
 							  callback(null); //this calls callback after each meeting is found- so essentially re rendering the page each time?
 						  });
 
@@ -122,7 +122,7 @@ module.exports = function (app, passport) {
 						  Meeting.findOne( { '_id': mId }, function(err, m) {
 							  dlog("searching acc_meetings:" + m, def_opts);
 							  if (m._status) { //check if the meeting has been accepted by everyone - not sure how to check for this just yet.. maybe check everytime an individual accepts?
-								  a_meetings.push(m.place.name);
+								  a_meetings.push(m);
 								  callback(null); //this calls callback after each meeting is found- so essentially re rendering the page each time?
 							  }
 						  });

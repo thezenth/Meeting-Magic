@@ -2,6 +2,7 @@
 <html lang="en">
 	<head>
 		<% include ../partials/head %>
+		<% include ../partials/slideshow-head %>
 	</head>
 
 	<body>
@@ -12,20 +13,41 @@
 		<main>
 			<div class="grid-container">
 				<div class="grid-column">
-					<div class="row"> <!-- User-Suggested Meetings Card -->
+					<div class="row">
+						<!-- User-Suggested Meetings Card -->
 						<div class="col s12 m12">
 							<div class="card blue-grey darken-1">
 								<div class="card-content white-text">
 									<span class="card-title">User-Suggested Meetings</span>
+
 									<% if (_meetings.length > 0) { %>
-										<p><%= _meetings %></p>
+										<div class="slideshow-container">
+											<% for (var i = 0; i<_meetings.length; i++) { %>
+												<div class="mySlides fade">
+													<div class="numbertext">1 / <%=_meetings.length%></div>
+													<img src="<%= _meetings[0].place.imgUrl %>" style="width:100%">
+													<div class="text"><%=_meetings[i].place.name%></div>
+												</div>
+											<% } %>
+
+											<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+											<a class="next" onclick="plusSlides(1)">&#10095;</a>
+										</div>
+										<br>
+
+										<div style="text-align:center">
+											<% for (var d = 0; d<_meetings.length; d++) { %>
+												<span class="dot" onclick="currentSlide(<%=d+1%>)"></span>
+											<% } %>
+										</div>
+
 									<% } else { %>
-										<p>oops! got nothin'...</p>
+										<p>None! Click the "Meetings" tab to set up a new meeting.</p>
 									<% } %>
 								</div>
 								<div class="card-action">
-									<a href="#">This is a link</a>
-									<a href="#">This is a link</a>
+									<a href="#">Edit</a>
+									<a href="#">Accept</a>
 								</div>
 							</div>
 						</div>
@@ -82,4 +104,5 @@
 			</div>
 		</main>
 	</body>
+	<script src="/js/slideshow.js"></script> <!-- call this after the body, because it waits until all the html/DOM is loaded! And there are html element specific functions in this file -->
 </html>
