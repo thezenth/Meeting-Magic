@@ -24,7 +24,8 @@
 										<div class="slideshow-container">
 											<% for (var i = 0; i<_meetings.length; i++) { %>
 												<div class="mySlides fade">
-													<div class="numbertext">1 / <%=_meetings.length%></div>
+													<div class="numbertext">1 /
+														<%=_meetings.length%></div>
 													<img src="<%= _meetings[0].place.imgUrl %>" style="width:100%">
 													<div class="text"><%=_meetings[i].place.name%></div>
 												</div>
@@ -46,8 +47,18 @@
 									<% } %>
 								</div>
 								<div class="card-action">
-									<a href="#">Edit</a>
-									<a href="#">Accept</a>
+									<div class="inline">
+										<form action="/home" method="post" id="editform_1">
+											<input name="edit" value="true" hidden>
+											<!-- value we are submitting with the form -->
+											<a href="#" onClick="<%- "document.getElementById('editform_1').submit();" %>" type="submit">Edit</a>
+										</form>
+										<form action="/home" method="post" id="acceptform_1">
+											<input name="accept" value="true" hidden>
+											<!-- value we are submitting with the form -->
+											<a href="#" onClick="<%- "document.getElementById('acceptform_1').submit();" %>" type="submit">Accept</a>
+										</form>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -104,5 +115,6 @@
 			</div>
 		</main>
 	</body>
-	<script src="/js/slideshow.js"></script> <!-- call this after the body, because it waits until all the html/DOM is loaded! And there are html element specific functions in this file -->
+	<script src="/js/slideshow.js"></script>
+	<!-- call this after the body, because it waits until all the html/DOM is loaded! And there are html element specific functions in this file -->
 </html>

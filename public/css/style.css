@@ -37,6 +37,16 @@
 .container-column {
     float:left;
 }
+.card-bottom {
+    display: inline-flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: left;
+}
+.rel-container {
+    width:45%;
+}
 p.normal {
     display: inline;
     font-weight: normal;
@@ -59,4 +69,11 @@ a.nav-link {
 a.fixed {
     width: 100px;
     margin: 10px;
+}
+a.with-icon-button {
+    display: inline-flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: left;
 }
