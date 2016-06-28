@@ -27,8 +27,13 @@
 					if(temp.content.querySelector('#card-title').innerText) { //checks the span for inner text, which is most modern browsers
 						temp.content.querySelector('#card-title').innerText = data.sendMeetings[i].place.name;
 						temp.content.querySelector('#card-title').appendChild(titleChild);
+
+						temp.content.querySelector('#card-title_2').innerText = data.sendMeetings[i].place.name;
+						temp.content.querySelector('#card-title_2').appendChild(infoChild);
+
 						temp.content.querySelector('#meeting').innerText = data.sendMeetings[i].place.name;
-						temp.content.querySelector('#meeting').appendChild(infoChild);
+
+
 					}
 					else if(temp.content.querySelector('#card-title').textContent) { //otherwise, do this for firefox
 						temp.content.querySelector('#card-title').textContent = data.sendMeetings[i].place.name;
@@ -56,7 +61,7 @@
 					<span class="card-title activator grey-text text-darken-4" id="card-title">Card Title<i class="material-icons right" id="reveal-card-button">more_vert</i></span>
 				</div>
 				<div class="card-reveal">
-					<span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right" id="close-card-button">close</i></span>
+					<span class="card-title grey-text text-darken-4" id="card-title_2">Card Title<i class="material-icons right" id="close-card-button">close</i></span>
 					<p id="meeting" style="color:black">Here is some more information about this product that is only revealed once clicked on.</p>
 				</div>
 				<div class="card-action">
