@@ -31,13 +31,49 @@
 						temp.content.querySelector('#card-title_2').innerText = data.sendMeetings[i].place.name;
 						temp.content.querySelector('#card-title_2').appendChild(infoChild);
 
-						temp.content.querySelector('#meeting').innerText = data.sendMeetings[i].place.name;
+						//Set info about the restaurant/meeting
+						temp.content.querySelector('#address').innerText = data.sendMeetings[i].place.address;
+						temp.content.querySelector('#rating').innerText = data.sendMeetings[i].place.rating;
 
+						//Format the time correctly
+						var time = parseInt(data.sendMeetings[i].time);
+						if (time > 11) {
+							if (time == 12) {
+								time = time + " pm";
+							}
+							else {
+								time = (time - 12) + " pm";
+							}
+						} else {
+							time = time + " am";
+						}
+						temp.content.querySelector('#date-and-time').innerText = data.sendMeetings[i].date + ' @ ' + time;
 
 					}
 					else if(temp.content.querySelector('#card-title').textContent) { //otherwise, do this for firefox
 						temp.content.querySelector('#card-title').textContent = data.sendMeetings[i].place.name;
-						temp.content.querySelector('#meeting').textContent = data.sendMeetings[i].place.name;
+						temp.content.querySelector('#card-title').appendChild(titleChild);
+
+						temp.content.querySelector('#card-title_2').textContent = data.sendMeetings[i].place.name;
+						temp.content.querySelector('#card-title_2').appendChild(infoChild);
+
+						//Set info about the restaurant/meeting
+						temp.content.querySelector('#address').textContent = data.sendMeetings[i].place.address;
+						temp.content.querySelector('#rating').textContent = data.sendMeetings[i].place.rating;
+
+						//Format the time correctly
+						var time = parseInt(data.sendMeetings[i].time);
+						if (time > 11) {
+							if (time == 12) {
+								time = time + " pm";
+							}
+							else {
+								time = (time - 12) + " pm";
+							}
+						} else {
+							time = time + " am";
+						}
+						temp.content.querySelector('#date-and-time').innerText = data.sendMeetings[i].date + ' @ ' + time;
 					}
 
 					//Append the card to the panel =============================================
@@ -62,7 +98,10 @@
 				</div>
 				<div class="card-reveal">
 					<span class="card-title grey-text text-darken-4" id="card-title_2">Card Title<i class="material-icons right" id="close-card-button">close</i></span>
-					<p id="meeting" style="color:black">Here is some more information about this product that is only revealed once clicked on.</p>
+					<p class="term" style="color: black">Address </p><p id="address" class="definition" style="color: black">Here is some more information about this product that is only revealed once clicked on.</p> <br>
+					<p class="term" style="color: black">Rating </p><p id="rating" class="definition" style="color: black">Here is some more information about this product that is only revealed once clicked on.</p> <br>
+					<p class="term" style="color: black">Date and Time </p><p id="date-and-time" class="definition" style="color: black">Here is some more information about this product that is only revealed once clicked on.</p> <br>
+
 				</div>
 				<div class="card-action">
 					<div class="inline">
