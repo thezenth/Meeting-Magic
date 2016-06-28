@@ -33,7 +33,9 @@
 
     "jshint": "latest",
 
-    "qs": "latest"
+    "qs": "latest",
+
+    "socket.io": "latest"
   },
   "engines": {
     "node": "4.x"

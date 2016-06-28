@@ -3,6 +3,16 @@
 	<head>
 		<% include ../partials/head %>
 		<% include ../partials/slideshow-head %>
+		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+		<script>
+			var socket = io.connect('/home-namespace');
+			socket.on('_update_sugg_meetings', function(data) {
+				document.getElementById('sugg_meetings').innerHTML = data.sendMeetings;
+			});
+			socket.on('_update_acc_meetings', function(data) {
+				document.getElementById('acc_meetings').innerHTML = data.sendMeetings;
+			});
+		</script>
 	</head>
 
 	<body>
@@ -19,44 +29,19 @@
 							<div class="card blue-grey darken-1">
 								<div class="card-content white-text">
 									<span class="card-title">User-Suggested Meetings</span>
-
-									<% if (_meetings.length > 0) { %>
-										<div class="slideshow-container">
-											<% for (var i = 0; i<_meetings.length; i++) { %>
-												<div class="mySlides fade">
-													<div class="numbertext">1 /
-														<%=_meetings.length%></div>
-													<img src="<%= _meetings[0].place.imgUrl %>" style="width:100%">
-													<div class="text"><%=_meetings[i].place.name%></div>
-												</div>
-											<% } %>
-
-											<a class="prev" onclick="plusSlides(-1, editform_1_input, acceptform_1_input)">&#10094;</a>
-											<a class="next" onclick="plusSlides(1, editform_1_input, acceptform_1_input)">&#10095;</a>
-										</div>
-										<br>
-
-										<div style="text-align:center">
-											<% for (var d = 0; d<_meetings.length; d++) { %>
-												<span class="dot" onclick="currentSlide(<%=d+1%>)"></span>
-											<% } %>
-										</div>
-
-									<% } else { %>
-										<p>None! Click the "Meetings" tab to set up a new meeting.</p>
-									<% } %>
+									<p id="sugg_meetings">oops! got nothin'...</p>
 								</div>
 								<div class="card-action">
 									<div class="inline">
 										<form action="/home" method="post" id="editform_1">
 											<input name="edit" value="1" id="editform_1_input" hidden>
 											<!-- value we are submitting with the form -->
-											<a href="#" onClick="<%- "document.getElementById('editform_1').submit();" %>" type="submit">Edit</a>
+											<a href="#" onClick="<%- " document.getElementById('editform_1').submit();" %>" type="submit">Edit</a>
 										</form>
 										<form action="/home" method="post" id="acceptform_1">
 											<input name="accept" value="1" id="acceptform_1_input" hidden>
 											<!-- value we are submitting with the form -->
-											<a href="#" onClick="<%- "document.getElementById('acceptform_1').submit();" %>" type="submit">Accept</a>
+											<a href="#" onClick="<%- " document.getElementById('acceptform_1').submit();" %>" type="submit">Accept</a>
 										</form>
 									</div>
 								</div>
@@ -84,11 +69,7 @@
 							<div class="card blue-grey darken-1">
 								<div class="card-content white-text">
 									<span class="card-title">Upcoming Meetings</span>
-									<% if (a_meetings.length > 0) { %>
-										<p><%= a_meetings %></p>
-									<% } else { %>
-										<p>oops! got nothin'...</p>
-									<% } %>
+										<p id="acc_meetings">oops! got nothin'...</p>
 								</div>
 								<div class="card-action">
 									<a href="#">This is a link</a>

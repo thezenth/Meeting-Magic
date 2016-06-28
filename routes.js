@@ -36,7 +36,72 @@ var def_opts = {
 //url module
 var url = require('url');
 
-module.exports = function (app, passport) {
+module.exports = function (sio, app, passport) {
+
+		var reqData = {};
+		var meetingData = {};
+
+		var hnsp = sio.of('/home-namespace');
+
+		hnsp.on('connection', function(socket) {
+			if(reqData.user) {
+				var usr = reqData.user;
+				var s_meetings = usr.sugg_meetings;
+				var a_meetings = usr.acc_meetings;
+
+				var sendMeetings_sugg = [];
+				var sendMeetings_acc = [];
+
+				if (s_meetings.length > 0) {
+					async.each(s_meetings, function(mId, callback) {
+						  // Perform operation on file here.
+						  Meeting.findOne( { '_id': mId }, function(err, m) {
+							  dlog("searching sugg_meetings:" + m, def_opts);
+							  if (m) {
+								  sendMeetings_sugg.push(m);
+								  callback(null);
+							  }
+						  });
+
+					  }, function(err){ //<-- callback if noah is being idiot and can't find it
+						    // if any of the file processing produced an error, err would equal that error
+						    if (err) {
+						      // One of the iterations produced an error.
+						      // All processing will now stop.
+						      console.log('A file failed to process');
+						    } else {
+								socket.emit('_update_sugg_meetings', {sendMeetings: sendMeetings_sugg});
+								console.log('Succesfully updated meetings');
+						    }
+						});
+				}
+
+				if (a_meetings.length > 0) {
+					async.each(a_meetings, function(mId, callback) {
+						  // Perform operation on file here.
+						  Meeting.findOne( { '_id': mId }, function(err, m) {
+							  dlog("searching acc_meetings:" + m, def_opts);
+							  if (m) {
+								  sendMeetings_acc.push(m);
+								  callback(null);
+							  }
+						  });
+
+					  }, function(err){ //<-- callback if noah is being idiot and can't find it
+						    // if any of the file processing produced an error, err would equal that error
+						    if (err) {
+						      // One of the iterations produced an error.
+						      // All processing will now stop.
+						      console.log('A file failed to process');
+						    } else {
+								socket.emit('_update_sugg_meetings', {sendMeetings: sendMeetings_acc});
+								console.log('Succesfully updated meetings');
+						    }
+						});
+				}
+			}
+		});
+
 		//Home page (with login links)
 		app.get('/', function (req, res) {
 			res.render('index');
@@ -75,9 +140,6 @@ module.exports = function (app, passport) {
 		//want this protected so you have to be logged in to visit
 		//use route middleware to verify this (the isLoggedIn function)
 		app.get('/home', isLoggedIn, function (req, res) {
-			//req.user..
-
-
 			User.findOne( { 'local.email': req.user.local.email }, function(err, user) {
 				if(err) {
 					dlog(err, {
@@ -88,63 +150,12 @@ module.exports = function (app, passport) {
 				}
 				// have to dothis to actually get the user...
 				if(user) {
-
+					reqData = req;
+					meetingData._meetings = _meetings;
+					meetingData.a_meetings = a_meetings;
 					var _meetings = [];
 					var a_meetings = [];
-
-					if(user.sugg_meetings.length > 0) {
-
-						async.each(user.sugg_meetings, function(mId, callback) {
-						  // Perform operation on file here.
-						  Meeting.findOne( { '_id': mId }, function(err, m) {
-							  dlog("searching sugg_meetings:" + m, def_opts);
-							  _meetings.push(m);
-							  callback(null); //this calls callback after each meeting is found- so essentially re rendering the page each time?
-						  });
-
-					  }, function(err){ //<-- callback if noah is being idiot and can't find it
-						    // if any of the file processing produced an error, err would equal that error
-						    if (err) {
-						      // One of the iterations produced an error.
-						      // All processing will now stop.
-						      console.log('A file failed to process');
-						    } else {
-								dlog("passed array:" + _meetings, def_opts);
-								res.render('home', {_meetings: _meetings, a_meetings: a_meetings});
-						    }
-						});
-					}
-					else {
-						res.render('home', {_meetings: _meetings, a_meetings: a_meetings});
-					}
-
-					if(user.acc_meetings.length > 0) {
-
-						async.each(user.acc_meetings, function(mId, callback) {
-						  // Perform operation on file here.
-						  Meeting.findOne( { '_id': mId }, function(err, m) {
-							  dlog("searching acc_meetings:" + m, def_opts);
-							  if (m._status) { //check if the meeting has been accepted by everyone - not sure how to check for this just yet.. maybe check everytime an individual accepts?
-								  a_meetings.push(m);
-								  callback(null); //this calls callback after each meeting is found- so essentially re rendering the page each time?
-							  }
-						  });
-
-					  }, function(err){ //<-- callback if noah is being idiot and can't find it
-						    // if any of the file processing produced an error, err would equal that error
-						    if (err) {
-						      // One of the iterations produced an error.
-						      // All processing will now stop.
-						      console.log('A file failed to process');
-						    } else {
-								dlog("passed array:" + _meetings, def_opts);
-								res.render('home', {_meetings: _meetings, a_meetings: a_meetings});
-						    }
-						});
-					}
-					else {
-						res.render('home', {_meetings: _meetings, a_meetings: a_meetings});
-					}
+					res.render('home', {_meetings: _meetings, a_meetings: a_meetings});
 				}
 			});
 		});
