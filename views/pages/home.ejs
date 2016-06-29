@@ -87,6 +87,9 @@
 					}
 
 					//Setup accept/edit buttons
+					var stringyObj = JSON.stringify(data.sendMeetings[i]);
+					temp.content.querySelector('#editform_input').value = stringyObj;
+					temp.content.querySelector('#acceptform_input').value = stringyObj;
 
 					//Append the card to the panel =============================================
 
