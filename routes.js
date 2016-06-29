@@ -171,7 +171,14 @@ module.exports = function (sio, app, passport) {
 		});
 
 		app.post('/home', isLoggedIn, function(req, res) {
-			console.log(req.body);
+			if(req.body.edit) {
+				var m = JSON.parse(req.body.edit); //remember, the meeting is passed as a stringified object
+				var redir = '/create?meetid=' + m._id; //qs.stringify( { 'meetid': newMeeting._id }, { indices : false, encode : false } ) ;
+				res.redirect(redir);
+			}
+			else if (req.body.accept) {
+				var m = JSON.parse(req.body.accept);
+			}
 		});
 
 		//Logout
