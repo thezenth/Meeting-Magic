@@ -6,6 +6,15 @@
 		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 		<script>
 			var socket = io.connect('/home-namespace');
+
+			window.editMeeting = function(meetingObj) {
+				socket.emit('_edit', {m: meetingObj});
+			}
+
+			window.acceptMeeting = function(meetingObj) {
+				socket.emit('_accept', {m: meetingObj});
+			}
+
 			socket.on('_update_sugg_meetings', function(data) {
 				for (var i = 0; i < data.sendMeetings.length; i++) {
 
@@ -74,8 +83,10 @@
 							time = time + " am";
 						}
 
-						temp.content.querySelector('#date-and-time').innerText = data.sendMeetings[i].date + ' @ ' + time;
+						temp.content.querySelector('#date-and-time').textContent = data.sendMeetings[i].date + ' @ ' + time;
 					}
+
+					//Setup accept/edit buttons
 
 					//Append the card to the panel =============================================
 
@@ -85,6 +96,8 @@
 			socket.on('_update_conf_meetings', function(data) {
 				document.getElementById('conf_meetings').innerHTML = data.sendMeetings;
 			});
+
+
 		</script>
 	</head>
 
@@ -106,15 +119,15 @@
 				</div>
 				<div class="card-action">
 					<div class="inline">
-						<form action="/home" method="post" id="editform_0">
-							<input name="edit" value="1" id="editform_0_input" hidden>
+						<form action="/home" method="post" id="editform">
+							<input name="edit" value="1" id="editform_input" hidden>
 							<!-- value we are submitting with the form -->
-							<a href="#" onClick="<%- " document.getElementById('editform_0').submit();" %>" type="submit">Edit</a>
+							<a href="#" onClick="<%- " this.parentElement.submit();" %>" type="submit">Edit</a>
 						</form>
-						<form action="/home" method="post" id="acceptform_2">
-							<input name="accept" value="1" id="acceptform_2_input" hidden>
+						<form action="/home" method="post" id="acceptform">
+							<input name="accept" value="1" id="acceptform_input" hidden>
 							<!-- value we are submitting with the form -->
-							<a href="#" onClick="<%- " document.getElementById('acceptform_2').submit();" %>" type="submit">Accept</a>
+							<a href="#" onClick="<%- " this.parentElement.submit();" %>" type="submit">Accept</a>
 						</form>
 					</div>
 				</div>

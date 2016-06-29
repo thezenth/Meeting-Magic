@@ -100,6 +100,16 @@ module.exports = function (sio, app, passport) {
 						});
 				}
 			}
+
+			socket.on('_edit', function(data) {
+				dlog("someone wants to edit a meeting!", def_opts);
+				console.log(data.m);
+			});
+
+			socket.on('_accept', function(data) {
+				dlog("someone accepted a meeting!", def_opts);
+				console.log(data.m);
+			});
 		});
 
 		//Home page (with login links)
