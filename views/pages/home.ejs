@@ -86,7 +86,7 @@
 					}
 
 					//Setup accept/edit buttons and card action
-					if(haveButtons) {
+					if(haveButtons && !temp.content.querySelector('.card-action')) {
 						var cardAction = document.getElementById('card-action-temp');
 
 						var stringyObj = JSON.stringify(data.sendMeetings[i]);
@@ -94,6 +94,10 @@
 						cardAction.content.querySelector('#acceptform_input').value = stringyObj;
 
 						temp.content.querySelector('#card-body').appendChild(cardAction.content.cloneNode(true));
+					} else if(!haveButtons){
+						if(temp.content.querySelector('.card-action')) {
+							temp.content.querySelector('.card-action').parentNode.removeChild(temp.content.querySelector('.card-action'));
+						}
 					}
 
 					//Append the card to the panel =============================================
