@@ -15,13 +15,12 @@
 				socket.emit('_accept', {m: meetingObj});
 			}
 
-			socket.on('_update_sugg_meetings', function(data) {
+			function addMeetingCards(data, panelRow, haveButtons) {
 				for (var i = 0; i < data.sendMeetings.length; i++) {
 
 					//Getting the template =====================================================
 
 					var temp = document.getElementById('meeting-card-temp');
-					console.log(temp)
 
 					//Edit the card's image ====================================================
 
@@ -86,57 +85,70 @@
 						temp.content.querySelector('#date-and-time').textContent = data.sendMeetings[i].date + ' @ ' + time;
 					}
 
-					//Setup accept/edit buttons
-					var stringyObj = JSON.stringify(data.sendMeetings[i]);
-					temp.content.querySelector('#editform_input').value = stringyObj;
-					temp.content.querySelector('#acceptform_input').value = stringyObj;
+					//Setup accept/edit buttons and card action
+					if(haveButtons) {
+						var cardAction = document.getElementById('card-action-temp');
+
+						var stringyObj = JSON.stringify(data.sendMeetings[i]);
+						cardAction.content.querySelector('#editform_input').value = stringyObj;
+						cardAction.content.querySelector('#acceptform_input').value = stringyObj;
+
+						temp.content.querySelector('#card-body').appendChild(cardAction.content.cloneNode(true));
+					}
 
 					//Append the card to the panel =============================================
 
-					document.getElementById('sugg_meetings_row').appendChild(temp.content.cloneNode(true));
+					document.getElementById(panelRow).appendChild(temp.content.cloneNode(true));
 				}
+			}
+
+			socket.on('_update_sugg_meetings', function(data) {
+				addMeetingCards(data, 'sugg_meetings_row', true);
 			});
 			socket.on('_update_conf_meetings', function(data) {
-				document.getElementById('conf_meetings').innerHTML = data.sendMeetings;
+				addMeetingCards(data, 'conf_meetings_row', false);
 			});
 
 
 		</script>
-	</head>
 
-	<template id="meeting-card-temp">
-		<div class="col s12 m6 l4" id="top-div">
-			<div class="card">
-				<div class="card-image waves-effect waves-block waves-light">
-					<img class="activator" src="images/office.jpg" id="image">
-				</div>
-				<div class="card-content">
-					<span class="card-title activator grey-text text-darken-4" id="card-title">Card Title<i class="material-icons right" id="reveal-card-button">more_vert</i></span>
-				</div>
-				<div class="card-reveal">
-					<span class="card-title grey-text text-darken-4" id="card-title_2">Card Title<i class="material-icons right" id="close-card-button">close</i></span>
-					<p class="term" style="color: black">Address </p><p id="address" class="definition" style="color: black">Here is some more information about this product that is only revealed once clicked on.</p> <br>
-					<p class="term" style="color: black">Rating </p><p id="rating" class="definition" style="color: black">Here is some more information about this product that is only revealed once clicked on.</p> <br>
-					<p class="term" style="color: black">Date and Time </p><p id="date-and-time" class="definition" style="color: black">Here is some more information about this product that is only revealed once clicked on.</p> <br>
-
-				</div>
-				<div class="card-action">
-					<div class="inline">
-						<form action="/home" method="post" id="editform">
-							<input name="edit" value="1" id="editform_input" hidden>
-							<!-- value we are submitting with the form -->
-							<a href="#" onClick="<%- " this.parentElement.submit();" %>" type="submit">Edit</a>
-						</form>
-						<form action="/home" method="post" id="acceptform">
-							<input name="accept" value="1" id="acceptform_input" hidden>
-							<!-- value we are submitting with the form -->
-							<a href="#" onClick="<%- " this.parentElement.submit();" %>" type="submit">Accept</a>
-						</form>
+		<template id="meeting-card-temp">
+			<div class="col s12 m6 l4" id="top-div">
+				<div class="card" id="card-body">
+					<div class="card-image waves-effect waves-block waves-light">
+						<img class="activator" src="images/office.jpg" id="image">
+					</div>
+					<div class="card-content">
+						<span class="card-title activator grey-text text-darken-4" id="card-title">Card Title<i class="material-icons right" id="reveal-card-button">more_vert</i></span>
+					</div>
+					<div class="card-reveal">
+						<span class="card-title grey-text text-darken-4" id="card-title_2">Card Title<i class="material-icons right" id="close-card-button">close</i></span>
+						<p class="term" style="color: black">Address </p><p id="address" class="definition" style="color: black">Here is some more information about this product that is only revealed once clicked on.</p> <br>
+						<p class="term" style="color: black">Rating </p><p id="rating" class="definition" style="color: black">Here is some more information about this product that is only revealed once clicked on.</p> <br>
+						<p class="term" style="color: black">Date and Time </p><p id="date-and-time" class="definition" style="color: black">Here is some more information about this product that is only revealed once clicked on.</p> <br>
 					</div>
 				</div>
 			</div>
-		</div>
-	</template>
+		</template>
+
+		<template id="card-action-temp">
+			<div class="card-action">
+				<div class="inline">
+					<form action="/home" method="post" id="editform">
+						<input name="edit" value="1" id="editform_input" hidden>
+						<!-- value we are submitting with the form -->
+						<a href="#" onClick="<%- " this.parentElement.submit();" %>" type="submit">Edit</a>
+					</form>
+					<form action="/home" method="post" id="acceptform">
+						<input name="accept" value="1" id="acceptform_input" hidden>
+						<!-- value we are submitting with the form -->
+						<a href="#" onClick="<%- " this.parentElement.submit();" %>" type="submit">Accept</a>
+					</form>
+				</div>
+			</div>
+		</template>
+
+	</head>
 
 	<body>
 		<header>
