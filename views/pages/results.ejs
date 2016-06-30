@@ -26,7 +26,10 @@
 								<i class="material-icons right">more_vert</i>
 							</span>
 							<p>
-								<a href="#">More</a>
+								<form action="/results" method="post">
+								    <input type="hidden" name="idx" value="<%=i%>"/>
+									<button type="submit" class="btn btn-warning btn-lg">Looks Good!</button>
+								</form>
 							</p>
 						</div>
 						<div class="card-reveal">

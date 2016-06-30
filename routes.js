@@ -1,8 +1,11 @@
+var qs = require('qs');
+
 //preferences.js
 prefs = require('./config/preferences');
 Foods = prefs.Foods;
 
 var User = require('./models/user');
+var Meeting = require('./models/meeting')
 
 //fetch and google places stuff
 var fetch = require('./libs/places/fetch');
@@ -18,6 +21,9 @@ var food_q = places.Food;
 var comp = require('./libs/compare_prefs');
 var compare_food_prefs = comp.compareFood;
 
+//async
+var async = require('async');
+
 // debug.js
 var debug = require("./libs/debug/debug");
 var dlog = debug.dlog;
@@ -27,7 +33,91 @@ var def_opts = {
 	isError: false
 }
 
-module.exports = function (app, passport) {
+//url module
+var url = require('url');
+
+module.exports = function (sio, app, passport) {
+
+	var reqData = {};
+	var meetingData = {};
+
+	var hnsp = sio.of('/home-namespace');
+
+	hnsp.on('connection', function (socket) {
+		if (reqData.user) {
+			var usr = reqData.user;
+			var s_meetings = usr.sugg_meetings;
+			var a_meetings = usr.acc_meetings;
+
+			var sendMeetings_sugg = [];
+			var sendMeetings_conf = [];
+
+			if (s_meetings.length > 0) {
+				async.each(s_meetings, function (mId, callback) {
+					// Perform operation on file here.
+					Meeting.findOne( { '_id': mId }, function (err, m) {
+						//dlog("searching sugg_meetings:" + m, def_opts);
+						if (m) {
+							sendMeetings_sugg.push(m);
+							callback(null);
+						}
+					});
+
+				}, function (err) { //<-- callback if noah is being idiot and can't find it
+					// if any of the file processing produced an error, err would equal that error
+					if (err) {
+						// One of the iterations produced an error.
+						// All processing will now stop.
+						console.log('A file failed to process');
+					} else {
+						socket.emit('_update_sugg_meetings', {
+							sendMeetings: sendMeetings_sugg
+						});
+						dlog("sent suggested meetings to client", def_opts)
+					}
+				});
+			}
+
+			if (a_meetings.length > 0) {
+				async.each(a_meetings, function (mId, callback) {
+					// Perform operation on file here.
+					Meeting.findOne({
+						'_id': mId
+					}, function (err, m) {
+						//dlog("searching acc_meetings:" + m, def_opts);
+						if (m._status) {
+							sendMeetings_conf.push(m);
+							callback(null);
+						}
+					});
+
+				}, function (err) { //<-- callback if noah is being idiot and can't find it
+					// if any of the file processing produced an error, err would equal that error
+					if (err) {
+						// One of the iterations produced an error.
+						// All processing will now stop.
+						console.log('A file failed to process');
+					} else {
+						socket.emit('_update_conf_meetings', {
+							sendMeetings: sendMeetings_conf
+						});
+						dlog("Sent confirmed meetings to client", def_opts)
+					}
+				});
+			}
+		}
+
+		socket.on('_edit', function (data) {
+			dlog("someone wants to edit a meeting!", def_opts);
+			console.log(data.m);
+		});
+
+		socket.on('_accept', function (data) {
+			dlog("someone accepted a meeting!", def_opts);
+			console.log(data.m);
+		});
+	});
+
 	//Home page (with login links)
 	app.get('/', function (req, res) {
 		res.render('index');
@@ -66,9 +156,103 @@ module.exports = function (app, passport) {
 	//want this protected so you have to be logged in to visit
 	//use route middleware to verify this (the isLoggedIn function)
 	app.get('/home', isLoggedIn, function (req, res) {
-		res.render('home', {
-			user: req.user
-		}); //get the user out of session and pass to template
+		User.findOne({
+			'local.email': req.user.local.email
+		}, function (err, user) {
+			if (err) {
+				dlog(err, {
+					id: "server",
+					isError: true,
+					isWarning: false
+				});
+			}
+			// have to dothis to actually get the user...
+			if (user) {
+				reqData = req;
+				meetingData._meetings = _meetings;
+				meetingData.a_meetings = a_meetings;
+				var _meetings = [];
+				var a_meetings = [];
+				res.render('home', {
+					_meetings: _meetings,
+					a_meetings: a_meetings
+				});
+			}
+		});
+	});
+
+	app.post('/home', isLoggedIn, function (req, res) {
+		if (req.body.edit) {
+			var m = JSON.parse(req.body.edit); //remember, the meeting is passed as a stringified object
+			dlog("editing meeting " + m._id, def_opts)
+			var redir = '/create?meetid=' + m._id; //qs.stringify( { 'meetid': newMeeting._id }, { indices : false, encode : false } ) ;
+			res.redirect(redir);
+		} else if (req.body.accept) {
+			var m = JSON.parse(req.body.accept);
+			dlog("accepting meeting " + m._id, def_opts)
+			//stick into acc_meetings array
+			User.findOne({ 'local.email': req.user.local.email }, function (err, user) {
+				if (err) {
+					dlog(err, {
+						id: "server",
+						isError: true,
+						isWarning: false
+					});
+				}
+				// have to dothis to actually get the user...
+				if (user) {
+					user.acc_meetings.push(m._id); //put into accepted meetings array
+					user.sugg_meetings.splice(
+						user.sugg_meetings.indexOf(m._id), 1
+					); //take out of suggested meetings array
+					user.save(); //ALWAYS MAKE SURE TO SAVE!
+
+					dlog("new suggested meetings array for user " + req.user.local.email + ": " + user.sugg_meetings, def_opts);
+					dlog("new accepted meetings array for user " + req.user.local.email + ": " + user.acc_meetings, def_opts);
+
+					dlog("checking if all users have accepted meeting " + m._id, def_opts);
+					var isAccepted = true;
+					Meeting.findOne( { '_id': m._id }, function(err, m) {
+						if (m) {
+							async.each(m.users, function (userEmail, callback) {
+								// Perform operation on file here.
+								User.findOne({ 'local.email': userEmail }, function (err, user) {
+									dlog("	checking user " + userEmail, def_opts);
+									dlog("	accepted array: " + user.acc_meetings, def_opts);
+									if (user.acc_meetings.indexOf(m._id) == -1) {
+										isAccepted = false;
+									}
+									callback(null);
+								});
+
+							}, function (err) { //<-- callback if noah is being idiot and can't find it
+								// if any of the file processing produced an error, err would equal that error
+								if (err) {
+									// One of the iterations produced an error.
+									// All processing will now stop.
+									console.log('A file failed to process');
+								} else {
+									console.log('Succesfully checked meetings');
+									m._status = isAccepted;
+									m.save();
+									dlog(m._id + " status:" + m._status, def_opts);
+									res.redirect('/home');
+								}
+							});
+						}
+					});
+
+
+				}
+			});
+
+		} else {
+			dlog("post to /home was empty...", {
+				id: "server",
+				isWarning: true,
+				isError: false
+			})
+		}
 	});
 
 	//Logout
@@ -172,7 +356,7 @@ module.exports = function (app, passport) {
 				}
 
 				if (user) {
-					if((user.food_prefs.length > 0) && (req.user.food_prefs.length > 0)) {
+					if ((user.food_prefs.length > 0) && (req.user.food_prefs.length > 0)) {
 						lat = parseFloat(req.body.coords.substring(
 							0, req.body.coords.indexOf(',')
 						));
@@ -190,7 +374,7 @@ module.exports = function (app, passport) {
 						rest_pq.rankBy = "prominence";
 
 						var sameFoodPrefs = compare_food_prefs(user.food_prefs, req.user.food_prefs);
-						if(sameFoodPrefs.length > 0) {
+						if (sameFoodPrefs.length > 0) {
 							rest_pq.cat = sameFoodPrefs;
 							get_place(rest_pq, fetch_parse);
 							var checkJson = function () {
@@ -206,7 +390,14 @@ module.exports = function (app, passport) {
 										var parsedJson = JSON.parse(jsonData);
 										var found_places = parsedJson["found_places"];
 										if (found_places.length > 0) {
-											res.redirect('/results');
+											var redir = '/results?' + qs.stringify({
+												'users': [req.user.local.email, req.body.otheremail]
+											}, {
+												indices: false,
+												arrayFormat: 'brackets',
+												encode: false
+											})
+											res.redirect(redir);
 											clearInterval(interval);
 										}
 									}
@@ -226,7 +417,18 @@ module.exports = function (app, passport) {
 		});
 	});
 
+	var resultsQuery = {};
+	var resultsRests = [];
+
 	app.get('/results', isLoggedIn, function (req, res) {
+
+		//Get and save the query string
+		//console.log(req.url);
+		var url_parts = url.parse(req.url, true);
+		//console.log(url_parts);
+		var query = url_parts.query;
+		resultsQuery = query;
+
 		fs.readFile('./libs/places/data.json', function (err, jsonData) {
 			if (err) {
 				dlog(err, {
@@ -235,7 +437,7 @@ module.exports = function (app, passport) {
 					isWarning: false
 				});
 			} else {
-				dlog("routes.js successfully read ./libs/places/data.json", def_opts);
+				//dlog("routes.js successfully read ./libs/places/data.json", def_opts);
 				parsedJson = JSON.parse(jsonData);
 				//dlog("parsedJson:"+JSON.stringify(parsedJson, null, 4), def_opts);
 				found_places = parsedJson["found_places"];
@@ -245,13 +447,124 @@ module.exports = function (app, passport) {
 					places: top5
 				});
 
-				dlog("wiping data.json found_places", def_opts);
+				resultsRests = top5; //save the results for use in app.post for results
+
+				//dlog("wiping data.json found_places", def_opts);
 				parsedJson["found_places"] = [];
 				fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
 			}
 		});
 	});
 
+	app.post('/results', isLoggedIn, function (req, res) {
+
+		dlog('query:' + resultsQuery['users[]'], def_opts)
+			//console.log(req.body.idx);
+		newMeeting = new Meeting({
+			users: resultsQuery['users[]'],
+			place: resultsRests[req.body.idx], //remeber, this comes back as a string!
+			date: "",
+			time: "",
+			_status: false
+		});
+
+		dlog("created a new meeting:" + newMeeting, def_opts);
+		newMeeting.save();
+
+		var redir = '/create?meetid=' + newMeeting._id; //qs.stringify( { 'meetid': newMeeting._id }, { indices : false, encode : false } ) ;
+		res.redirect(redir);
+	});
+
+	var createQuery = {};
+
+	app.get('/create', isLoggedIn, function (req, res) {
+		//Get and save the query string
+		//console.log(req.url);
+		var url_parts = url.parse(req.url, true);
+		//console.log(url_parts);
+		var query = url_parts.query;
+		createQuery = query;
+
+		Meeting.findOne({
+			'_id': createQuery.meetid
+		}, function (err, m) {
+			if (err) {
+				dlog(err, {
+					id: "server",
+					isError: true,
+					isWarning: false
+				});
+			}
+
+			if (m) {
+				//dlog(m, def_opts);
+				//dlog(m.place.name, def_opts);
+				res.render('create', {
+					meeting: m
+				});
+			}
+		});
+	});
+
+	app.post('/create', isLoggedIn, function (req, res) {
+		Meeting.findOne({
+			'_id': createQuery.meetid
+		}, function (err, m) {
+			if (err) {
+				dlog(err, {
+					id: "server",
+					isError: true,
+					isWarning: false
+				});
+			}
+
+			if (m) {
+				m.time = req.body.time;
+				m.date = req.body.date;
+				m.save();
+				dlog("updated a meeting:\n" + m, def_opts);
+
+				async.each(m.users, function (u_name, callback) {
+
+					// Perform operation on file here.
+					console.log('Updating user ' + u_name);
+
+					User.findOne({
+						'local.email': u_name
+					}, function (err, user) {
+						if (err) {
+							dlog(err, {
+								id: "server",
+								isError: true,
+								isWarning: false
+							});
+							callback(true);
+						}
+
+						if (user) {
+							//userMeetingObj = { "_id": m._id, "reviewed": false, "accepted": false }; //assume these things for everyone, including person making the meeting (for now)
+							user.sugg_meetings.push(m._id); //push the meeting obj thingie to the user
+							dlog('updated user:\n' + user, def_opts)
+							user.save(); //save the user!
+							callback(null);
+						}
+
+					});
+
+				}, function (err) {
+					// if any of the file processing produced an error, err would equal that error
+					if (err) {
+						// One of the iterations produced an error.
+						// All processing will now stop.
+						console.log('A user failed to update');
+					} else {
+						console.log('All users updated successfully');
+						res.redirect('/home');
+					}
+				});
+			}
+		});
+	});
 };
 
 //route middleware to make sure user is logged in

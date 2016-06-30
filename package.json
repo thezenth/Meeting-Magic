@@ -30,8 +30,12 @@
     "request-promise": "latest",
 
     "cfenv": "1.0.x",
-    
-    "jshint": "latest"
+
+    "jshint": "latest",
+
+    "qs": "latest",
+
+    "socket.io": "latest"
   },
   "engines": {
     "node": "4.x"
