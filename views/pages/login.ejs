@@ -5,39 +5,47 @@
 	</head>
 	<body>
 		<div class="row">
-			<div class="center-parent">
-				<h1>Login</h1>
+			<div class="hide-on-small-only col m2 l2 white-text">.</div>
+			<div class="col s12 m8 l8">
+				<div class="card">
+					<div class="col s12">
+						<div class="row">
+							<h1 class="center-align">Login</h1>
+							<!-- show any messages that come back with authentication -->
+							<% if (message.length > 0) { %>
+								<div><%= message %></div>
+							<% } %>
+							<form class="col s12" action="/login" method="post">
+								<div class="row">
+									<div class="input-field col s12 m12 l12">
+										<input id="email" type="text" class="validate" name="email">
+										<label for="email">Email</label>
+									</div>
+									<div class="input-field col s12 m12 l12">
+										<input id="pwd" type="password" class="validate" name="password">
+										<label class="active" for="pwd">Password</label>
+									</div>
+								</div>
+								<div class="center-parent">
+									<button type="submit" class="btn btn-warning btn-lg">Login</button>
+								</div>
+								<br>
+							</form>
+							<hr>
+							<div class="basic-container">
+								<p class>Need an account?
+									<a href="/signup">Signup</a>
+								</p>
+								<p>Or go
+									<a href="/">home</a>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<!-- show any messages that come back with authentication -->
-			<% if (message.length > 0) { %>
-				<div><%= message %></div>
-			<% } %>
-
-			<form class="col s12" action="/login" method="post">
-				<div class="row">
-					<div class="input-field col s6">
-						<input id="email" type="text" class="validate" name="email">
-						<label for="email">Email</label>
-					</div>
-					<div class="input-field col s6">
-						<input id="pwd" type="password" class="validate" name="password">
-						<label class="active" for="pwd">Password</label>
-					</div>
-				</div>
-				<div class="center-parent">
-					<button type="submit" class="btn btn-warning btn-lg">Login</button>
-				</div>
-			</form>
-
-			<hr>
-				<div class="basic-container">
-					<p class>Need an account?
-						<a href="/signup">Signup</a>
-					</p>
-					<p>Or go
-						<a href="/">home</a>
-					</p>
-				</div>
 		</div>
-	</body>
+		<div class="hide-on-small-only col m2 l2 white-text">.</div>
+	</div>
+</body>
 </html>
