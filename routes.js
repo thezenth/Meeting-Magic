@@ -396,7 +396,7 @@ module.exports = function (sio, app, passport) {
 												indices: false,
 												arrayFormat: 'brackets',
 												encode: false
-											})
+											});
 											res.redirect(redir);
 											clearInterval(interval);
 										}
@@ -543,9 +543,12 @@ module.exports = function (sio, app, passport) {
 
 						if (user) {
 							//userMeetingObj = { "_id": m._id, "reviewed": false, "accepted": false }; //assume these things for everyone, including person making the meeting (for now)
-							user.sugg_meetings.push(m._id); //push the meeting obj thingie to the user
-							dlog('updated user:\n' + user, def_opts)
-							user.save(); //save the user!
+							if(user.sugg_meetings.indexOf(m._id) == -1) { //push the updated meeting's id to the array if it isn't there already
+								user.sugg_meetings.push(m._id); //push the meeting obj thingie to the user
+								dlog('updated user:\n' + user, def_opts)
+								user.save(); //save the user!
+							}
+
 							callback(null);
 						}
 
