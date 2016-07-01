@@ -165,8 +165,10 @@
 				<div class="col s12 m12 l12">
 					<div class="card blue-grey darken-1">
 						<div class="card-content white-text">
-							<span class="card-title">Proposed Meetings</span>
-							<div class="row" id="sugg_meetings_row"></div>
+							<span class="card-title">Proposed Meetings<i class="material-icons right" id="min-button_1">remove</i></span>
+							<div id="panel_1">
+								<div class="row" id="sugg_meetings_row"></div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -176,14 +178,38 @@
 				<div class="col s12 m12 l12">
 					<div class="card blue-grey darken-1">
 						<div class="card-content white-text">
-							<span class="card-title">Upcoming Meetings</span>
-							<div class="row" id="conf_meetings_row"></div>
+							<span class="card-title">Upcoming Meetings<i class="material-icons right" id="min-button_2">remove</i></span>
+							<div id="panel_2">
+								<div class="row" id="conf_meetings_row"></div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</main>
 	</body>
+	<script>
+		//Change cursor to the pointer (or click mode) when it is moused over
+		$('#min-button_1').css('cursor', 'pointer');
+		$('#min-button_2').css('cursor', 'pointer');
+		
+		$("#min-button_1").click(function() {
+			if($("#min-button_1").html() == 'remove') {
+				$("#min-button_1").html('add');
+			} else {
+				$("#min-button_1").html('remove');
+			}
+			$("#panel_1").slideToggle();
+		});
+		$("#min-button_2").click(function() {
+			if($("#min-button_2").html() == 'remove') {
+				$("#min-button_2").html('add');
+			} else {
+				$("#min-button_2").html('remove');
+			}
+			$("#panel_2").slideToggle();
+		});
+	</script>
 	<!-- <script src="/js/slideshow.js"></script> -->
 	<!-- call this after the body, because it waits until all the html/DOM is loaded! And there are html element specific functions in this file -->
 </html>
