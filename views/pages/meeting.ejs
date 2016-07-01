@@ -1,0 +1,46 @@
+<!doctype html>
+
+<html>
+	<head>
+		<% include ../partials/head %>
+	</head>
+
+	<script>
+		navigator.geolocation.getCurrentPosition(function(pos) {
+			document.getElementById("location").value = pos.coords.latitude + "," + pos.coords.longitude;
+			Materialize.updateTextFields();
+		});
+	</script>
+
+	<body>
+
+		<header>
+			<% include ../partials/header-nav-bar %>
+		</header>
+
+		<% if(message.length > 0) { %>
+			<div>
+				<p><%= message %></p>
+			</div>
+		<% } %>
+		<div class="row">
+			<form class="col s12" action="/meeting" method="post">
+				<div class="row">
+					<div class="input-field col s6">
+						<input id="otheruser" type="text" class="validate" name="otheremail">
+						<label for="otheruser">Other user</label>
+					</div>
+					<div class="input-field col s6">
+						<input id="location" type="text" class="validate" name="coords">
+						<label class="active" for="location">Location</label>
+					</div>
+				</div>
+				<div class="center-parent">
+					<button type="submit" class="btn btn-warning btn-lg">Go</button>
+				</div>
+			</form>
+		</div>
+
+	</body>
+
+</html>

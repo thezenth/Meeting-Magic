@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<% include ../partials/head %>
+		<% include ../partials/slideshow-head %>
+		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+		<script>
+			var socket = io.connect('/home-namespace');
+
+			window.editMeeting = function(meetingObj) {
+				socket.emit('_edit', {m: meetingObj});
+			}
+
+			window.acceptMeeting = function(meetingObj) {
+				socket.emit('_accept', {m: meetingObj});
+			}
+
+			function addMeetingCards(data, panelRow, haveActions) {
+				for (var i = 0; i < data.sendMeetings.length; i++) {
+
+					//Setting it up ============================================================
+
+					//Container for everything
+					var firstDiv = document.createElement('div');
+					firstDiv.className = "col s12 m6 l4";
+
+					//Actual body of the card
+					var cardBody = document.createElement('div');
+					cardBody.className = "card small"; //materialize small class forces small size
+
+					//Image Container
+					var imageCont = document.createElement('div');
+					imageCont.className = "card-image waves-effect waves-block waves-light";
+					//	Image
+					var image = document.createElement('img');
+					image.className = "activator";
+					image.src = data.sendMeetings[i].place.imgUrl;
+					//	Append image to Container
+					imageCont.appendChild(image);
+					//	Append container to body
+					cardBody.appendChild(imageCont);
+
+					//Card content
+
+					var cardContent = document.createElement('div');
+					cardContent.className = 'card-content';
+					//	Title of the card
+					var title = document.createElement('span');
+					title.className = 'card-title activator grey-text text-darken-4';
+					title.innerHTML = data.sendMeetings[i].place.name;
+					//		Material icon (3 dots vertical)
+					var openIcon = document.createElement('i');
+					openIcon.className = 'material-icons right';
+					openIcon.innerHTML = 'more_vert';
+					//	Append icon to title
+					title.appendChild(openIcon);
+					//	Append title to content
+					cardContent.appendChild(title);
+					//Append card content to body
+					cardBody.appendChild(cardContent);
+
+					//Card reveal
+
+					var reveal = document.createElement('div');
+					reveal.className = 'card-reveal';
+					//	Information about meeting
+					//		Name
+					var name = document.createElement('span');
+					name.className = 'card-title grey-text text-darken-4';
+					name.innerHTML = data.sendMeetings[i].place.name;
+					//		Close button
+					var closeIcon = document.createElement('i');
+					closeIcon.className = 'material-icons right';
+					closeIcon.innerHTML = 'close';
+					//		Append close to span
+					name.appendChild(closeIcon);
+					//	Append span to reveal
+					reveal.appendChild(name);
+
+					function labelsAndInfo(label1, information) {
+						var label = document.createElement('p');
+						label.className = 'term';
+						label.style = 'color: black';
+						label.innerHTML = label1;
+						var info = document.createElement('p');
+						info.className = 'definition';
+						info.style = 'color: black';
+						info.innerHTML = information;
+
+						reveal.appendChild(label);
+						reveal.appendChild(info);
+						reveal.appendChild(document.createElement('br'));
+					}
+
+					//	Information about meeting
+					//		Address
+					labelsAndInfo('Address ', data.sendMeetings[i].place.address);
+					//		Rating
+					labelsAndInfo('Rating ', data.sendMeetings[i].place.rating);
+					//		Date and Time
+					var time = parseInt(data.sendMeetings[i].time);
+					if (time > 11) {
+						if (time == 12) {
+							time = time + " pm";
+						}
+						else {
+							time = (time - 12) + " pm";
+						}
+					} else {
+						time = time + " am";
+					}
+					labelsAndInfo('Date and Time ', data.sendMeetings[i].date + ' @ ' + time);
+
+					//	Append reveal to body
+					cardBody.appendChild(reveal);
+
+					//Card Action
+					if(haveActions) {
+						//Container for card action
+						var cardAction = document.createElement('div');
+						cardAction.className = 'card-action';
+
+						//Body
+						var cardActionBody = document.createElement('div');
+						cardActionBody.className = 'inline';
+
+						function makeForm(nme) {
+							//Form
+							var form = document.createElement('form');
+							form.action = '/home';
+							form.method = 'post';
+							//Input
+							var input = document.createElement('input');
+							var stringyObj = JSON.stringify(data.sendMeetings[i]);
+							input.name = nme;
+							input.value = stringyObj;
+							input.setAttribute("hidden", true);
+							//Submit Button
+							var sub = document.createElement('a');
+							sub.href = '#';
+							sub.onclick = function() {sub.parentElement.submit();}
+							sub.type = 'submit';
+							sub.innerHTML = nme;
+
+							//Append input and button to the form
+							form.appendChild(input);
+							form.appendChild(sub);
+							//Append the form to the card action body
+							cardActionBody.appendChild(form);
+						}
+
+						makeForm('edit');
+						makeForm('accept');
+
+						//Append body to container
+						cardAction.appendChild(cardActionBody);
+						//Append card action to body
+						cardBody.appendChild(cardAction)
+					}
+
+					//Append card body to Container
+					firstDiv.appendChild(cardBody);
+					//Append card to the panel
+					document.getElementById(panelRow).appendChild(firstDiv);
+
+					/*
+					//Getting the template =====================================================
+
+					var temp = document.querySelector('#meeting-card-temp');
+					//Edit the card's image ====================================================
+
+					temp.content.querySelector('#image').src = data.sendMeetings[i].place.imgUrl;
+
+					//Editing title and card content ===========================================
+
+					//Assuming only one child, because that should only be the <i> child of these <span> elements
+					var titleChild = temp.content.querySelector('#reveal-card-button');
+					var infoChild = temp.content.querySelector('#close-card-button');
+
+					if(temp.content.querySelector('#card-title').innerText) { //checks the span for inner text, which is most modern browsers
+						temp.content.querySelector('#card-title').innerText = data.sendMeetings[i].place.name;
+						temp.content.querySelector('#card-title').appendChild(titleChild);
+
+						temp.content.querySelector('#card-title_2').innerText = data.sendMeetings[i].place.name;
+						temp.content.querySelector('#card-title_2').appendChild(infoChild);
+
+						//Set info about the restaurant/meeting
+						temp.content.querySelector('#address').innerText = data.sendMeetings[i].place.address;
+						temp.content.querySelector('#rating').innerText = data.sendMeetings[i].place.rating;
+
+						//Format the time correctly
+						var time = parseInt(data.sendMeetings[i].time);
+						if (time > 11) {
+							if (time == 12) {
+								time = time + " pm";
+							}
+							else {
+								time = (time - 12) + " pm";
+							}
+						} else {
+							time = time + " am";
+						}
+						temp.content.querySelector('#date-and-time').innerText = data.sendMeetings[i].date + ' @ ' + time;
+
+					}
+					else if(temp.content.querySelector('#card-title').textContent) { //otherwise, do this for firefox
+						temp.content.querySelector('#card-title').textContent = data.sendMeetings[i].place.name;
+						temp.content.querySelector('#card-title').appendChild(titleChild);
+
+						temp.content.querySelector('#card-title_2').textContent = data.sendMeetings[i].place.name;
+						temp.content.querySelector('#card-title_2').appendChild(infoChild);
+
+						//Set info about the restaurant/meeting
+						temp.content.querySelector('#address').textContent = data.sendMeetings[i].place.address;
+						temp.content.querySelector('#rating').textContent = data.sendMeetings[i].place.rating;
+
+						//Format the time correctly
+						var time = parseInt(data.sendMeetings[i].time);
+						if (time > 11) {
+							if (time == 12) {
+								time = time + " pm";
+							}
+							else {
+								time = (time - 12) + " pm";
+							}
+						} else {
+							time = time + " am";
+						}
+
+						temp.content.querySelector('#date-and-time').textContent = data.sendMeetings[i].date + ' @ ' + time;
+					}
+
+					//Setup accept/edit buttons and card action
+					if(haveButtons && !temp.content.querySelector('#card-action-part')) {
+						var cardAction = document.getElementById('card-action-temp');
+
+						var stringyObj = JSON.stringify(data.sendMeetings[i]);
+						console.log("=== MEETING ===\n" + stringyObj);
+						cardAction.content.querySelector('#editform_input').value = stringyObj;
+						cardAction.content.querySelector('#acceptform_input').value = stringyObj;
+						console.log(cardAction.content.querySelector('#acceptform_input').value);
+
+						temp.content.querySelector('#card-body').appendChild(cardAction.content.cloneNode(true));
+					} else if(!haveButtons){
+						if(temp.content.querySelector('#card-action-part')) {
+							temp.content.querySelector(':scope > #card-action-part').parentNode.removeChild(temp.content.querySelector(':scope > #card-action-part'));
+						}
+					}
+
+					//Append the card to the panel =============================================
+
+					document.getElementById(panelRow).appendChild(temp.content.cloneNode(true)); */
+				}
+			}
+
+			socket.on('_update_sugg_meetings', function(data) {
+				addMeetingCards(data, 'sugg_meetings_row', true);
+			});
+			socket.on('_update_conf_meetings', function(data) {
+				addMeetingCards(data, 'conf_meetings_row', false);
+			});
+
+			/*setTimeout(function() {
+				for(var x = 0; x<document.querySelectorAll('#acceptform_input').length; x++) {
+					console.log(document.querySelectorAll('#acceptform_input')[x].value);
+				}
+			}, 10000);*/
+
+		</script>
+
+		<template id="meeting-card-temp">
+			<div class="col s12 m6 l4" id="top-div">
+				<div class="card small" id="card-body">
+					<div class="card-image waves-effect waves-block waves-light">
+						<img class="activator" src="images/office.jpg" id="image">
+					</div>
+					<div class="card-content">
+						<span class="card-title activator grey-text text-darken-4" id="card-title">Card Title<i class="material-icons right" id="reveal-card-button">more_vert</i></span>
+					</div>
+					<div class="card-reveal">
+						<span class="card-title grey-text text-darken-4" id="card-title_2">Card Title<i class="material-icons right" id="close-card-button">close</i></span>
+						<p class="term" style="color: black">Address </p><p id="address" class="definition" style="color: black">Here is some more information about this product that is only revealed once clicked on.</p> <br>
+						<p class="term" style="color: black">Rating </p><p id="rating" class="definition" style="color: black">Here is some more information about this product that is only revealed once clicked on.</p> <br>
+						<p class="term" style="color: black">Date and Time </p><p id="date-and-time" class="definition" style="color: black">Here is some more information about this product that is only revealed once clicked on.</p> <br>
+					</div>
+				</div>
+			</div>
+		</template>
+
+		<template id="card-action-temp">
+			<div class="card-action" id="card-action-part">
+				<div class="inline">
+					<form action="/home" method="post" id="editform">
+						<input name="edit" value="1" id="editform_input" hidden>
+						<!-- value we are submitting with the form -->
+						<a href="#" onClick="<%- " this.parentElement.submit();" %>" type="submit">Edit</a>
+					</form>
+					<form action="/home" method="post" id="acceptform">
+						<input name="accept" value="1" id="acceptform_input" hidden>
+						<!-- value we are submitting with the form -->
+						<a href="#" onClick="<%- " this.parentElement.submit();" %>" type="submit">Accept</a>
+					</form>
+				</div>
+			</div>
+		</template>
+
+	</head>
+
+	<body>
+		<header>
+			<% include ../partials/header-nav-bar %>
+		</header>
+
+		<main>
+			<div class="row">
+				<!-- Proposed Meetings Card -->
+				<div class="col s12 m12 l12">
+					<div class="card amber accent-4">
+						<div class="card-content white-text">
+							<span class="card-title activator" id="min-span_1">Proposed Meetings<i class="material-icons right activator" id="min-button_1">remove</i></span>
+							<div id="panel_1">
+								<div class="row" id="sugg_meetings_row"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col s12 m12 l12">
+					<div class="card amber accent-4">
+						<div class="card-content white-text">
+							<span class="card-title activator" id="min-span_2">Upcoming Meetings<i class="material-icons right activator" id="min-button_2">remove</i></span>
+							<div id="panel_2">
+								<div class="row" id="conf_meetings_row"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</body>
+	<script>
+		//Change cursor to the pointer (or click mode) when it is moused over
+		//$('#min-button_1').css('cursor', 'pointer');
+		//$('#min-button_2').css('cursor', 'pointer');
+
+		$("#min-span_1").click(function() {
+			if($("#min-button_1").html() == 'remove') {
+				$("#min-button_1").html('add');
+			} else {
+				$("#min-button_1").html('remove');
+			}
+			$("#panel_1").slideToggle();
+		});
+		$("#min-span_2").click(function() {
+			if($("#min-button_2").html() == 'remove') {
+				$("#min-button_2").html('add');
+			} else {
+				$("#min-button_2").html('remove');
+			}
+			$("#panel_2").slideToggle();
+		});
+
+		/*$("#min-button_1").click(function() {
+			if($("#min-button_1").html() == 'remove') {
+				$("#min-button_1").html('add');
+			} else {
+				$("#min-button_1").html('remove');
+			}
+			$("#panel_1").slideToggle();
+		});
+		$("#min-button_2").click(function() {
+			if($("#min-button_2").html() == 'remove') {
+				$("#min-button_2").html('add');
+			} else {
+				$("#min-button_2").html('remove');
+			}
+			$("#panel_2").slideToggle();
+		});*/
+	</script>
+	<!-- <script src="/js/slideshow.js"></script> -->
+	<!-- call this after the body, because it waits until all the html/DOM is loaded! And there are html element specific functions in this file -->
+</html>

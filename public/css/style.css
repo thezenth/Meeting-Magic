@@ -1,0 +1,79 @@
+.basic-container {
+    margin: 0.75rem;
+}
+.fixed-container {
+    margin: 0.75rem;
+    width: 500px;
+}
+.invisible {
+    display: none;
+}
+.center-parent {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+.inline {
+    display: inline-flex;
+}
+.center-left {
+    align: left;
+}
+.grid-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.grid-column {
+    flex: 1;
+    margin: auto;
+}
+.center-child {
+    margin: auto;
+    width: 50%;
+}
+.container-column {
+    float:left;
+}
+.card-bottom {
+    display: inline-flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: left;
+}
+.rel-container {
+    width:45%;
+}
+p.normal {
+    display: inline;
+    font-weight: normal;
+}
+p.term {
+    display: inline;
+    font-weight: bold;
+}
+p.definition {
+    display: inline;
+    font-weight: lighter;
+}
+a.nav-link {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: left;
+}
+a.fixed {
+    width: 100px;
+    margin: 10px;
+}
+a.with-icon-button {
+    display: inline-flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: left;
+}

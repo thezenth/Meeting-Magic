@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+
+	<head>
+		<% include ../partials/head %>
+	</head>
+
+	<body>
+		<header>
+			<% include ../partials/header-nav-bar %>
+		</header>
+
+		<main>
+			<div class="center-parent">
+				<% for(var i = 0; i<places.length; i++) { %>
+					<div class="card center-child">
+						<div class="card-image waves-effect waves-block waves-light">
+							<% if (places[i].imgUrl) { %>
+								<img class="activator" src="<%= places[i].imgUrl %>">
+							<% } else { %>
+								<img class="activator" src="/assets/images/menu-placeholder.gif">
+							<% } %>
+						</div>
+						<div class="card-content">
+							<span class="card-title activator grey-text text-darken-4"><%= places[i].name %>
+								<i class="material-icons right">more_vert</i>
+							</span>
+							<p>
+								<form action="/results" method="post">
+								    <input type="hidden" name="idx" value="<%=i%>"/>
+									<button type="submit" class="btn btn-warning btn-lg">Looks Good!</button>
+								</form>
+							</p>
+						</div>
+						<div class="card-reveal">
+							<span class="card-title grey-text text-darken-4"><%= places[i].name %>
+								<i class="material-icons right">close</i>
+							</span>
+							<p class="term">Address:</p>
+							<p class="normal"><%= places[i].address %></p>
+							<br>
+							<% if (places[i].hours.length > 0) { %>
+								<p class="term">Hours:</p>
+								<p class="normal"><%= places[i].hours %></p>
+								<br>
+							<% } else { %>
+								<p class="term">Hours:</p>
+								<p class="normal">Not available</p>
+								<br>
+							<% } %>
+						</div>
+					</div>
+					<br>
+				<% } %>
+			</div>
+		</main>
+	</body>
+
+</html>

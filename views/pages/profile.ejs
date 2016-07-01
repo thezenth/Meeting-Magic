@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+	<% include ../partials/head %>
+	<script src="/js/client_profile_settings.js"></script>
+</head>
+
+<body>
+	<header>
+		<% include ../partials/header-nav-bar %>
+	</header>
+
+	<div class="row">
+		<div class="hide-on-small-only col m2 l2 white-text">.</div>
+		<div class="col s12 m8 l8">
+			<div class="card">
+				<div class="card-content">
+					<div class="row">
+						<h3>Profile</h3>
+					 <div>
+						 <h5>Email</h5>
+						 <p><%= user.local.email %></p>
+						 <button onClick="<%- " inputOnClick(this.id, 'newemail', 'Email')" %>" class="waves-effect waves-light btn" id="email-button">Change</button>
+					 </div>
+					 <br>
+					 <div>
+						 <h5>Password</h5>
+						 <button onClick="<%- " inputOnClick(this.id, 'newpwd', 'Password')" %>" class="waves-effect waves-light btn" id="pwd-button">Change</button>
+					 </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="hide-on-small-only col m2 l2 white-text">.</div>
+	</div>
+	</body>
+</html>
