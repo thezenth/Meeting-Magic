@@ -87,8 +87,8 @@ module.exports = function (sio, app, passport) {
 						//dlog("searching acc_meetings:" + m, def_opts);
 						if (m._status) {
 							sendMeetings_conf.push(m);
-							callback(null);
 						}
+						callback(null);
 					});
 
 				}, function (err) { //<-- callback if noah is being idiot and can't find it

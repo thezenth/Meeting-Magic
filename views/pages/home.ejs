@@ -15,13 +15,158 @@
 				socket.emit('_accept', {m: meetingObj});
 			}
 
-			function addMeetingCards(data, panelRow, haveButtons) {
+			function addMeetingCards(data, panelRow, haveActions) {
 				for (var i = 0; i < data.sendMeetings.length; i++) {
 
+					//Setting it up ============================================================
+
+					//Container for everything
+					var firstDiv = document.createElement('div');
+					firstDiv.className = "col s12 m6 l4";
+
+					//Actual body of the card
+					var cardBody = document.createElement('div');
+					cardBody.className = "card small"; //materialize small class forces small size
+
+					//Image Container
+					var imageCont = document.createElement('div');
+					imageCont.className = "card-image waves-effect waves-block waves-light";
+					//	Image
+					var image = document.createElement('img');
+					image.className = "activator";
+					image.src = data.sendMeetings[i].place.imgUrl;
+					//	Append image to Container
+					imageCont.appendChild(image);
+					//	Append container to body
+					cardBody.appendChild(imageCont);
+
+					//Card content
+
+					var cardContent = document.createElement('div');
+					cardContent.className = 'card-content';
+					//	Title of the card
+					var title = document.createElement('span');
+					title.className = 'card-title activator grey-text text-darken-4';
+					title.innerHTML = data.sendMeetings[i].place.name;
+					//		Material icon (3 dots vertical)
+					var openIcon = document.createElement('i');
+					openIcon.className = 'material-icons right';
+					openIcon.innerHTML = 'more_vert';
+					//	Append icon to title
+					title.appendChild(openIcon);
+					//	Append title to content
+					cardContent.appendChild(title);
+					//Append card content to body
+					cardBody.appendChild(cardContent);
+
+					//Card reveal
+
+					var reveal = document.createElement('div');
+					reveal.className = 'card-reveal';
+					//	Information about meeting
+					//		Name
+					var name = document.createElement('span');
+					name.className = 'card-title grey-text text-darken-4';
+					name.innerHTML = data.sendMeetings[i].place.name;
+					//		Close button
+					var closeIcon = document.createElement('i');
+					closeIcon.className = 'material-icons right';
+					closeIcon.innerHTML = 'close';
+					//		Append close to span
+					name.appendChild(closeIcon);
+					//	Append span to reveal
+					reveal.appendChild(name);
+
+					function labelsAndInfo(label1, information) {
+						var label = document.createElement('p');
+						label.className = 'term';
+						label.style = 'color: black';
+						label.innerHTML = label1;
+						var info = document.createElement('p');
+						info.className = 'definition';
+						info.style = 'color: black';
+						info.innerHTML = information;
+
+						reveal.appendChild(label);
+						reveal.appendChild(info);
+						reveal.appendChild(document.createElement('br'));
+					}
+
+					//	Information about meeting
+					//		Address
+					labelsAndInfo('Address ', data.sendMeetings[i].place.address);
+					//		Rating
+					labelsAndInfo('Rating ', data.sendMeetings[i].place.rating);
+					//		Date and Time
+					var time = parseInt(data.sendMeetings[i].time);
+					if (time > 11) {
+						if (time == 12) {
+							time = time + " pm";
+						}
+						else {
+							time = (time - 12) + " pm";
+						}
+					} else {
+						time = time + " am";
+					}
+					labelsAndInfo('Date and Time ', data.sendMeetings[i].date + ' @ ' + time);
+
+					//	Append reveal to body
+					cardBody.appendChild(reveal);
+
+					//Card Action
+					if(haveActions) {
+						//Container for card action
+						var cardAction = document.createElement('div');
+						cardAction.className = 'card-action';
+
+						//Body
+						var cardActionBody = document.createElement('div');
+						cardActionBody.className = 'inline';
+
+						function makeForm(nme) {
+							//Form
+							var form = document.createElement('form');
+							form.action = '/home';
+							form.method = 'post';
+							//Input
+							var input = document.createElement('input');
+							var stringyObj = JSON.stringify(data.sendMeetings[i]);
+							input.name = nme;
+							input.value = stringyObj;
+							input.setAttribute("hidden", true);
+							//Submit Button
+							var sub = document.createElement('a');
+							sub.href = '#';
+							sub.onclick = function() {sub.parentElement.submit();}
+							sub.type = 'submit';
+							sub.innerHTML = nme;
+
+							//Append input and button to the form
+							form.appendChild(input);
+							form.appendChild(sub);
+							//Append the form to the card action body
+							cardActionBody.appendChild(form);
+						}
+
+						makeForm('edit');
+						makeForm('accept');
+
+						//Append body to container
+						cardAction.appendChild(cardActionBody);
+						//Append card action to body
+						cardBody.appendChild(cardAction)
+					}
+
+					//Append card body to Container
+					firstDiv.appendChild(cardBody);
+					//Append card to the panel
+					document.getElementById(panelRow).appendChild(firstDiv);
+
+					/*
 					//Getting the template =====================================================
 
-					var temp = document.getElementById('meeting-card-temp');
-
+					var temp = document.querySelector('#meeting-card-temp');
 					//Edit the card's image ====================================================
 
 					temp.content.querySelector('#image').src = data.sendMeetings[i].place.imgUrl;
@@ -86,23 +231,25 @@
 					}
 
 					//Setup accept/edit buttons and card action
-					if(haveButtons && !temp.content.querySelector('.card-action')) {
+					if(haveButtons && !temp.content.querySelector('#card-action-part')) {
 						var cardAction = document.getElementById('card-action-temp');
 
 						var stringyObj = JSON.stringify(data.sendMeetings[i]);
+						console.log("=== MEETING ===\n" + stringyObj);
 						cardAction.content.querySelector('#editform_input').value = stringyObj;
 						cardAction.content.querySelector('#acceptform_input').value = stringyObj;
+						console.log(cardAction.content.querySelector('#acceptform_input').value);
 
 						temp.content.querySelector('#card-body').appendChild(cardAction.content.cloneNode(true));
 					} else if(!haveButtons){
-						if(temp.content.querySelector('.card-action')) {
-							temp.content.querySelector('.card-action').parentNode.removeChild(temp.content.querySelector('.card-action'));
+						if(temp.content.querySelector('#card-action-part')) {
+							temp.content.querySelector(':scope > #card-action-part').parentNode.removeChild(temp.content.querySelector(':scope > #card-action-part'));
 						}
 					}
 
 					//Append the card to the panel =============================================
 
-					document.getElementById(panelRow).appendChild(temp.content.cloneNode(true));
+					document.getElementById(panelRow).appendChild(temp.content.cloneNode(true)); */
 				}
 			}
 
@@ -113,6 +260,11 @@
 				addMeetingCards(data, 'conf_meetings_row', false);
 			});
 
+			/*setTimeout(function() {
+				for(var x = 0; x<document.querySelectorAll('#acceptform_input').length; x++) {
+					console.log(document.querySelectorAll('#acceptform_input')[x].value);
+				}
+			}, 10000);*/
 
 		</script>
 
@@ -136,7 +288,7 @@
 		</template>
 
 		<template id="card-action-temp">
-			<div class="card-action">
+			<div class="card-action" id="card-action-part">
 				<div class="inline">
 					<form action="/home" method="post" id="editform">
 						<input name="edit" value="1" id="editform_input" hidden>
