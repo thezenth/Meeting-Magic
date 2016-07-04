@@ -34,18 +34,21 @@ function dlog(msg, opts) {
 	var startStr = "";
 
 	switch (opts.id) {
-	case 'mongodb':
-		startStr = mongodb(opts.id);
-		break;
-	case 'server':
-		startStr = server(opts.id);
-		break;
-	case 'google-places-api':
-		startStr = api_fetch(opts.id);
-		break;
-	default:
-		startStr = def(opts.id);
-		break;
+		case 'mongodb':
+			startStr = mongodb(opts.id);
+			break;
+		case 'server':
+			startStr = server(opts.id);
+			break;
+		case 'google-places-api':
+			startStr = api_fetch(opts.id);
+			break;
+		case 'google-maps/distance-matrix':
+			startStr = api_fetch(opts.id);
+			break;
+		default:
+			startStr = def(opts.id);
+			break;
 	}
 
 	mainStr = startStr + ":" + msg;
