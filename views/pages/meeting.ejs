@@ -5,8 +5,8 @@
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 		<meta charset="utf-8">
 		<script>
-		window.lati = 0;
-		window.longi = 0;
+			window.lati = 40.7037461; //default coords center on New York
+			window.longi = -73.9911713;
 			navigator.geolocation.getCurrentPosition(function(position) {
 				lati = position.coords.latitude;
 				longi = position.coords.longitude;
@@ -84,8 +84,6 @@
 
 		<script>
 			// This example requires the Places library. Include the libraries=places parameter when you first load the API. For example: <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
-
 
 			function initMap() {
 
@@ -167,5 +165,5 @@
 			}
 		</script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApb_nPuz3nPSO9lDBnGBbIF4Q98-JJJc8&libraries=places&callback=initMap" async defer></script>
-</body>
+	</body>
 </html>
