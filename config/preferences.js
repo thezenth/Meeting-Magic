@@ -1,3 +1,5 @@
+// preferences.js - grabs the list of food preferences from a .yaml file
+
 yaml = require('js-yaml');
 fs = require('fs');
 
