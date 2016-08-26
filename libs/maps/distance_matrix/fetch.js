@@ -9,6 +9,16 @@ var def_opts = {
 
 var apiKey = "AIzaSyApb_nPuz3nPSO9lDBnGBbIF4Q98-JJJc8";
 
+/**
+ * Build url according to Google Maps API
+ *
+ * @method build_url
+ * @param {Object} org - The origin, with lat (latitude) and lng (longitude) properties.
+ * @param {Object} dest - The destination, with lat (latitude) and lng (longitude) properties.
+ * @param {Number} depart_time - The departure time; default value is 0 (doesn't include departure time in this case).
+ * @param {Number} oauth - API authentication key; default value is 0 (uses a default api key in this case).
+ * @param {String} u - Units of distance, either imperial or metric; default value is 0 (doesn't include units in this case).
+ */
 function build_url(org, dest, depart_time = 0, oauth = 0, u = 0) {
 	var base = "https://maps.googleapis.com/maps/api/distancematrix/json?";
 

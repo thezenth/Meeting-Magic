@@ -29,14 +29,14 @@ var goog_key = "AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ"
  * Builds a URL according to the Google Places API.
  *
  * @method build_url
- * @param {Number} latitude The latitude coordinate of the center of the search area.
- * @param {Number} longitude The longitude coordinate of the center of the search area.
- * @param {Number} rad The radius of the search area.
- * @param {String} type The type of place you will be looking for; ex: food, crusie, entertainment, etc.
- * @param {String} keywords The keywords of the search itself; ex: coffee, Indian, Pizza, etc.
- * @param {String} rankBy Rank the data either by "distance" from center of "prominence" (which includes rating, mentions on google, etc.). Specifies the order in which the data will be returned.
- * @param {String} oauth The authKey, provided by the Google Places API.
- * @return {String} newUrl The new URL.
+ * @param {Number} latitude - The latitude coordinate of the center of the search area.
+ * @param {Number} longitude - The longitude coordinate of the center of the search area.
+ * @param {Number} rad - The radius of the search area.
+ * @param {String} type - The type of place you will be looking for; ex: food, crusie, entertainment, etc.
+ * @param {String} keywords - The keywords of the search itself; ex: coffee, Indian, Pizza, etc.
+ * @param {String} rankBy Rank - The data either by "distance" from center of "prominence" (which includes rating, mentions on google, etc.). Specifies the order in which the data will be returned.
+ * @param {String} oauth - The authKey, provided by the Google Places API.
+ * @return {String} newUrl - The new URL.
  */
 function build_url(latitude, longitude, rad, type, keywords, rankBy, oauth) {
 	var base = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
@@ -77,6 +77,13 @@ function build_url(latitude, longitude, rad, type, keywords, rankBy, oauth) {
 	// EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&rankby=prominence&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
 }
 
+/**
+ * Builds a URL according to the Google Places API to grab an image.
+ *
+ * @method build_img_url
+ * @param {String} ref - The Google Places API image reference (alphanumeric).
+ * @param {Number} m_width - The maximum width of the image when grabbing it.
+ */
 function build_img_url(ref, m_width) {
 	//https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU&key=YOUR_API_KEY
 
@@ -115,14 +122,9 @@ function build_img_url(ref, m_width) {
  * Designed to fetch data, specifically using the Google Places API (as it uses build_url, which builds a URL specifically for the Google Places API). Does not parse data, only gets it.
  *
  * @method get_place
- * @param {Object} place_query An object with all of the information needed to build the fetch URL. Specification: place_query: { position: { lat: Number, long: Number }, rad(radius of search): Number, type(see type in build_url): String, cat(see keywords in build_url): String, rankBy(see rankBy in build_url): String }
- * @return {String} body The JSON returned from the GET request. This is only returned if there are no errors.
+ * @param {Object} q - An object with all of the information needed to build the fetch URL.
+ * @return {Function} parseFunc - A callback function which will be used to parse the data fetched.
  */
-
-function donothing() {
-	console.log("IMA CALLBACK");
-}
-
 function get_place(q, parseFunc) {
 	var url = build_url(
 		q.position.lat,
@@ -148,123 +150,3 @@ function get_place(q, parseFunc) {
 			dlog("CAUGHT ERROR IN FETCH:" + err, {id: "google-places-api", isError: true, isWarning: false});
 		});
 }
-
-/*function get_place(q, parseFunc) {
-
-
-  async.map(lookup_list, function (item, callback) {
-      request(url, function (err, response, body) {
-        if (!err && response.statusCode == 200) {
-          //dlog("successfully fetched google places api", def_opts);
-          //dlog("query=\n" + place_query.toString(), def_opts);
-          //dlog("results:\n" + body);
-          callback(null, JSON.parse(body));
-        }
-        else if (response.statusCode != 200) {
-          callback(response.statusCode, null);
-        }
-        else {
-          callback(err, null);
-        }
-      });
-    },
-    function (err, results) {
-      if (!err) {
-        for (var i = 0; i < results.length; i++) {
-          dlog(i, def_opts);
-          //console.log(i);
-          //console.log(results[i], def_opts);
-          parseFunc(results[i]['results']);
-        }
-      }
-      else {
-        dlog(err, def_opts);
-        //console.log("We had an error somewhere.");
-      }
-    });
-}
-*/
-
-exports.get_place = get_place;
-exports.build_img_url = build_img_url;
-
-/*function secondFunction(data) {
-  //console.log(data);
-  for(var i =0; i<data.length; i++) {
-    console.log(data[i]);
-  }
-}
-
-function testy(err, result) {
-  return err;
-  return result;
-}
-
-function get_place(place_query) {
-  var url = build_url (
-    place_query.position.lat,
-    place_query.position.long,
-    place_query.rad,
-    place_query.type,
-    place_query.cat,
-    place_query.rankBy,
-    goog_key
-  );
-
-  var funcy = function() {
-    request(url, function (err, response, body) {
-      if (!err && response.statusCode == 200) {
-        //dlog("successfully fetched google places api", def_opts);
-        //dlog("query=\n" + place_query.toString(), def_opts);
-        //dlog("results:\n" + body);
-        testy(null, JSON.parse(body));
-      }
-      else if (response.statusCode != 200) {
-        dlog("status code: " + response.statusCode);
-      }
-      else {
-        dlog(err, def_opts);
-      }
-    });
-  }
-
-  async.parallel([
-    function(testy){
-      setTimeout(funcy, 200);
-    }
-  ],
-  function(err, results){
-      console.log(results[0])
-  });
-
-
-
-
-  //call_thing();
-
-}
-*/
-//exports.get_place = get_place;
-
-/*var rest_pq = food_q;
-rest_pq.position = {
-  lat: 34.058583,
-  long: -118.416582
-};
-rest_pq.rad = 5000;
-rest_pq.cat = "coffee";
-rest_pq.rankBy = "prominence";
-
-get_place(rest_pq);
-*/
-/*
-build_url(
-  34.058583,
-  -118.416582,
-  5000,
-  "coffee",
-  "goog_key",
-  "food",
-  "prominence"
-);
-*/

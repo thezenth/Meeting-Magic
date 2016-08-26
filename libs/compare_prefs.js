@@ -7,6 +7,13 @@ var def_opts = {
 	isError: false
 }
 
+/**
+ * Compares two lists of food preferences between two users.
+ *
+ * @method compareFood
+ * @param {string[]} l1 - The first list of food preferences.
+ * @param {string[]} l2 - The second list of food preferences.
+ */
 function compareFood(l1, l2) {
 
     var prefs1; //longer list
