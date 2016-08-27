@@ -24,15 +24,6 @@ var compare_food_prefs = comp.compareFood;
 //async
 var async = require('async');
 
-// debug.js
-var debug = require("./libs/debug/debug");
-var dlog = debug.dlog;
-var def_opts = {
-	id: "server",
-	isWarning: false,
-	isError: false
-}
-
 //url module
 var url = require('url');
 
@@ -56,7 +47,6 @@ module.exports = function (sio, app, passport) {
 				async.each(s_meetings, function (mId, callback) {
 					// Perform operation on file here.
 					Meeting.findOne( { '_id': mId }, function (err, m) {
-						//dlog("searching sugg_meetings:" + m, def_opts);
 						if (m) {
 							sendMeetings_sugg.push(m);
 							callback(null);
@@ -73,7 +63,7 @@ module.exports = function (sio, app, passport) {
 						socket.emit('_update_sugg_meetings', {
 							sendMeetings: sendMeetings_sugg
 						});
-						dlog("sent suggested meetings to client", def_opts)
+						console.log("SERVER:sent suggested meetings to client");
 					}
 				});
 			}
@@ -84,7 +74,6 @@ module.exports = function (sio, app, passport) {
 					Meeting.findOne({
 						'_id': mId
 					}, function (err, m) {
-						//dlog("searching acc_meetings:" + m, def_opts);
 						if (m._status) {
 							sendMeetings_conf.push(m);
 						}
@@ -101,19 +90,19 @@ module.exports = function (sio, app, passport) {
 						socket.emit('_update_conf_meetings', {
 							sendMeetings: sendMeetings_conf
 						});
-						dlog("Sent confirmed meetings to client", def_opts)
+						console.log("SERVER:sent confirmed meetings to client");
 					}
 				});
 			}
 		}
 
 		socket.on('_edit', function (data) {
-			dlog("someone wants to edit a meeting!", def_opts);
+			console.log("SERVER:someone wants to edit a meeting");
 			console.log(data.m);
 		});
 
 		socket.on('_accept', function (data) {
-			dlog("someone accepted a meeting!", def_opts);
+			console.log("SERVER:someone accepted a meeting");
 			console.log(data.m);
 		});
 	});
@@ -160,11 +149,7 @@ module.exports = function (sio, app, passport) {
 			'local.email': req.user.local.email
 		}, function (err, user) {
 			if (err) {
-				dlog(err, {
-					id: "server",
-					isError: true,
-					isWarning: false
-				});
+				console.error(err);
 			}
 			// have to dothis to actually get the user...
 			if (user) {
@@ -184,20 +169,16 @@ module.exports = function (sio, app, passport) {
 	app.post('/home', isLoggedIn, function (req, res) {
 		if (req.body.edit) {
 			var m = JSON.parse(req.body.edit); //remember, the meeting is passed as a stringified object
-			dlog("editing meeting " + m._id, def_opts)
+			console.log(`CLIENT:editing meeting ${m._id}`);
 			var redir = '/create?meetid=' + m._id; //qs.stringify( { 'meetid': newMeeting._id }, { indices : false, encode : false } ) ;
 			res.redirect(redir);
 		} else if (req.body.accept) {
 			var m = JSON.parse(req.body.accept);
-			dlog("accepting meeting " + m._id, def_opts)
+			console.log(`CLIENT:accepting meeting ${m._id}`);
 			//stick into acc_meetings array
 			User.findOne({ 'local.email': req.user.local.email }, function (err, user) {
 				if (err) {
-					dlog(err, {
-						id: "server",
-						isError: true,
-						isWarning: false
-					});
+					console.error(err);
 				}
 				// have to dothis to actually get the user...
 				if (user) {
@@ -207,18 +188,18 @@ module.exports = function (sio, app, passport) {
 					); //take out of suggested meetings array
 					user.save(); //ALWAYS MAKE SURE TO SAVE!
 
-					dlog("new suggested meetings array for user " + req.user.local.email + ": " + user.sugg_meetings, def_opts);
-					dlog("new accepted meetings array for user " + req.user.local.email + ": " + user.acc_meetings, def_opts);
+					console.log(`SERVER:new suggested meetings array for user ${req.user.local.email}- ${user.sugg_meetings}`);
+					console.log(`SERVER:new accepted meetings array for user ${req.user.local.email}- ${user.acc_meetings}`);
 
-					dlog("checking if all users have accepted meeting " + m._id, def_opts);
+					console.log(`SERVER:checking if all users have accepted meeting ${m._id}`);
 					var isAccepted = true;
 					Meeting.findOne( { '_id': m._id }, function(err, m) {
 						if (m) {
 							async.each(m.users, function (userEmail, callback) {
 								// Perform operation on file here.
 								User.findOne({ 'local.email': userEmail }, function (err, user) {
-									dlog("	checking user " + userEmail, def_opts);
-									dlog("	accepted array: " + user.acc_meetings, def_opts);
+									console.log(`SERVER: checking user ${userEmail}`);
+									console.log(`SERVER: accepted array ${user.acc_meetings}`);
 									if (user.acc_meetings.indexOf(m._id) == -1) {
 										isAccepted = false;
 									}
@@ -235,7 +216,7 @@ module.exports = function (sio, app, passport) {
 									console.log('Succesfully checked meetings');
 									m._status = isAccepted;
 									m.save();
-									dlog(m._id + " status:" + m._status, def_opts);
+									console.log(`DATABASE:${m._id} status- ${m._status}`);
 									res.redirect('/home');
 								}
 							});
@@ -247,11 +228,7 @@ module.exports = function (sio, app, passport) {
 			});
 
 		} else {
-			dlog("post to /home was empty...", {
-				id: "server",
-				isWarning: true,
-				isError: false
-			})
+			console.warning("post to /home was empty");
 		}
 	});
 
@@ -282,16 +259,14 @@ module.exports = function (sio, app, passport) {
   */
 	app.post('/user-prefs', function (req, res) {
 		process.nextTick(function () {
-			//dlog("session: " + req, def_opts);
-			//dlog("session: user is " + req.user, def_opts);
-			dlog("session: user email is " + req.user.local.email, def_opts);
+			console.log(`CLIENT:user email is ${req.user.local.email}`);
 			User.findOne({
 				'local.email': req.user.local.email
 			}, function (err, user) {
-				dlog("got foodprefs: " + req.body.foodprefs, def_opts);
+				console.log(`SERVER:got foodprefs- ${req.body.foodprefs}`);
 				user.food_prefs = req.body.foodprefs;
 				user.save();
-				dlog("successfully updated user", def_opts);
+				console.log("SERVER:successfully updated user");
 				res.redirect('/home');
 			});
 		});
@@ -305,27 +280,27 @@ module.exports = function (sio, app, passport) {
 
 	app.post('/profile', function (req, res) {
 		process.nextTick(function () {
-			dlog("session: user email is " + req.user.local.email, def_opts);
-			dlog("post: new email is " + req.body.newemail, def_opts);
+			console.log(`CLIENT:user email is ${req.user.local.email}`);
+			console.log(`CLIENT:new email is ${req.user.newemail}`);
 			User.findOne({
 				'local.email': req.user.local.email
 			}, function (err, user) {
 				if (req.body.newemail) {
-					dlog("checking format of new email...", def_opts);
+					console.log("SERVER:checking format of new email");
 					if (!req.body.newemail.includes("[$%^&*:;\\/|<>\"\'!.,-\s+]")) {
-						dlog("formatted correctly!", def_opts);
+						console.log("SERVER:formatted correctly");
 						user.local.email = req.body.newemail;
 						user.save();
 					}
 				} else if (req.body.newpwd) {
-					dlog("checking format of new password...", def_opts);
+					console.log("SERVER:checking format of new password");
 					if (!req.body.newpwd.includes("[$%^&*:;\\/|<>\"\'!.,-\s+]")) {
-						dlog("formatted correctly!", def_opts);
+						console.log("SERVER:formatted correctly");
 						user.local.password = req.body.newpwd;
 						user.save();
 					}
 				}
-				dlog("successfully updated user", def_opts);
+				console.log("SERVER:successfully updated user profile");
 				res.redirect('/profile');
 			});
 		});
@@ -338,21 +313,14 @@ module.exports = function (sio, app, passport) {
 	});
 
 	app.post('/meeting', function (req, res) {
-		//dlog("recived post", def_opts);
 		process.nextTick(function () {
-			//dlog("test, before mongodb check", def_opts);
-
 			User.findOne({
 				'local.email': req.body.otheremail
 			}, function (err, user) {
-				dlog("checking mongodb", def_opts);
-				dlog("other email:" + req.body.otheremail, def_opts);
+				console.log("SERVER:checking mongodb");
+				console.log(`CLIENT: other email- ${req.body.otheremail}`);
 				if (err) {
-					dlog(err, {
-						id: "server",
-						isError: true,
-						isWarning: false
-					});
+					console.error(err);
 				}
 
 				if (user) {
@@ -363,7 +331,7 @@ module.exports = function (sio, app, passport) {
 						long = parseFloat(req.body.coords.substring(
 							req.body.coords.indexOf(',') + 1, req.body.coords.length
 						));
-						dlog("coords:" + lat + "," + long, def_opts);
+						console.log(`SERVER: ${lat},${long}`);
 
 						var rest_pq = food_q;
 						rest_pq.position = {
@@ -380,13 +348,9 @@ module.exports = function (sio, app, passport) {
 							var checkJson = function () {
 								fs.readFile('./libs/places/data.json', function (err, jsonData) {
 									if (err) {
-										dlog(err, {
-											id: "server",
-											isError: true,
-											isWarning: false
-										});
+										console.error(err);
 									} else {
-										dlog("checking ./libs/places/data.json", def_opts);
+										console.log("SERVER:checking ./libs/places/data.json");
 										var parsedJson = JSON.parse(jsonData);
 										var found_places = parsedJson["found_places"];
 										if (found_places.length > 0) {
@@ -431,25 +395,17 @@ module.exports = function (sio, app, passport) {
 
 		fs.readFile('./libs/places/data.json', function (err, jsonData) {
 			if (err) {
-				dlog(err, {
-					id: "server",
-					isError: true,
-					isWarning: false
-				});
+				console.error(err);
 			} else {
-				//dlog("routes.js successfully read ./libs/places/data.json", def_opts);
 				parsedJson = JSON.parse(jsonData);
-				//dlog("parsedJson:"+JSON.stringify(parsedJson, null, 4), def_opts);
 				found_places = parsedJson["found_places"];
 				top5 = found_places.slice(0, 5); //gets top 5 restaurants
-				//dlog("top 5:"+top5[top5.length-1].name, def_opts);
 				res.render('results', {
 					places: top5
 				});
 
 				resultsRests = top5; //save the results for use in app.post for results
 
-				//dlog("wiping data.json found_places", def_opts);
 				parsedJson["found_places"] = [];
 				fs.writeFile('./libs/places/data.json', JSON.stringify(parsedJson, null, '\t')); //also, include null and '\t' arguments to keep the data.json file indented with tabs
 			}
@@ -458,8 +414,7 @@ module.exports = function (sio, app, passport) {
 
 	app.post('/results', isLoggedIn, function (req, res) {
 
-		dlog('query:' + resultsQuery['users[]'], def_opts)
-			//console.log(req.body.idx);
+		console.log(`DATABASE:${resultsQuery['users[]']}`);
 		newMeeting = new Meeting({
 			users: resultsQuery['users[]'],
 			place: resultsRests[req.body.idx], //remeber, this comes back as a string!
@@ -468,7 +423,7 @@ module.exports = function (sio, app, passport) {
 			_status: false
 		});
 
-		dlog("created a new meeting:" + newMeeting, def_opts);
+		console.log(`SERVER:created a new meeting ${newMeeting}`);
 		newMeeting.save();
 
 		var redir = '/create?meetid=' + newMeeting._id; //qs.stringify( { 'meetid': newMeeting._id }, { indices : false, encode : false } ) ;
@@ -489,16 +444,10 @@ module.exports = function (sio, app, passport) {
 			'_id': createQuery.meetid
 		}, function (err, m) {
 			if (err) {
-				dlog(err, {
-					id: "server",
-					isError: true,
-					isWarning: false
-				});
+				console.error(err);
 			}
 
 			if (m) {
-				//dlog(m, def_opts);
-				//dlog(m.place.name, def_opts);
 				res.render('create', {
 					meeting: m
 				});
@@ -511,18 +460,14 @@ module.exports = function (sio, app, passport) {
 			'_id': createQuery.meetid
 		}, function (err, m) {
 			if (err) {
-				dlog(err, {
-					id: "server",
-					isError: true,
-					isWarning: false
-				});
+				console.error(err);
 			}
 
 			if (m) {
 				m.time = req.body.time;
 				m.date = req.body.date;
 				m.save();
-				dlog("updated a meeting:\n" + m, def_opts);
+				console.log(`DATABASE:updated meeting-\n${m}`);
 
 				async.each(m.users, function (u_name, callback) {
 
@@ -533,11 +478,7 @@ module.exports = function (sio, app, passport) {
 						'local.email': u_name
 					}, function (err, user) {
 						if (err) {
-							dlog(err, {
-								id: "server",
-								isError: true,
-								isWarning: false
-							});
+							console.error(err);
 							callback(true);
 						}
 
@@ -545,7 +486,7 @@ module.exports = function (sio, app, passport) {
 							//userMeetingObj = { "_id": m._id, "reviewed": false, "accepted": false }; //assume these things for everyone, including person making the meeting (for now)
 							if(user.sugg_meetings.indexOf(m._id) == -1) { //push the updated meeting's id to the array if it isn't there already
 								user.sugg_meetings.push(m._id); //push the meeting obj thingie to the user
-								dlog('updated user:\n' + user, def_opts)
+								console.log(`DATABASE:updated user-\n${user}`);
 								user.save(); //save the user!
 							}
 
