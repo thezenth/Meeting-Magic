@@ -1,11 +1,5 @@
 // debug.js
 var debug = require("./debug/debug.js");
-var dlog = debug.dlog;
-var def_opts = {
-	id: "google-places-api",
-	isWarning: false,
-	isError: false
-}
 
 /**
  * Compares two lists of food preferences between two users.
@@ -39,7 +33,7 @@ function compareFood(l1, l2) {
         }
     }
 
-    dlog("same list:"+sameList, def_opts);
+	console.log(`SERVER:same list- ${sameList}`);
     return sameList;
 }
 
