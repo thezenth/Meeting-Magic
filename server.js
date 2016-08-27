@@ -1,5 +1,6 @@
 // set up ======================================================================
 // get all the tools we need
+var debug = require("./libs/debug/debug");
 var http = require('http');
 var express = require('express');
 var app = express();
@@ -20,16 +21,19 @@ var io = require('socket.io')(server);
 //namespaces
 //home page namespaces
 
-//cloud foundry environment stuff - for bluemix
-//var cfenv = require('cfenv');
-//var appEnv = cfenv.getAppEnv();
-//var port = appEnv.port;
 var port = 8080;
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
 
 require('./config/passport')(passport); // pass passport for configuration
+
+// some custom middleware
+function reqLog(req, res, next) {
+    console.log(req.method + ':' + req.url);
+    next();
+}
+//app.use(reqLog);
 
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
@@ -41,8 +45,6 @@ io.use(function(socket, next) {
 app.use(bodyParser()); // get information from html forms
 
 app.set('view engine', 'ejs'); // set up ejs for templating
-
-
 
 // required for passport
 app.use(session({

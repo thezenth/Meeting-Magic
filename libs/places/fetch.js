@@ -9,12 +9,6 @@ var food_q = places.Food;
 
 // debug.js
 var debug = require("../debug/debug.js");
-var dlog = debug.dlog;
-var def_opts = {
-	id: "google-places-api",
-	isWarning: false,
-	isError: false
-}
 
 //latitude, longitude, rad, query, oauth, types="food", rankBy="prominence"
 // **opts**
@@ -71,8 +65,7 @@ function build_url(latitude, longitude, rad, type, keywords, rankBy, oauth) {
 
 	var newUrl = base + location + "&" + radius + "&" + search + "&" + place_type + "&" + rank_by + "&" + authKey;
 
-	dlog("made google places fetch url", def_opts);
-	//dlog("URL= " + newUrl, def_opts)
+	console.log("GOOGLE PLACES API:made google places fetch url");
 	return (newUrl);
 	// EX: https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.058583,-118.416582&radius=5000&keyword=coffee&rankby=prominence&types=food&key=AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ
 }
@@ -88,7 +81,7 @@ function build_img_url(ref, m_width) {
 	//https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CnRtAAAATLZNl354RwP_9UKbQ_5Psy40texXePv4oAlgP4qNEkdIrkyse7rPXYGd9D_Uj1rVsQdWT4oRz4QrYAJNpFX7rzqqMlZw2h2E2y5IKMUZ7ouD_SlcHxYq1yL4KbKUv3qtWgTK0A6QbGh87GB3sscrHRIQiG2RrmU_jF4tENr9wGS_YxoUSSDrYjWmrNfeEHSGSc3FyhNLlBU&key=YOUR_API_KEY
 
 	if(ref == "") {
-		dlog("returned no image url", {id:"google-places-api", isWarning:true, isError:false});
+		console.warning("GOOGLE PLACES API:returned no image url");
 		return "";
 	}
 	else {
@@ -99,9 +92,6 @@ function build_img_url(ref, m_width) {
 
 		var newUrl = base + maxWidth + "&" + imgRef + "&" + authKey;
 
-		//dlog("made google places image fetch url", def_opts);
-		//dlog("image url:"+newUrl, def_opts);
-		//newUrl = "http://www.hvantagetechnologies.com/img/industries/restaurant.jpg";
 		return (newUrl);
 	}
 }
@@ -135,7 +125,7 @@ function get_place(q, parseFunc) {
 		q.rankBy,
 		goog_key
 	);
-	dlog(url, def_opts);
+	console.log(`GOOGLE PLACES API:${url}`);
 
 	var options = {
 		uri: url,
@@ -147,6 +137,6 @@ function get_place(q, parseFunc) {
 			parseFunc(data);
 		})
 		.catch(function (err) {
-			dlog("CAUGHT ERROR IN FETCH:" + err, {id: "google-places-api", isError: true, isWarning: false});
+			console.error(`GOOGLE PLACES API:${err}`);
 		});
 }
