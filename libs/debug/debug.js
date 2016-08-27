@@ -1,65 +1,54 @@
-chalk = require('chalk');
-/**
- * A function which uses Chalk to display colored debug messages, based upon the context of the message (is it a warning, is it from mongodb, etc.)
- *
- * @method dlog
- * @param {String} msg The debug message to be displayed.
- * @param {Object} opts An object with options for the id of the message (i.e., is it from the server, mongodb, etc.), and whether it is a warning, error, or neither. Specification: { id: String, isWarning: Boolean, isError: Boolean }.
- */
-function dlog(msg, opts) {
+var RESET = '\u001b[0m';
+var colors = {
+    BLACK     : '\u001b[30m',
+    RED       : '\u001b[31m',
+    GREEN     : '\u001b[32m',
+    YELLOW    : '\u001b[33m',
+    BLUE      : '\u001b[34m',
+    MAGENTA   : '\u001b[35m',
+    CYAN      : '\u001b[36m',
+    WHITE     : '\u001b[37m'
+};
 
-	//possibly add cases for warnings?
+var origLog = console.log;
+console.log = function(str) {
+    var out = str;
+    if(typeof str == 'string') {
+        if (str.indexOf(':') > -1) {
+            var ident = str.substring(0, str.indexOf(':'));
+            var rest = str.substring(str.indexOf(':'), str.length);
 
-	/* **opts**
-	opts: {
-	  id: "some debug identifier like mongodb or sever - i.e., the source usually",
-	  isWarning: is this a warning message, but maybe not code breaking (boolean),
-	  isError: is this an error message (boolean),
-	}
-	*/
-
-	if (msg !== null && typeof msg == 'object') {
-		msg = JSON.stringify(msg, null, 4);
-	}
-
-	//msgTxt = chalk.gray;
-	var def = chalk.yellow.bold;
-	var error = chalk.black.bgRed.bold;
-	var warning = chalk.black.bgYellow.bold;
-
-	var mongodb = chalk.black.bgCyan.bold;
-	var server = chalk.black.bgBlue.bold;
-	var api_fetch = chalk.black.bgMagenta.bold;
-
-	var startStr = "";
-
-	switch (opts.id) {
-	case 'mongodb':
-		startStr = mongodb(opts.id);
-		break;
-	case 'server':
-		startStr = server(opts.id);
-		break;
-	case 'google-places-api':
-		startStr = api_fetch(opts.id);
-		break;
-	default:
-		startStr = def(opts.id);
-		break;
-	}
-
-	mainStr = startStr + ":" + msg;
-
-	if (opts.isWarning) {
-		mainStr = startStr + warning("WARNING:") + msg;
-	}
-
-	if (opts.isError) {
-		mainStr = startStr + error(" ERROR:") + msg;
-	}
-
-	console.log(mainStr); //this gets called whether or not there is an error
-
+            switch (ident) {
+                case 'DATABASE':
+                case 'NEW QUERY':
+                    out = colors.BLUE + ident + RESET + rest;
+                    break;
+                case 'CLIENT':
+                case 'GET':
+                    out = colors.GREEN + ident + RESET + rest;
+                    break;
+                case 'POST':
+                    out = colors.YELLOW + ident + RESET + rest;
+                    break;
+				case 'SERVER':
+					out = colors.BLUE + ident + RESET + rest;
+					break;
+				case 'GOOGLE MAPS/DISTANCE-MATRIX':
+				case 'GOOGLE PLACES API':
+					out = colors.BLUE + ident + RESET + rest;
+					break;
+				default:
+					out = colors.BLUE + ident + RESET + rest;
+					break;
+            }
+        }
+    }
+    origLog(out);
 }
-
-exports.dlog = dlog;
+var origErr = console.error;
+console.error = function(str) {
+    origErr(colors.RED + str + RESET);
+}
+console.warning = function(str) {
+	console.log(colors.YELLOW + str + RESET);
+}
