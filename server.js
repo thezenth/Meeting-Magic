@@ -79,7 +79,6 @@ function isLoggedIn(req, res, next) {
         case '/logout':
         case '/signup':
             return next();
-            break;
         default:
             if (req.isAuthenticated()) {
                 return next();
