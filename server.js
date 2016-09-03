@@ -70,9 +70,28 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/public/assets'));
 app.use(express.static(__dirname + '/public/assets/images'));
 
+//route middleware to make sure user is logged in
+function isLoggedIn(req, res, next) {
+
+    switch (req.path) {
+        case '/':
+        case '/login':
+        case '/logout':
+        case '/signup':
+            return next();
+        default:
+            if (req.isAuthenticated()) {
+                return next();
+            } else {
+                res.redirect('/');
+            }
+            break;
+    }
+}
+app.use(isLoggedIn);
 
 // routes ======================================================================
-require('./routes.js')(io, app, passport); // load our routes and pass in our app and fully configured passport
+app.use(require('./controllers/index')(io, passport)); // load our routes and pass in our app and fully configured passport
 
 // launch ======================================================================
 server.listen(8080);

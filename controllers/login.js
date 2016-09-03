@@ -32,21 +32,18 @@ var router = express.Router();
 
 module.exports = function(sio, passport) {
 
-    // other routes
-    router.use('/login', require('./login')(sio, passport));
-    router.use('/logout', require('./logout')(sio, passport));
-    router.use('/home', require('./home')(sio, passport));
-    router.use('/profile', require('./profile')(sio, passport));
-    router.use('/user-prefs', require('./user-prefs')(sio, passport));
-    router.use('/meeting', require('./meeting')(sio, passport));
-    router.use('/results', require('./results')(sio, passport));
-    router.use('/create', require('./create')(sio, passport));
-    router.use('/signup', require('./signup')(sio, passport));
-
-    //Home page (with login links)
+    //Login
 	router.get('/', function (req, res) {
-		res.render('index');
+		//render page and pass any flash data if it exists
+		res.render('login', { message: req.flash('signupMessage') });
 	});
 
-    return router;
+    // process the login form
+	router.post('/', passport.authenticate('local-login', {
+		successRedirect: '/home', // redirect to the secure home section
+		failureRedirect: '/login', // redirect back to the signup page if there is an error
+		failureFlash: true // allow flash messages
+	}));
+
+	return router;
 }

@@ -140,3 +140,8 @@ function get_place(q, parseFunc) {
 			console.error(`GOOGLE PLACES API:${err}`);
 		});
 }
+
+module.exports = {
+	get_place: get_place,
+	build_img_url: build_img_url
+}
