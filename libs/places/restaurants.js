@@ -6,11 +6,6 @@ var fetch = require("./fetch.js");
 var get_place = fetch.get_place;
 var build_img_url = fetch.build_img_url;
 
-//places.js
-var places = require("./places.js");
-var food_q = places.Food;
-var rest = places.Restaurant;
-
 // debug.js
 var debug = require("../debug/debug.js");
 var dlog = debug.dlog;
@@ -81,6 +76,7 @@ function fetch_parse(data) {
 			}
 		}
 
+		// creating a JSON object to temporarily put in data.json
 		newRest = {};
 		newRest.type = 'food';
 		newRest.name = name;

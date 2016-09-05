@@ -3,10 +3,6 @@ var rp = require('request-promise');
 
 var async = require('async');
 
-//places.js
-var places = require("./places.js");
-var food_q = places.Food;
-
 // debug.js
 var debug = require("../debug/debug.js");
 
