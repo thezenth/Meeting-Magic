@@ -28,15 +28,20 @@ var goog_key = "AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ"
  * @return {String} newUrl - The new URL.
  */
 function build_url(position, rad, type, keywords, rankBy, oauth) {
-	var base = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-	var location = "location=" + position.lat.toString() + "," + position.lng.toString();
 
+	// stuff that is not optional
+	var base = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+
+	var location = `location=${position.lat.toString()},${position.lng.toString()}`;
+
+	// check if the radius is over 50,000 - if it is, then "truncate" it to only 50,000 (this is due to the Google Places API restriction on radius)
 	if (rad > 50000) {
 		rad = 50000;
 	}
+	var radius = `radius=${rad.toString()}`;
 
-	var radius = "radius=" + rad.toString();
-
+	// go through the keywords array and combine it all into a single string
+	// this must be done instead of a simple keywords.toString(), as Places API specification requires (keyword_1) OR (keyword_2) OR (keyword_n)
 	var search = "keyword=";
 	for(i = 0; i<keywords.length; i++) {
 		search += "(" + keywords[i] + ")";
@@ -45,25 +50,26 @@ function build_url(position, rad, type, keywords, rankBy, oauth) {
 		}
 	}
 
-	var place_type = "types=" + type;
-	var authKey = "key=" + oauth;
+	// parameterization is used as it is a bit easier to read
+	var place_type = `types=${type}`;
+	var authKey = `key=${oauth}`
 
 	var rank_by = ""
 
 	switch (rankBy) {
 		case 'distance':
 			radius = ""; //can't have radius when sorting by DISTANCE
-			rank_by = "rankby=" + rankBy;
+			rank_by = `rankBy=${rankBy}`;
 			break;
 		case 'prominence': //REMEMBER, PROMINENCE =/= RATING, BUT ALSO INCLUDES GOOGLE SEARCH RANK AND OTHER NEAT STUFF
-			rank_by = "rankby=" + rankBy
+			rank_by = `rankBy=${rankBy}`;
 			break;
 		default:
 			rank_by = "";
 			break;
 	}
 
-	var newUrl = base + location + "&" + radius + "&" + search + "&" + place_type + "&" + rank_by + "&" + authKey;
+	var newUrl = `${base}${location}&${radius}&${search}&${place_type}&${rank_by}&${authKey}`;
 
 	console.log("GOOGLE PLACES API:made google places fetch url");
 	return (newUrl);
@@ -86,11 +92,11 @@ function build_img_url(ref, m_width) {
 	}
 	else {
 		var base = "https://maps.googleapis.com/maps/api/place/photo?";
-		var maxWidth = "maxwidth=" + m_width;
-		var imgRef = "photoreference=" + ref;
-		var authKey = "key=" + goog_key;
+		var maxWidth = `maxwidth=${m_width}`;
+		var imgRef = `photoreference=${ref}`;
+		var authKey = `key=${goog_key}`;
 
-		var newUrl = base + maxWidth + "&" + imgRef + "&" + authKey;
+		var newUrl = `${base}${maxWidth}&${imgRef}&${authKey}`;
 
 		return (newUrl);
 	}
