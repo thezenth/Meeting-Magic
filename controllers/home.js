@@ -14,9 +14,6 @@ var get_place = fetch.get_place;
 var restaurants = require('../libs/places/restaurants');
 var fetch_parse = restaurants.fetch_parse;
 
-var places = require('../libs/places/places');
-var food_q = places.Food;
-
 //compare_prefs.js
 var comp = require('../libs/compare_prefs');
 var compare_food_prefs = comp.compareFood;
