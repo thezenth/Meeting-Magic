@@ -23,18 +23,22 @@ var goog_key = "AIzaSyDpHahG-VLpYYZo238mbnHdFfLqLf91rSQ"
  * Builds a URL according to the Google Places API.
  *
  * @method build_url
- * @param {Number} latitude - The latitude coordinate of the center of the search area.
- * @param {Number} longitude - The longitude coordinate of the center of the search area.
- * @param {Number} rad - The radius of the search area.
+ * @param {Object} position - An object contating latitude and longitude as lat and lng, respectively.
+ * @param {Number} rad - The radius of the search area in meters. The maximum allowed values is 50,000 meters.
  * @param {String} type - The type of place you will be looking for; ex: food, crusie, entertainment, etc.
  * @param {String} keywords - The keywords of the search itself; ex: coffee, Indian, Pizza, etc.
  * @param {String} rankBy Rank - The data either by "distance" from center of "prominence" (which includes rating, mentions on google, etc.). Specifies the order in which the data will be returned.
  * @param {String} oauth - The authKey, provided by the Google Places API.
  * @return {String} newUrl - The new URL.
  */
-function build_url(latitude, longitude, rad, type, keywords, rankBy, oauth) {
+function build_url(position, rad, type, keywords, rankBy, oauth) {
 	var base = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-	var location = "location=" + latitude.toString() + "," + longitude.toString();
+	var location = "location=" + position.lat.toString() + "," + position.lng.toString();
+
+	if (rad > 50000) {
+		rad = 50000;
+	}
+
 	var radius = "radius=" + rad.toString();
 
 	var search = "keyword=";
@@ -51,16 +55,16 @@ function build_url(latitude, longitude, rad, type, keywords, rankBy, oauth) {
 	var rank_by = ""
 
 	switch (rankBy) {
-	case 'distance':
-		radius = ""; //can't have radius when sorting by DISTANCE
-		rank_by = "rankby=" + rankBy;
-		break;
-	case 'prominence': //REMEMBER, PROMINENCE =/= RATING, BUT ALSO INCLUDES GOOGLE SEARCH RANK AND OTHER NEAT STUFF
-		rank_by = "rankby=" + rankBy
-		break;
-	default:
-		rank_by = "";
-		break;
+		case 'distance':
+			radius = ""; //can't have radius when sorting by DISTANCE
+			rank_by = "rankby=" + rankBy;
+			break;
+		case 'prominence': //REMEMBER, PROMINENCE =/= RATING, BUT ALSO INCLUDES GOOGLE SEARCH RANK AND OTHER NEAT STUFF
+			rank_by = "rankby=" + rankBy
+			break;
+		default:
+			rank_by = "";
+			break;
 	}
 
 	var newUrl = base + location + "&" + radius + "&" + search + "&" + place_type + "&" + rank_by + "&" + authKey;
@@ -112,20 +116,17 @@ function build_img_url(ref, m_width) {
  * Designed to fetch data, specifically using the Google Places API (as it uses build_url, which builds a URL specifically for the Google Places API). Does not parse data, only gets it.
  *
  * @method get_place
- * @param {Number} latitude - The latitude coordinate of the center of the search area.
- * @param {Number} longitude - The longitude coordinate of the center of the search area.
- * @param {Number} radius - The radius of the search area.
- * @param {String} placeType - The type of place; ex: food (restaurants), crusie, entertainment, etc.
+ * @param {Object} position - An object contating latitude and longitude as lat and lng, respectively.
  * @param {String[]} keywords - The keyword search terms, such as "pizza" or "coffee" for a place of type "food" (restaurant).
+ * @param {Number} radius - The radius of the search area in meters. The maximum allowed values is 50,000 meters. Default value is 5000 in meters.
+ * @param {String} placeType - The type of place; ex: food (restaurants), crusie, entertainment, etc.
  * @param {String} rankBy - The data either by "distance" from center or "prominence" (which includes rating, mentions on google, etc.). Specifies the order in which the data will be returned.
- * @param {String} oauth - The authKey, needed to access the Google Places API.
  * @param {Function} parseFunc - A callback function which will be used to parse the data fetched.
  * @return {String} newUrl - The new URL.
  */
-function get_place(latitude, longitude, radius, placeType, keywords, rankBy, parseFunc) {
+function get_place(position, keywords, parseFunc, radius=5000, placeType='food', rankBy='prominence') {
 	var url = build_url(
-		latitude,
-		longitude,
+		position,
 		radius,
 		placeType,
 		keywords,

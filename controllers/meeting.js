@@ -70,7 +70,7 @@ module.exports = function(sio, passport) {
                         var sameFoodPrefs = compare_food_prefs(user.food_prefs, req.user.food_prefs);
                         if (sameFoodPrefs.length > 0) {
                             //rest_pq.cat = sameFoodPrefs;
-                            get_place(lat, long, 5000, 'food', sameFoodPrefs, 'prominence', fetch_parse);
+                            get_place({lat: lat, lng: long}, sameFoodPrefs, fetch_parse);
                             var checkJson = function () {
                                 fs.readFile('./libs/places/data.json', function (err, jsonData) {
                                     if (err) {
