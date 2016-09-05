@@ -112,17 +112,24 @@ function build_img_url(ref, m_width) {
  * Designed to fetch data, specifically using the Google Places API (as it uses build_url, which builds a URL specifically for the Google Places API). Does not parse data, only gets it.
  *
  * @method get_place
- * @param {Object} q - An object with all of the information needed to build the fetch URL.
- * @return {Function} parseFunc - A callback function which will be used to parse the data fetched.
+ * @param {Number} latitude - The latitude coordinate of the center of the search area.
+ * @param {Number} longitude - The longitude coordinate of the center of the search area.
+ * @param {Number} radius - The radius of the search area.
+ * @param {String} placeType - The type of place; ex: food (restaurants), crusie, entertainment, etc.
+ * @param {String[]} keywords - The keyword search terms, such as "pizza" or "coffee" for a place of type "food" (restaurant).
+ * @param {String} rankBy - The data either by "distance" from center or "prominence" (which includes rating, mentions on google, etc.). Specifies the order in which the data will be returned.
+ * @param {String} oauth - The authKey, needed to access the Google Places API.
+ * @param {Function} parseFunc - A callback function which will be used to parse the data fetched.
+ * @return {String} newUrl - The new URL.
  */
-function get_place(q, parseFunc) {
+function get_place(latitude, longitude, radius, placeType, keywords, rankBy, parseFunc) {
 	var url = build_url(
-		q.position.lat,
-		q.position.long,
-		q.rad,
-		q.type,
-		q.cat,
-		q.rankBy,
+		latitude,
+		longitude,
+		radius,
+		placeType,
+		keywords,
+		rankBy,
 		goog_key
 	);
 	console.log(`GOOGLE PLACES API:${url}`);

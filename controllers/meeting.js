@@ -59,18 +59,18 @@ module.exports = function(sio, passport) {
                         ));
                         console.log(`SERVER: ${lat},${long}`);
 
-                        var rest_pq = food_q;
-                        rest_pq.position = {
-                            lat: lat,
-                            long: long
-                        };
-                        rest_pq.rad = 5000;
-                        rest_pq.rankBy = "prominence";
+                        //var rest_pq = food_q;
+                        //rest_pq.position = {
+                        //    lat: lat,
+                        //    long: long
+                        //};
+                        //rest_pq.rad = 5000;
+                        //rest_pq.rankBy = "prominence";
 
                         var sameFoodPrefs = compare_food_prefs(user.food_prefs, req.user.food_prefs);
                         if (sameFoodPrefs.length > 0) {
-                            rest_pq.cat = sameFoodPrefs;
-                            get_place(rest_pq, fetch_parse);
+                            //rest_pq.cat = sameFoodPrefs;
+                            get_place(lat, long, 5000, 'food', sameFoodPrefs, 'prominence', fetch_parse);
                             var checkJson = function () {
                                 fs.readFile('./libs/places/data.json', function (err, jsonData) {
                                     if (err) {
